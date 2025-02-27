@@ -69,7 +69,7 @@ const CrmDeals = () => {
       setModal(true);
     }
   };
-  document.title = "Deals | Velzon - React Admin & Dashboard Template";
+  //document.title = "Deals | Velzon - React Admin & Dashboard Template";
 
   return (
     <React.Fragment>

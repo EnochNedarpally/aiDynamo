@@ -504,7 +504,7 @@ const EcommerceOrders = () => {
     return updateTime;
   };
 
-  document.title = "Orders | Velzon - React Admin & Dashboard Template";
+  //document.title = "Orders | Velzon - React Admin & Dashboard Template";
   return (
     <div className="page-content">
       <ExportCSVModal

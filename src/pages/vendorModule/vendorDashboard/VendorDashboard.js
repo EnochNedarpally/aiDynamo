@@ -12,7 +12,7 @@ import Header from "../../Jobs/JobList/Overview/Header";
 
 
 const VendorDashboard = () => {
-  document.title = "Vendor Dashboard";
+  //document.title = "Vendor Dashboard";
 
   const [rightColumn, setRightColumn] = useState(false);
   const toggleRightColumn = () => {

@@ -82,7 +82,7 @@ delete payload.confirm_password
 
     }, [dispatch, success, error, history]);
 
-    document.title = "Basic SignUp | Velzon - React Admin & Dashboard Template";
+    //document.title = "Basic SignUp | Velzon - React Admin & Dashboard Template";
 
     return (
         <React.Fragment>

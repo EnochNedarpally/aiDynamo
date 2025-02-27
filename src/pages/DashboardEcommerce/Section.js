@@ -13,7 +13,7 @@ const Section = (props) => {
                             <h4 className="fs-16 mb-1">Hello!</h4>
                             <p className="text-muted mb-0">today's Update.</p>
                         </div>
-                        <div className="mt-3 mt-lg-0">
+                        {/* <div className="mt-3 mt-lg-0">
                             <form action="#">
                                 <Row className="g-3 mb-0 align-items-center">
                                     <div className="col-sm-auto">
@@ -29,15 +29,9 @@ const Section = (props) => {
                                             <div className="input-group-text bg-primary border-primary text-white"><i className="ri-calendar-2-line"></i></div>
                                         </div>
                                     </div>
-                                    {/* <div className="col-auto">
-                                        <button type="button" className="btn btn-soft-secondary"><i className="ri-add-circle-line align-middle me-1"></i> Add PDF</button>
-                                    </div> */}
-                                    {/* <div className="col-auto">
-                                        <button type="button" className="btn btn-soft-success btn-success waves-effect waves-light layout-rightside-btn" onClick={props.rightClickBtn} ><i className="ri-pulse-line"></i></button>
-                                    </div> */}
                                 </Row>
                             </form>
-                        </div>
+                        </div> */}
                     </div>
                 </Col>
             </Row>

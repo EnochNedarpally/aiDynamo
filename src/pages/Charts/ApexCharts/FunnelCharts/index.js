@@ -4,7 +4,7 @@ import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import { FunnelChartCode, PyramidChartCode } from './Funnellchart';
 
 const FunnelCharts = () => {
-    document.title = "Apex Funnel Charts | Velzon - React Admin & Dashboard Template";
+    //document.title = "Apex Funnel Charts | Velzon - React Admin & Dashboard Template";
     return (
         <React.Fragment>
             <div className="page-content">

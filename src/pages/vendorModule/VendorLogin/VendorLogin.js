@@ -94,7 +94,7 @@ const VendorLogin = (props) => {
     }
   }, [error]);
 
-  document.title = "Vendor Login | Infinite B2B";
+  //document.title = "Vendor Login | Infinite B2B";
 
   return (
     <React.Fragment>

@@ -47,7 +47,7 @@ const SimplePage = () => {
         }
     };
 
-    document.title = "Profile | Velzon - React Admin & Dashboard Template";
+    //document.title = "Profile | Velzon - React Admin & Dashboard Template";
 
     return (
         <React.Fragment>

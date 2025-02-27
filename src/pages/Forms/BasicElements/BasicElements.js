@@ -10,7 +10,7 @@ import { useState } from 'react';
 
 
 const BasicElements = () => {
-    document.title = "Basic Elements | Velzon - React Admin & Dashboard Template";
+    //document.title = "Basic Elements | Velzon - React Admin & Dashboard Template";
     return (
         <React.Fragment>
             <UiContent />

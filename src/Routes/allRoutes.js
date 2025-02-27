@@ -156,7 +156,6 @@ import BasicPasswReset from '../pages/AuthenticationInner/PasswordReset/BasicPas
 import Starter from '../pages/Pages/Starter/Starter';
 import SimplePage from '../pages/Pages/Profile/SimplePage/SimplePage';
 import Settings from '../pages/Pages/Profile/Settings/Settings';
-import AddCategory from '../pages/Pages/Category/AddCategory';
 import Timeline from '../pages/Pages/Timeline/Timeline';
 // import Faqs from '../pages/Pages/Faqs/Faqs';
 // import Pricing from '../pages/Pages/Pricing/Pricing';
@@ -286,116 +285,35 @@ import VendorLogin from "../pages/vendorModule/VendorLogin/VendorLogin";
 import VendorAddWhitepaper from "../pages/vendorModule/Whitepaper/VendorAddWhitepapers";
 import VendorAllWhitepapers from "../pages/vendorModule/Whitepaper/vendorAllWhitepapers ";
 import GetUserToken from "../pages/userModule/GetUserToken";
-
-
+import Accounts from "../pages/Accounts/Accounts";
+import AddAccount from "../pages/Accounts/AddAccount";
+import Category from "../pages/Category/Category";
+import AddCategory from "../pages/Category/AddCategory";
 
 const authProtectedRoutes = [
-  { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
-  { path: "/dashboard-crm", component: <DashboardCrm /> },
   { path: "/admin/dashboard", component: <AdminDashboard /> },
-  { path: "/index", component: <DashboardEcommerce /> },
-
-  { path: "/apps-calendar", component: <Calendar /> },
-  { path: "/apps-calendar-month-grid", component: <MonthGrid /> },
-  { path: "/apps-ecommerce-products", component: <EcommerceProducts /> },
-
-  //Projects
-  // { path: "/apps-projects-list", component: <ProjectList /> },
-  { path: "/apps-projects-overview", component: <ProjectOverview /> },
-  // { path: "/apps-projects-create", component: <CreateProject /> },
-
-  // Widgets
-  { path: "/widgets", component: <Widgets /> },
-
- 
-  { path: "/admin/add-whitepapers", component: <AddWhitepaper /> }, 
-  { path: "/admin/all-whitepapers", component: <AllWhitepapers /> }, 
-
-
-
-  //Maps
-  { path: "/maps-google", component: <GoogleMaps /> },
-
-  //Pages
-  { path: "/pages-starter", component: <Starter /> },
-  { path: "/pages-profile", component: <SimplePage /> },
-  { path: "/pages-profile-settings", component: <Settings /> },
-  //Category
+  { path: "/admin/accounts", component: <Accounts /> },
+  { path: "/admin/add-account", component: <AddAccount /> },
+  { path: "/admin/category", component: <Category /> },
   { path: "/admin/add-category", component: <AddCategory /> },
-  { path: "/view-category", component: <ViewCategory /> },
-  { path: "/admin/all-category", component: <AllCategory /> },
-  //Campaign
+  { path: "/admin/campaigns", component: <AllCampaign /> },
   { path: "/admin/add-campaign", component: <AddCampaign /> },
-  { path: "/view-campaign", component: <ViewCampaign /> },
-  { path: "/admin/all-campaign", component: <AllCampaign /> },
-  //NewsLetters
-  { path: "/add-news-letters", component: <AddNewsLetters/> },
-  { path: "/view-news-letters", component: <ViewNewsLetters /> },
-  { path: "/all-news-letters", component: <AllNewsLetters/> },
-  //blogs
-  { path: "/add-blogs-category", component: <AddBlogsCategory/> },
-  { path: "/all-blogs-category", component: <AllBlogsCategory/> },
-  { path: "/all-blogs", component: <AllBlogs /> },
-  { path: "add-new-blog", component: <AddNewBlog/> },
-
-
-
-
-
-  //report
-  { path: "/campaign-reports", component: <CampaignReports/> },
-  { path: "/newsletter-reports", component: <NewsletterReports/> },
-  { path: "/subscriber-reports", component: <SubscriberReports /> },
-  { path: "download-reports", component: <DownloadReports/> },
-
-  
-  //uses
-  { path: "/admin/user-addadmin", component: <AddAdmin/> },
-  { path: "/admin/user-alladmin", component: <AllAdmin/> },
-  { path: "/admin/user-addcampaign-managers", component: <AddCampaignManagers/> },
-  { path: "/admin/user-allcampaign-managers", component: <AllCampaignManagers/> },
-  { path: "/admin/user-addeditors", component: <AddEditors /> },
-  { path: "/admin/user-alleditors", component: <AllEditors /> },
-
-  //Vendors
-  { path: "/admin/review-vendor", component: <ReviewVendor/> },
-  { path: "/admin/all-vendors", component: <AllVendors/> },
- 
-
-  { path: "/pages-privacy-policy", component: <PrivecyPolicy /> },
-  { path: "/pages-terms-condition", component: <TermsCondition /> },
-
-
-  //User Profile
-  { path: "/profile", component: <UserProfile /> },
-
-  // this route should be at the end of all other routes
-  // eslint-disable-next-line react/display-name
-  {
-    path: "/admin/login",
-    exact: true,
-    component: <Navigate to="/admin/login" />,
-  },
+  { path: "/admin/add-asset", component: <AdminDashboard /> },
+  { path: "/admin/assets", component: <AdminDashboard /> },
+  { path: "/admin/single-email", component: <AdminDashboard /> },
+  { path: "/admin/bulk-email", component: <AdminDashboard /> },
+  { path: "/admin/email-log-list", component: <AdminDashboard /> },
+  { path: "/admin/email-log-filter", component: <AdminDashboard /> },
+  { path: "/admin/subscriber-list", component: <AdminDashboard /> },
+  { path: "/admin/unsubscriber-list", component: <AdminDashboard /> },
+  { path: "/admin/user-report", component: <AdminDashboard /> },
+  { path: "/admin/email-list", component: <AdminDashboard /> },
+  { path: "/admin/add-email", component: <AdminDashboard /> },
+  { path: "/admin/admin-list", component: <AdminDashboard /> },
+  { path: "/admin/add-admin", component: <AdminDashboard /> },
+  { path: "/admin/user-list", component: <AdminDashboard /> },
+  { path: "/admin/add-user", component: <AdminDashboard /> },
   { path: "*", component: <Navigate to="/admin/dashboard" /> },
-  { path: "/vendor", component: <Navigate to="/vendor/login" /> },
-  { path: "/vendor/dashboard", component: <VendorDashboard /> }, 
-
-//**************************************************************** */
-//vendor module
-{ path: "/vendor/add-whitepapers", component: <VendorAddWhitepaper /> }, 
-{ path: "/vendor/all-whitepapers", component: <VendorAllWhitepapers /> }, 
-
-{ path: "/vendor/profile", component: <VendorProfile /> }, 
-
-//**************************************************************** */
-//user module
-{ path: "/user/dashboard", component: <UserDashboard /> }, 
-{ path: "/user/saved-whitepapers", component: <SavedWhitepapers /> }, 
-{ path: "/user/news-letter", component: <NewsletterSubsciber /> }, 
-{ path: "/user/category-subsciber", component: <CategorySubsciber /> }, 
-{ path: "/user/profile", component: <UserProfile /> }, 
-
-
 ];
 
 const publicRoutes = [

@@ -315,7 +315,7 @@ const EcommerceProducts = (props) => {
   ],
     []
   );
-  document.title = "Products | Velzon - React Admin & Dashboard Template";
+  //document.title = "Products | Velzon - React Admin & Dashboard Template";
   const customStyles = {
     multiValue: (styles, { data }) => {
         return {

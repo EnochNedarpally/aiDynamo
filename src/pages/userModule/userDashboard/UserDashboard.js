@@ -7,7 +7,7 @@ import UserDash from "./TotalWidgets";
 import Sidebar from "../Sidebar";
 
 const UserDashboard = () => {
-  document.title = "UserDashboard";
+  //document.title = "UserDashboard";
 
   const [rightColumn, setRightColumn] = useState(false);
   const toggleRightColumn = () => {

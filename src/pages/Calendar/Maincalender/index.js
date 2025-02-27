@@ -361,7 +361,7 @@ const Calender = () => {
     }
   };
 
-  document.title = "Calendar | Velzon - React Admin & Dashboard Template";
+  //document.title = "Calendar | Velzon - React Admin & Dashboard Template";
   return (
     <React.Fragment>
       <DeleteModal

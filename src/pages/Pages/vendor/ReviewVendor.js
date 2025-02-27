@@ -529,7 +529,7 @@ Approve
   // Export Modal
   const [isExportCSV, setIsExportCSV] = useState(false);
 
-  document.title = "infiniteb2b";
+  //document.title = "infiniteb2b";
   return (
     <React.Fragment>
      <div className="page-content">

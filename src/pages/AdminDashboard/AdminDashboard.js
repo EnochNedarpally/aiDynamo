@@ -18,7 +18,7 @@ import CrmCompanies from "./MostDownloadedPDFList ";
 import MostDownloadedPDFList from "./MostDownloadedPDFList ";
 
 const AdminDashboard = () => {
-  document.title = "Dashboard | Velzon - React Admin & Dashboard Template";
+  //document.title = "Dashboard | Velzon - React Admin & Dashboard Template";
 
   const [rightColumn, setRightColumn] = useState(false);
   const toggleRightColumn = () => {

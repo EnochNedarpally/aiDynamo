@@ -381,7 +381,7 @@ const VendorAllWhitepapers = () => {
   // Export Modal
   const [isExportCSV, setIsExportCSV] = useState(false);
 
-  document.title = "Companies | Velzon - React Admin & Dashboard Template";
+  //document.title = "Companies | Velzon - React Admin & Dashboard Template";
   return (
     <React.Fragment>
      <div className="page-content">
@@ -722,7 +722,7 @@ export default VendorAllWhitepapers;
 
 
 
-//   document.title = "Companies | Velzon - React Admin & Dashboard Template";
+//   //document.title = "Companies | Velzon - React Admin & Dashboard Template";
 //   return (
 //     <React.Fragment>
 //       <div className="page-content">
@@ -1198,7 +1198,7 @@ export default VendorAllWhitepapers;
 //   // Export Modal
 //   const [isExportCSV, setIsExportCSV] = useState(false);
 
-//   document.title = "Companies | Velzon - React Admin & Dashboard Template";
+//   //document.title = "Companies | Velzon - React Admin & Dashboard Template";
 //   return (
 //     <React.Fragment>
 //      <div className="page-content">
