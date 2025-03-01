@@ -247,9 +247,6 @@ import AddWhitepaper from "../pages/Pages/Whitepaper/AddWhitepapers";
 import AdminDashboard from "../pages/AdminDashboard/AdminDashboard";
 import MostDownloadedPDFList from "../pages/AdminDashboard/MostDownloadedPDFList ";
 import ViewCategory from "../pages/Pages/Category/ViewCategory";
-import AddCampaign from "../pages/Pages/campaign/AddCampaign";
-import AllCampaign from "../pages/Pages/campaign/AllCampaign";
-import ViewCampaign from "../pages/Pages/campaign/ViewCampaign";
 import AddNewsLetters from "../pages/Pages/newsLetters/AddNewsLetters";
 import AllNewsLetters from "../pages/Pages/newsLetters/AllNewsLetters";
 import ViewNewsLetters from "../pages/Pages/newsLetters/ViewNewsLetters";
@@ -289,6 +286,11 @@ import Accounts from "../pages/Accounts/Accounts";
 import AddAccount from "../pages/Accounts/AddAccount";
 import Category from "../pages/Category/Category";
 import AddCategory from "../pages/Category/AddCategory";
+import Assets from "../pages/Assets/Assets";
+import AddAsset from "../pages/Assets/AddAsset";
+import AddCampaign from "../pages/campaign/AddCampaign";
+import AllCampaign from "../pages/campaign/AllCampaign";
+import Email from "../pages/Email/Email";
 
 const authProtectedRoutes = [
   { path: "/admin/dashboard", component: <AdminDashboard /> },
@@ -298,10 +300,10 @@ const authProtectedRoutes = [
   { path: "/admin/add-category", component: <AddCategory /> },
   { path: "/admin/campaigns", component: <AllCampaign /> },
   { path: "/admin/add-campaign", component: <AddCampaign /> },
-  { path: "/admin/add-asset", component: <AdminDashboard /> },
-  { path: "/admin/assets", component: <AdminDashboard /> },
-  { path: "/admin/single-email", component: <AdminDashboard /> },
-  { path: "/admin/bulk-email", component: <AdminDashboard /> },
+  { path: "/admin/add-asset", component: <AddAsset /> },
+  { path: "/admin/assets", component: <Assets /> },
+  { path: "/admin/single-email", component: <Email /> },
+  { path: "/admin/bulk-email", component: <Email /> },
   { path: "/admin/email-log-list", component: <AdminDashboard /> },
   { path: "/admin/email-log-filter", component: <AdminDashboard /> },
   { path: "/admin/subscriber-list", component: <AdminDashboard /> },

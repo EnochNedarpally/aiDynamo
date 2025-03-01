@@ -42,7 +42,7 @@
             display: flex;
             align-items: center;
             padding: $vertical-menu-item-padding-y $vertical-menu-item-padding-x;
-            color: var(--#{$prefix}vertical-menu-item-color);
+            color: white;
             font-size: $vertical-menu-item-font-size;
             font-family: $vertical-menu-item-font-family;
 
@@ -129,7 +129,7 @@
 
             .nav-link {
                 padding: $vertical-menu-sub-item-padding-y $vertical-menu-sub-item-padding-x !important;
-                color: var(--#{$prefix}vertical-menu-sub-item-color);
+                color: white;
                 white-space: none;
                 position: relative;
                 font-size: $vertical-menu-sub-item-font-size;

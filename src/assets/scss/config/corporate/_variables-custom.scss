@@ -23,13 +23,13 @@ $vertical-menu-bg:                                $white;
 $vertical-menu-border:                            $white;
 $vertical-menu-item-color:                        darken($gray-600, 10%);
 $vertical-menu-item-bg:                           rgba($primary, .15);
-$vertical-menu-item-hover-color:                  $primary;
-$vertical-menu-item-active-color:                 $primary;
+$vertical-menu-item-hover-color:                  #87ebec;
+$vertical-menu-item-active-color:                 #87ebec;
 $vertical-menu-item-active-bg:                    rgba($primary, .15);
 $vertical-menu-sub-item-color:                    darken($gray-600, 4%);
-$vertical-menu-sub-item-hover-color:              $primary;
-$vertical-menu-sub-item-active-color:             $primary;
-$vertical-menu-title-color:                       #919da9;
+$vertical-menu-sub-item-hover-color:               #87ebec;
+$vertical-menu-sub-item-active-color:              #87ebec;
+$vertical-menu-title-color:                        #87ebec;
 $vertical-menu-box-shadow:                        0 2px 4px rgba(15,34,58,0.12);
 $vertical-menu-dropdown-box-shadow:               0 2px 4px rgba(15, 34, 58, 0.12);
 

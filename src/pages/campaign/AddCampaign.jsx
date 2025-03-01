@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardBody, Col, Row, Container, CardHeader } from 'reactstrap';
 import axios from 'axios';
-import { api } from '../../../config';
 import { Autocomplete, TextField } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { api } from '../../config';
+import ConfirmModal from '../../Components/Common/ConfirmModal';
 
+const initialState = {
+  name: "",
+  description: "",
+  accountId: "",
+  categoryId: "",
+  assetId: "",
+  webTemplate: null,
+  emailTemplate: null
+}
 const AddCampaign = () => {
   const token = useSelector(state => state.Login.token)
   const config = {
@@ -15,19 +25,15 @@ const AddCampaign = () => {
     },
   };
   const navigate = useNavigate()
-  const [campaignName, setCampaignName] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
+  const location = useLocation()?.state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [accountOptions, setAccountOptions] = useState([]);
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [assetOptions, setAssetOptions] = useState([]);
-  const [emailTemplate, setEmailTemplate] = useState(null);
-  const [file, setFile] = useState(null);
-  const [account, setAccount] = useState("");
-  const [asset, setAsset] = useState('');
+  const [campaign, setCampaign] = useState(initialState);
 
   useEffect(() => {
     fetchAccountOptions()
@@ -35,10 +41,26 @@ const AddCampaign = () => {
     fetchAssetOptions()
   }, [])
 
+  useEffect(() => {
+    if (location) {
+      const campaignData = { ...campaign }
+      Object.keys(location).map((key) => {
+        if (key == "desc") {
+          campaignData["description"] = location[key]
+        }
+        else campaignData[key] = location[key]
+      })
+      setCampaign(campaignData)
+    }
+  }, [location])
+
   const fetchAccountOptions = async () => {
     try {
       const res = await axios.get(`${api.API_URL}/api/accounts/options`, config)
-      setAccountOptions(res.responseData.accounts);
+      if (res.status) {
+        setAccountOptions(res.responseData.accounts);
+      }
+      else toast.error(res?.responseData.message ?? "Error fetching search results:")
     } catch (error) {
       console.error('Error fetching search results:', error);
     }
@@ -46,7 +68,10 @@ const AddCampaign = () => {
   const fetchCategoryOptions = async () => {
     try {
       const res = await axios.get(`${api.API_URL}/api/category/options`, config)
-      setCategoryOptions(res.responseData.categories);
+      if (res.status) {
+        setCategoryOptions(res.responseData.categories);
+      }
+      else toast.error(res?.responseData.message ?? "Error fetching search results:")
     } catch (error) {
       console.error('Error fetching search results:', error);
     }
@@ -54,7 +79,10 @@ const AddCampaign = () => {
   const fetchAssetOptions = async () => {
     try {
       const res = await axios.get(`${api.API_URL}/api/asset/options`, config)
-      setAssetOptions(res.responseData.assets);
+      if (res.status) {
+        setAssetOptions(res.responseData.assets);
+      }
+      else toast.error(res?.responseData.message ?? "Error fetching search results:")
     } catch (error) {
       console.error('Error fetching search results:', error);
     }
@@ -63,20 +91,15 @@ const AddCampaign = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!campaignName || !description || !category || !account || !asset || !emailTemplate || !file) {
+    if (!campaign.name || !campaign.description || !campaign.categoryId || !campaign.accountId || !campaign.assetId || !campaign.emailTemplate || !campaign.webTemplate) {
       alert('Please fill in all fields');
       return;
     }
 
     const formData = new FormData();
-    formData.append('name', campaignName);
-    formData.append('description', description);
-    formData.append('accountId', account);
-    formData.append('categoryId', category);
-    formData.append('assetId', asset);
-    formData.append('webTemplate', file);
-    formData.append('emailTemplate', emailTemplate);
-
+    Object.keys(campaign).map(key => {
+      formData.append(key, campaign[key]);
+    })
 
     setLoading(true);
     setError(null);
@@ -96,9 +119,7 @@ const AddCampaign = () => {
 
       if (response.status) {
         // Reset form
-        setCampaignName('');
-        setDescription('');
-        setCategory('');
+        setCampaign(initialState)
         navigate("/admin/campaigns")
       }
       else toast.error("Enocuntered an error while creating campaign")
@@ -111,17 +132,18 @@ const AddCampaign = () => {
   };
 
   const handleFileChange = (acceptedFiles) => {
-    setFile(acceptedFiles[0]);
+    setCampaign(prev => { return { ...prev, webTemplate: acceptedFiles[0] } })
   };
 
   const handleEmailTemplate = (acceptedFiles) => {
-    setEmailTemplate(acceptedFiles[0]);
+    setCampaign(prev => { return { ...prev, emailTemplate: acceptedFiles[0] } })
   };
 
   return (
     <React.Fragment>
       <div className="page-content m-0">
         <Container fluid>
+          {isOpen && <ConfirmModal url={`${api.API_URL}/api/campaign/${location?.id}`} navigate={navigate} token={token} setIsOpen={setIsOpen} navigateUrl={"/admin/campaigns"} />}
           <ToastContainer />
           <Row>
             <Col lg={12}>
@@ -138,7 +160,7 @@ const AddCampaign = () => {
                         getOptionLabel={(option) => option.name}
                         onChange={(event, newValue) => {
                           if (newValue) {
-                            setAccount(newValue.id)
+                            setCampaign(prev => { return { ...prev, accountId: newValue.id } })
                           }
                         }}
                         renderInput={(params) => <TextField {...params} label="Account" />}
@@ -152,7 +174,7 @@ const AddCampaign = () => {
                         getOptionLabel={(option) => option.name}
                         onChange={(event, newValue) => {
                           if (newValue) {
-                            setCategory(newValue.id)
+                            setCampaign(prev => { return { ...prev, categoryId: newValue.id } })
                           }
                         }}
                         renderInput={(params) => <TextField {...params} label="Category" />}
@@ -165,7 +187,7 @@ const AddCampaign = () => {
                         getOptionLabel={(option) => option.name}
                         onChange={(event, newValue) => {
                           if (newValue) {
-                            setAsset(newValue.id)
+                            setCampaign(prev => { return { ...prev, assetId: newValue.id } })
                           }
                         }}
                         renderInput={(params) => <TextField {...params} label="Assets" />}
@@ -179,8 +201,8 @@ const AddCampaign = () => {
                         type="text"
                         id="campaignName"
                         className="form-control"
-                        value={campaignName}
-                        onChange={(e) => setCampaignName(e.target.value)}
+                        value={campaign.name}
+                        onChange={(e) => setCampaign(prev => { return { ...prev, name: e.target.value } })}
                         required
                       />
                     </div>
@@ -192,8 +214,8 @@ const AddCampaign = () => {
                         type="text"
                         id="description"
                         className="form-control"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        value={campaign.description}
+                        onChange={(e) => setCampaign(prev => { return { ...prev, description: e.target.value } })}
                         required
                         rows={5}
                       />
@@ -225,7 +247,7 @@ const AddCampaign = () => {
                     </div>
                     <Row className="mt-2">
                       <Col lg={6}>
-                        <div className="d-flex align-items-center" style={{ gap: '10px' }}>
+                        <div className="d-flex justify-content-between" style={{ gap: '10px' }}>
                           <button
                             type="submit"
                             className="btn btn-primary"
@@ -233,6 +255,14 @@ const AddCampaign = () => {
                           >
                             {loading ? 'Uploading...' : 'Save'}
                           </button>
+                          {location && (<button
+                            type="button"
+                            style={{ backgroundColor: "red", color: "white" }}
+                            className="btn "
+                            onClick={() => setIsOpen(true)}
+                          >
+                            Delete
+                          </button>)}
                         </div>
                       </Col>
                     </Row>

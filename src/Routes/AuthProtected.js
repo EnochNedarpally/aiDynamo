@@ -23,7 +23,6 @@ const AuthProtected = (props) => {
     Navigate is un-auth access protected routes via url
     */
 
-  console.log("userProfile", userProfile, loading, "token", token);
 
   if (!userProfile && loading && !token) {
     return (

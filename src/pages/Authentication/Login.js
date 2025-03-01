@@ -68,8 +68,6 @@ const Login = (props) => {
             password: Yup.string().required("Please Enter Your Password"),
         }),
         onSubmit: (values) => {
-            // console.log("values", values)
-            // console.log("props.router.navigate", props.router.navigate)
             dispatch(loginUser(values, props.router.navigate));
           
         }
@@ -110,7 +108,7 @@ const Login = (props) => {
                                 <div className="text-center mt-sm-5 mb-4 text-white-50">
                                     <div>
                                         <Link to="/" className="d-inline-block auth-logo">
-                                            <img src={logoLight} alt="" height="30" />
+                                            <img src={logoLight} alt="" style={{objectFit:'cover'}} width="450"  />
                                         </Link>
                                     </div>
                                     <p className="mt-3 fs-15 fw-medium">Admin & Dashboard</p>

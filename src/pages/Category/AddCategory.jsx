@@ -5,6 +5,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../../config';
 import { useSelector } from 'react-redux';
+import ConfirmModal from '../../Components/Common/ConfirmModal';
 
 
 const AddCategory = () => {
@@ -12,6 +13,7 @@ const AddCategory = () => {
   const [title, setTitle] = useState('');
   const [categoryId, setCategoryId] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const location = useLocation()?.state
 
   const token = useSelector(state => state.Login.token)
@@ -69,63 +71,14 @@ const AddCategory = () => {
   };
 
   const handleDelete = () => {
-    showConfirmToast()
-  }
-  const handleCancel = () => {
-    toast.dismiss()
-  }
-  const handleConfirm = async () => {
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`
-        }
-      };
-      await axios.delete(`${api.API_URL}/api/category/${categoryId}`, config)
-      toast.warn("Category Deleted")
-      navigate("/admin/category")
-    } catch (error) {
-      toast.error(error)
-    } finally {
-      toast.dismiss()
-    }
-
+    setIsOpen(true)
   }
 
-  const showConfirmToast = (itemId) => {
-    toast(
-      <div>
-        <h3>Are you sure you want to delete this item?</h3>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-          <button
-            onClick={() => handleCancel()}
-            className="cancel-btn"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => handleConfirm(itemId)}
-            className="confirm-btn"
-          >
-            Confirm
-          </button>
-        </div>
-      </div>,
-      {
-        position: "top-center",
-        autoClose: false,
-        closeOnClick: false,
-        draggable: false,
-        pauseOnHover: false,
-        closeButton: false,
-      }
-    );
-  };
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
+          {isOpen && <ConfirmModal url={`${api.API_URL}/api/category/${categoryId}`} navigate={navigate} token={token} setIsOpen={setIsOpen} navigateUrl={"/admin/category"} />}
           <ToastContainer closeButton={false} limit={1} />
           <Row>
             <Col lg={12}>

@@ -23,11 +23,11 @@ import {
 
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import TableContainer from "../../../Components/Common/TableContainer";
 
 import axios from "axios";
-import { api } from "../../../config";
 import { useSelector } from "react-redux";
+import { api } from "../../config";
+import TableContainer from "../../Components/Common/TableContainer";
 
 const AllCampaign = () => {
   const token = useSelector(state => state.Login.token)
@@ -91,8 +91,8 @@ const AllCampaign = () => {
           return (
             <ul className="list-inline hstack gap-2 mb-0">
               <li className="list-inline-item" title="Edit">
-                <Link className="edit-item-btn" to="#"
-                  onClick={() => { const companyData = cell.row.original }}
+                <Link className="edit-item-btn" to="/admin/add-campaign"
+                  state={cell.row.original}
                 >
                   <i className="ri-pencil-fill align-bottom text-muted"></i>
                 </Link>

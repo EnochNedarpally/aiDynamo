@@ -19,7 +19,7 @@ import TableContainer from "../../Components/Common/TableContainer";
 import { api } from "../../config";
 
 
-const Accounts = () => {
+const Assets = () => {
     const token = useSelector(state => state.Login.token)
     const config = {
         headers: {
@@ -27,25 +27,21 @@ const Accounts = () => {
         },
     };
     const navigate = useNavigate()
-    const [accounts, setAccounts] = useState([]);
-    const handleAddAccount = () => {
-        navigate('/admin/add-Account');
-    };
+    const [Assets, setAssets] = useState([]);
 
     useEffect(() => {
-        fetchAccounts()
+        fetchAssets()
     }, [])
 
-    const fetchAccounts = async () => {
+    const fetchAssets = async () => {
         try {
-            const data = await axios.get(`${api.API_URL}/api/accounts`, config)
+            const data = await axios.get(`${api.API_URL}/api/asset`, config)
             if (data.status) {
-                setAccounts(data.responseData)
-
+                setAssets(data.responseData)
             }
-            else toast.error("Unable to fetch Accounts")
+            else toast.error("Unable to fetch Assets")
         } catch (error) {
-            toast.error("Unable to fetch Accounts")
+            toast.error("Unable to fetch Assets")
             console.log("error", error)
         }
     }
@@ -66,11 +62,16 @@ const Accounts = () => {
 
             },
             {
-                header: "Account Name",
+                header: "Asset Name",
                 accessorKey: "name",
                 enableColumnFilter: false,
             },
 
+            {
+                header: "Code",
+                accessorKey: "code",
+                enableColumnFilter: false,
+            },
             {
                 header: "Description",
                 accessorKey: "description",
@@ -82,7 +83,7 @@ const Accounts = () => {
                     return (
                         <ul className="list-inline hstack gap-2 mb-0">
                             <li className="list-inline-item" title="Edit">
-                                <Link className="edit-item-btn" to="/admin/add-account" 
+                                <Link className="edit-item-btn" to="/admin/add-asset"
                                     state={cell.row.original}
                                 >
                                     <i className="ri-pencil-fill align-bottom text-muted"></i>
@@ -108,18 +109,18 @@ const Accounts = () => {
                                 <CardBody className="pt-0 ">
                                     <div className="flex-grow-1 ">
                                         <div className="d-flex justify-content-between align-items-center my-2 mx-1">
-                                            <h4 className="card-title mb-0">Account List</h4>
+                                            <h4 className="card-title mb-0">Asset List</h4>
                                             <Button
                                                 color="secondary"
                                                 style={{ backgroundColor: 'purple', borderColor: 'purple' }}
-                                                onClick={() => navigate("/admin/add-account")}
+                                                onClick={() => navigate("/admin/add-Asset")}
                                             >
-                                                <i className="ri-add-fill me-1 align-bottom"></i> Add Account
+                                                <i className="ri-add-fill me-1 align-bottom"></i> Add Asset
                                             </Button>
                                         </div>
                                         <TableContainer
                                             columns={columns}
-                                            data={(accounts ?? [])}
+                                            data={(Assets ?? [])}
                                             isGlobalFilter={true}
                                             isAddUserList={false}
                                             customPageSize={10}
@@ -127,7 +128,7 @@ const Accounts = () => {
                                             divClass="table-responsive table-card mb-2"
                                             tableClass="align-middle table-nowrap"
                                             theadClass="table-light"
-                                            SearchPlaceholder='Search for Account...'
+                                            SearchPlaceholder='Search for Asset...'
                                         />
                                     </div>
                                     <ToastContainer closeButton={false} limit={1} />
@@ -142,4 +143,4 @@ const Accounts = () => {
     );
 };
 
-export default Accounts;
+export default Assets;
