@@ -291,6 +291,7 @@ import AddAsset from "../pages/Assets/AddAsset";
 import AddCampaign from "../pages/campaign/AddCampaign";
 import AllCampaign from "../pages/campaign/AllCampaign";
 import Email from "../pages/Email/Email";
+import EmailLog from "../pages/EmailLog/EmailLog";
 
 const authProtectedRoutes = [
   { path: "/admin/dashboard", component: <AdminDashboard /> },
@@ -304,7 +305,7 @@ const authProtectedRoutes = [
   { path: "/admin/assets", component: <Assets /> },
   { path: "/admin/single-email", component: <Email /> },
   { path: "/admin/bulk-email", component: <Email /> },
-  { path: "/admin/email-log-list", component: <AdminDashboard /> },
+  { path: "/admin/email-log", component: <EmailLog /> },
   { path: "/admin/email-log-filter", component: <AdminDashboard /> },
   { path: "/admin/subscriber-list", component: <AdminDashboard /> },
   { path: "/admin/unsubscriber-list", component: <AdminDashboard /> },

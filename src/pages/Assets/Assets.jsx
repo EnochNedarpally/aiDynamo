@@ -73,11 +73,6 @@ const Assets = () => {
                 enableColumnFilter: false,
             },
             {
-                header: "Description",
-                accessorKey: "description",
-                enableColumnFilter: false,
-            },
-            {
                 header: "Action",
                 cell: (cell) => {
                     return (

@@ -1,6 +1,6 @@
 module.exports = {
   api: {
-    API_URL: "http://141.136.35.203:8899",
+    API_URL: "https://ai.infeedu.com:8899",
 
   }
 };

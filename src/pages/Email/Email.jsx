@@ -125,7 +125,7 @@ const Email = () => {
 
             if (response.status) {
                 setEmail(isBulkEmail ? initialStateBulkEmail : initialStateSingleEmail)
-                toast.success("Email successfully send")
+                toast.success("Email successfully sent")
             }
             else toast.error(response?.responseData.message ?? "Enocuntered an error while sending email")
         } catch (err) {

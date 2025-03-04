@@ -132,7 +132,7 @@ const AllCampaign = () => {
                       data={(campaigns ?? [])}
                       isGlobalFilter={true}
                       isAddUserList={false}
-                      customPageSize={8}
+                      customPageSize={10}
                       className="custom-header-css"
                       divClass="table-responsive table-card mb-2"
                       tableClass="align-middle table-nowrap"

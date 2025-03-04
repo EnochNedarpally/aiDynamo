@@ -108,6 +108,8 @@ const TableContainer = ({
 }) => {
   const [columnFilters, setColumnFilters] = useState ([]);
   const [globalFilter, setGlobalFilter] = useState('');
+  const [currentPaginationRange, setCurrentPaginationRange] = useState([0, 9]); 
+  
 
   const fuzzyFilter = (row, columnId, value, addMeta) => {
     const itemRank = rankItem(row.getValue(columnId), value);
@@ -115,6 +117,14 @@ const TableContainer = ({
       itemRank
     });
     return itemRank.passed;
+  };
+
+  const handleNextRange = () => {
+    setCurrentPaginationRange([currentPaginationRange[0] + 10, currentPaginationRange[1] + 10]);
+  };
+  
+  const handlePreviousRange = () => {
+    setCurrentPaginationRange([currentPaginationRange[0] - 10, currentPaginationRange[1] - 10]);
   };
 
   const table = useReactTable({
@@ -152,7 +162,8 @@ const TableContainer = ({
   useEffect(() => {
     (customPageSize) && setPageSize((customPageSize));
   }, [customPageSize, setPageSize]);
-
+  const pageButtons = getPageOptions().slice(currentPaginationRange[0], currentPaginationRange[1]);
+  const length = getPageOptions().length
   return (
     <Fragment>
       {isGlobalFilter && <Row className="mb-3">
@@ -272,13 +283,19 @@ const TableContainer = ({
             <li className={!getCanPreviousPage() ? "page-item disabled" : "page-item"}>
               <Link to="#" className="page-link" onClick={previousPage}>Previous</Link>
             </li>
-            {getPageOptions().map((item, key) => (
+            {pageButtons[0] > 0 && (<li className={!getCanPreviousPage() ? "page-item disabled" : "page-item"}>
+              <Link to="#" className="page-link" onClick={handlePreviousRange}>...</Link>
+            </li>)}
+            {pageButtons.map((item, key) => (
               <React.Fragment key={key}>
                 <li className="page-item">
                   <Link to="#" className={getState().pagination.pageIndex === item ? "page-link active" : "page-link"} onClick={() => setPageIndex(item)}>{item + 1}</Link>
                 </li>
               </React.Fragment>
             ))}
+            {pageButtons[pageButtons.length - 1] !== length - 1 && <li className={!getCanNextPage() ? "page-item disabled" : "page-item"}>
+              <Link to="#" className="page-link" onClick={handleNextRange}>...</Link>
+            </li>}
             <li className={!getCanNextPage() ? "page-item disabled" : "page-item"}>
               <Link to="#" className="page-link" onClick={nextPage}>Next</Link>
             </li>

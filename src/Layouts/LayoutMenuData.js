@@ -234,7 +234,7 @@ const Navdata = () => {
             // label: "Pages",
             label: "Email Log",
             icon: "ri-pages-line",
-            link: "/admin/email-log-list",
+            link: "/admin/email-log",
             click: function (e) {
                 e.preventDefault();
                 setIsEmailLog(!isEmailLog);

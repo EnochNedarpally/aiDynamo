@@ -9,31 +9,36 @@ import { api } from '../../config';
 import { useSelector } from 'react-redux';
 import ConfirmModal from '../../Components/Common/ConfirmModal';
 import ContentEditor from '../../Components/Common/ContentEditor';
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Autocomplete, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 
 const initialState = {
   name: "",
   linkType: "",
-  name: "",
   code: "",
-  videoUrl: "",
+  videoLink: "",
   subject: "",
   formTitle: "",
   formButton: "",
-  assetImage: null,
-  uploadPDF: null,
-  uploadLogo: null,
-  uploadLogo2: null,
+  image: null,
+  file: null,
+  logo1: null,
+  logo2: null,
   emailTemplate: null,
   webTemplate: null,
-  assetDesc: "",
-  formConfirmationText: ""
+  description: "",
+  confirmationText: "",
+  infeeduCategoryId: "",
+  campaignId: "",
+  downloadButtonTitle: "",
+  downloadTitle: ""
 }
 
 const AddAsset = () => {
   const [loading, setLoading] = useState(false);
   const [asset, setAsset] = useState(initialState)
   const [selectedAsset, setSelectedAsset] = useState({})
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  const [campaignOptions, setCampaignOptions] = useState([]);
   const [isOpen, setIsOpen] = useState(false)
   const token = useSelector(state => state.Login.token)
   const navigate = useNavigate()
@@ -52,6 +57,44 @@ const AddAsset = () => {
       setAsset(assetData)
     }
   }, [location])
+
+  useEffect(() => {
+    fetchCategoryOptions()
+    fetchCampaignOptions()
+  }, [])
+
+  const fetchCategoryOptions = async () => {
+    try {
+      const res = await axios.get(`https://infeedu.com:8443/api/category`, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+      if (res.status) {
+        setCategoryOptions(res.data);
+      }
+      else toast.error(res?.responseData.message ?? "Error fetching search results:")
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+    }
+  };
+  const fetchCampaignOptions = async () => {
+    try {
+      const res = await axios.get(`${api.API_URL}/api/campaign/options`, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+      if (res.status) {
+        setCampaignOptions(res.responseData.campaigns);
+      }
+      else toast.error(res?.responseData.message ?? "Error fetching search results:")
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -81,7 +124,7 @@ const AddAsset = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${api.API_URL}/api/Assetssss`,
+        `${api.API_URL}/api/asset`,
 
         formData,
         {
@@ -113,7 +156,7 @@ const AddAsset = () => {
     setLoading(true);
     try {
       const response = await axios.put(
-        `${api.API_URL}/api/Assets/${asset.id}`,
+        `${api.API_URL}/api/asset/${asset.id}`,
 
         formData,
         {
@@ -139,7 +182,7 @@ const AddAsset = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          {isOpen && <ConfirmModal url={`${api.API_URL}/api/Assets/${asset?.id}`} navigate={navigate} token={token} setIsOpen={setIsOpen} navigateUrl={"/admin/Assets"} />}
+          {isOpen && <ConfirmModal url={`${api.API_URL}/api/asset/${asset?.id}`} navigate={navigate} token={token} setIsOpen={setIsOpen} navigateUrl={"/admin/assets"} />}
           <ToastContainer closeButton={false} limit={1} />
           <Row>
             <Col lg={12}>
@@ -178,9 +221,41 @@ const AddAsset = () => {
                           required={!location}
                         />
                       </div>
+                      <div className="mb-4 d-flex gap-2">
+                        <Autocomplete
+                          fullWidth
+                          id="tags-outlined1"
+                          options={categoryOptions ?? []}
+                          getOptionLabel={(option) => option.name}
+                          onChange={(event, newValue) => {
+                            if (newValue) {
+                              location ? setSelectedAsset(prev => { return { ...prev, infeeduCategoryId: newValue.id } }) : setAsset(prev => { return { ...prev, infeeduCategoryId: newValue.id } })
+                            }
+                          }}
+                          renderInput={(params) => <TextField {...params} label="Category" />}
+                          value={categoryOptions.find(option => selectedAsset?.infeeduCategoryId
+                            ? option.id == selectedAsset.infeeduCategoryId
+                            : option.id == asset.infeeduCategoryId) || null}
+                        />
+                        <Autocomplete
+                          fullWidth
+                          id="tags-outlined1"
+                          options={campaignOptions ?? []}
+                          getOptionLabel={(option) => option.name}
+                          onChange={(event, newValue) => {
+                            if (newValue) {
+                              location ? setSelectedAsset(prev => { return { ...prev, campaignId: newValue.id } }) : setAsset(prev => { return { ...prev, campaignId: newValue.id } })
+                            }
+                          }}
+                          renderInput={(params) => <TextField {...params} label="Campaign" />}
+                          value={campaignOptions.find(option => selectedAsset?.campaignId
+                            ? option.id == selectedAsset.campaignId
+                            : option.id == asset.campaignId) || null}
+                        />
+                      </div>
                       <div>
                         <label className="form-label">Description</label>
-                        <ContentEditor content={selectedAsset?.assetDesc ?? asset.assetDesc} setContent={setAsset} name="assetDesc" />
+                        <ContentEditor content={selectedAsset?.description ? selectedAsset.description : asset.description} setContent={selectedAsset?.description ? setSelectedAsset : setAsset} name="description" />
                       </div>
                       <div className='d-flex justify-content-between gap-5 align-items-center mb-3'>
                         <FormControl fullWidth>
@@ -193,9 +268,8 @@ const AddAsset = () => {
                             sx={{ height: 40 }}
                             onChange={(e) => setAsset(prev => { return { ...prev, linkType: e.target.value } })}
                           >
-                            <MenuItem value={10}>Image</MenuItem>
-                            <MenuItem value={20}>Video</MenuItem>
-                            <MenuItem value={30}>Pdf</MenuItem>
+                            <MenuItem value={"image"}>Image</MenuItem>
+                            <MenuItem value={"video"}>Video</MenuItem>
                           </Select>
                         </FormControl>
                         <div className='d-flex flex-column w-100'>
@@ -205,9 +279,9 @@ const AddAsset = () => {
                           <input
                             type="text"
                             id="title"
-                            name="videoUrl"
+                            name="videoLink"
                             className="form-control w-100"
-                            value={selectedAsset?.videoUrl ?? asset.videoUrl}
+                            value={selectedAsset?.videoLink ?? asset.videoLink}
                             onChange={(e) => handleInputChange(e)}
                             required={!location}
                           />
@@ -230,7 +304,7 @@ const AddAsset = () => {
                       <div className='d-flex justify-content-between gap-5 align-items-center mb-3'>
                         <div className='d-flex flex-column w-100'>
                           <label htmlFor="title" className="form-label">
-                            Download Form title
+                            Form title
                           </label>
                           <input
                             type="text"
@@ -244,7 +318,7 @@ const AddAsset = () => {
                         </div>
                         <div className='d-flex flex-column w-100'>
                           <label htmlFor="title" className="form-label">
-                            Download Form Button text
+                            Form Button text
                           </label>
                           <input
                             type="text"
@@ -257,9 +331,39 @@ const AddAsset = () => {
                           />
                         </div>
                       </div>
+                      <div className='d-flex justify-content-between gap-5 align-items-center mb-3'>
+                        <div className='d-flex flex-column w-100'>
+                          <label htmlFor="title1" className="form-label">
+                            Download Form title
+                          </label>
+                          <input
+                            type="text"
+                            id="title1"
+                            className="form-control w-100"
+                            name="downloadTitle"
+                            value={selectedAsset?.downloadTitle ?? asset.downloadTitle}
+                            onChange={(e) => handleInputChange(e)}
+                            required={!location}
+                          />
+                        </div>
+                        <div className='d-flex flex-column w-100'>
+                          <label htmlFor="downloadButtonTitle" className="form-label">
+                            Download Form Button text
+                          </label>
+                          <input
+                            type="text"
+                            id="downloadButtonTitle"
+                            name="downloadButtonTitle"
+                            className="form-control w-100"
+                            value={selectedAsset?.downloadButtonTitle ?? asset.downloadButtonTitle}
+                            onChange={(e) => handleInputChange(e)}
+                            required={!location}
+                          />
+                        </div>
+                      </div>
                       <div>
                         <label className="form-label">Download Form Confirmation text</label>
-                        <ContentEditor content={selectedAsset.formConfirmationText ?? asset.formConfirmationText} setContent={setAsset} name="formConfirmationText" />
+                        <ContentEditor content={selectedAsset.confirmationText ?? asset.confirmationText} setContent={setAsset} name="confirmationText" />
                       </div>
                       <div className="mb-3 d-flex align-items-center gap-2 flex-wrap" style={{ boxSizing: 'border-box' }}>
                         <div className='d-flex flex-column flex-grow-1'>
@@ -269,7 +373,7 @@ const AddAsset = () => {
                             id="fileInput"
                             accept="image/*"
                             className='form-control'
-                            name="assetImage"
+                            name="image"
                             onChange={(e) => handleFileChange(e.target.files, e.target.name)}
                           />
                         </div>
@@ -280,7 +384,7 @@ const AddAsset = () => {
                             id="fileInput"
                             accept=".pdf"
                             className='form-control'
-                            name="uploadPdf"
+                            name="file"
                             onChange={(e) => handleFileChange(e.target.files, e.target.name)}
                           />
                         </div>
@@ -291,7 +395,7 @@ const AddAsset = () => {
                             id="fileInput"
                             accept="image/*"
                             className='form-control'
-                            name="uploadLogo"
+                            name="logo1"
                             onChange={(e) => handleFileChange(e.target.files, e.target.name)}
                           />
                         </div>
@@ -302,7 +406,7 @@ const AddAsset = () => {
                             id="fileInput"
                             accept="image/*"
                             className='form-control'
-                            name="uploadLogo2"
+                            name="logo2"
                             onChange={(e) => handleFileChange(e.target.files, e.target.name)}
                           />
                         </div>

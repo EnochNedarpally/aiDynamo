@@ -57,13 +57,13 @@ const AddCategory = () => {
       }
       );
       if (response.status) {
-        toast.success("Account added")
+        toast.success("Category added")
         setDesc('');
         setTitle('');
         navigate("/admin/category")
-      } else toast.error("Encountered an error while creating an account")
+      } else toast.error("Encountered an error while creating an category")
     } catch (err) {
-      toast.error("Encountered an error while creating an account")
+      toast.error("Encountered an error while creating an category")
       console.log(err, "err")
     } finally {
       setLoading(false);

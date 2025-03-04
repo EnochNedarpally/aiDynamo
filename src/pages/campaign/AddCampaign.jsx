@@ -13,7 +13,6 @@ const initialState = {
   description: "",
   accountId: "",
   categoryId: "",
-  assetId: "",
   webTemplate: null,
   emailTemplate: null
 }
@@ -32,25 +31,21 @@ const AddCampaign = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [accountOptions, setAccountOptions] = useState([]);
   const [categoryOptions, setCategoryOptions] = useState([]);
-  const [assetOptions, setAssetOptions] = useState([]);
   const [campaign, setCampaign] = useState(initialState);
+  const [selectedCampaign, setSelectedCampaign] = useState({});
 
   useEffect(() => {
     fetchAccountOptions()
     fetchCategoryOptions()
-    fetchAssetOptions()
   }, [])
 
   useEffect(() => {
     if (location) {
       const campaignData = { ...campaign }
       Object.keys(location).map((key) => {
-        if (key == "desc") {
-          campaignData["description"] = location[key]
-        }
-        else campaignData[key] = location[key]
+        campaignData[key] = location[key]
       })
-      setCampaign(campaignData)
+      setCampaign({...campaignData,accountId:campaignData?.accounts.id ?? "",categoryId:campaignData?.category.id ?? ""})
     }
   }, [location])
 
@@ -76,67 +71,93 @@ const AddCampaign = () => {
       console.error('Error fetching search results:', error);
     }
   };
-  const fetchAssetOptions = async () => {
-    try {
-      const res = await axios.get(`${api.API_URL}/api/asset/options`, config)
-      if (res.status) {
-        setAssetOptions(res.responseData.assets);
-      }
-      else toast.error(res?.responseData.message ?? "Error fetching search results:")
-    } catch (error) {
-      console.error('Error fetching search results:', error);
-    }
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!campaign.name || !campaign.description || !campaign.categoryId || !campaign.accountId || !campaign.assetId || !campaign.emailTemplate || !campaign.webTemplate) {
-      alert('Please fill in all fields');
-      return;
-    }
-
-    const formData = new FormData();
-    Object.keys(campaign).map(key => {
-      formData.append(key, campaign[key]);
-    })
-
-    setLoading(true);
-    setError(null);
-    setSuccess(false);
-
-    try {
-      const response = await axios.post(
-        `${api.API_URL}/api/campaign`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.status) {
-        // Reset form
-        setCampaign(initialState)
-        navigate("/admin/campaigns")
+    if(!location?.id){
+      if (!campaign.name || !campaign.description || !campaign.categoryId || !campaign.accountId || !campaign.emailTemplate || !campaign.webTemplate) {
+        alert('Please fill in all fields');
+        return;
       }
-      else toast.error("Enocuntered an error while creating campaign")
-    } catch (err) {
-      toast.error(err?.responseData?.message ?? 'Error uploading file');
-      console.error(err);
-    } finally {
-      setLoading(false);
+  
+      const formData = new FormData();
+      Object.keys(campaign).map(key => {
+        formData.append(key, campaign[key]);
+      })
+  
+      setLoading(true);
+      setError(null);
+      setSuccess(false);
+  
+      try {
+        const response = await axios.post(
+          `${api.API_URL}/api/campaign`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+  
+        if (response.status) {
+          // Reset form
+          setCampaign(initialState)
+          navigate("/admin/campaigns")
+        }
+        else toast.error("Enocuntered an error while creating campaign")
+      } catch (err) {
+        toast.error(err?.responseData?.message ?? 'Error uploading file');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     }
+    else {
+      const formData = new FormData();
+      Object.keys(selectedCampaign).map(key => {
+        formData.append(key, selectedCampaign[key]);
+      })
+  
+      setLoading(true);
+      setError(null);
+      setSuccess(false);
+  
+      try {
+        const response = await axios.put(
+          `${api.API_URL}/api/campaign/${location.id}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+  
+        if (response.status) {
+          setCampaign(initialState)
+          navigate("/admin/campaigns")
+        }
+        else toast.error(err?.responseData?.message ?? "Enocuntered an error while Updating campaign")
+      } catch (err) {
+        toast.error(err?.responseData?.message ?? 'Enocuntered an error while Updating campaign');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
   };
 
   const handleFileChange = (acceptedFiles) => {
-    setCampaign(prev => { return { ...prev, webTemplate: acceptedFiles[0] } })
+    location ? setSelectedCampaign(prev => { return { ...prev, webTemplate: acceptedFiles[0] } }) : setCampaign(prev => { return { ...prev, webTemplate: acceptedFiles[0] } })
   };
 
   const handleEmailTemplate = (acceptedFiles) => {
-    setCampaign(prev => { return { ...prev, emailTemplate: acceptedFiles[0] } })
+    location ? setSelectedCampaign(prev => { return { ...prev, emailTemplate: acceptedFiles[0] } }) : setCampaign(prev => { return { ...prev, emailTemplate: acceptedFiles[0] } })
   };
 
   return (
@@ -153,20 +174,20 @@ const AddCampaign = () => {
                 </CardHeader>
                 <CardBody className="m-0">
                   <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
+                    <div className="mb-4 d-flex gap-2">
                       <Autocomplete
+                        fullWidth
                         id="tags-outlined1"
                         options={accountOptions ?? []}
                         getOptionLabel={(option) => option.name}
                         onChange={(event, newValue) => {
                           if (newValue) {
-                            setCampaign(prev => { return { ...prev, accountId: newValue.id } })
+                            location ? setSelectedCampaign(prev => { return { ...prev, accountId: newValue.id } }) : setCampaign(prev => { return { ...prev, accountId: newValue.id } })
                           }
                         }}
                         renderInput={(params) => <TextField {...params} label="Account" />}
+                        value={accountOptions.find(option => option.id == campaign.accountId) || null}
                       />
-                    </div>
-                    <div className="mb-4 d-flex gap-2">
                       <Autocomplete
                         fullWidth
                         id="tags-outlined1"
@@ -174,23 +195,13 @@ const AddCampaign = () => {
                         getOptionLabel={(option) => option.name}
                         onChange={(event, newValue) => {
                           if (newValue) {
-                            setCampaign(prev => { return { ...prev, categoryId: newValue.id } })
+                            location ? setSelectedCampaign(prev => { return { ...prev, categoryId: newValue.id } }) : setCampaign(prev => { return { ...prev, categoryId: newValue.id } })
                           }
                         }}
                         renderInput={(params) => <TextField {...params} label="Category" />}
-                      />
-                      <Autocomplete
-                        freeSolo
-                        fullWidth
-                        id="tags-outlined1"
-                        options={assetOptions ?? []}
-                        getOptionLabel={(option) => option.name}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            setCampaign(prev => { return { ...prev, assetId: newValue.id } })
-                          }
-                        }}
-                        renderInput={(params) => <TextField {...params} label="Assets" />}
+                        value={categoryOptions.find(option => selectedCampaign?.categoryId 
+                          ? option.id == selectedCampaign.categoryId 
+                          : option.id == campaign.categoryId) || null}  
                       />
                     </div>
                     <div className="mb-4">
@@ -201,9 +212,9 @@ const AddCampaign = () => {
                         type="text"
                         id="campaignName"
                         className="form-control"
-                        value={campaign.name}
-                        onChange={(e) => setCampaign(prev => { return { ...prev, name: e.target.value } })}
-                        required
+                        value={selectedCampaign.name ?? campaign.name}
+                        onChange={(e) => location ? setSelectedCampaign(prev => { return { ...prev, name: e.target.value } }) : setCampaign(prev => { return { ...prev, name: e.target.value } })}
+                        required = {!location}
                       />
                     </div>
                     <div className="mb-4">
@@ -214,9 +225,9 @@ const AddCampaign = () => {
                         type="text"
                         id="description"
                         className="form-control"
-                        value={campaign.description}
-                        onChange={(e) => setCampaign(prev => { return { ...prev, description: e.target.value } })}
-                        required
+                        value={selectedCampaign.description ?? campaign.description}
+                        onChange={(e) => location ? setSelectedCampaign(prev => { return { ...prev, description: e.target.value } }) : setCampaign(prev => { return { ...prev, description: e.target.value } })}
+                        required = {!location}
                         rows={5}
                       />
                     </div>
@@ -229,6 +240,7 @@ const AddCampaign = () => {
                           accept=".html"
                           className='form-control'
                           onChange={(e) => handleFileChange(e.target.files)}
+                          required = {!location}
                         />
                       </div>
                       <div className='d-flex flex-column w-100'>
@@ -241,7 +253,7 @@ const AddCampaign = () => {
                           accept=".pdf"
                           className="form-control"
                           onChange={(e) => handleEmailTemplate(e.target.files)}
-                          required
+                          required = {!location}
                         />
                       </div>
                     </div>
@@ -253,7 +265,7 @@ const AddCampaign = () => {
                             className="btn btn-primary"
                             disabled={loading}
                           >
-                            {loading ? 'Uploading...' : 'Save'}
+                            {loading ? 'Saving...' : `${location ? "Update" : "Save"}`}
                           </button>
                           {location && (<button
                             type="button"
