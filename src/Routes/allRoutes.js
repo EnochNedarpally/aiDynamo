@@ -267,7 +267,6 @@ import Admin from "../pages/Pages/user/admin/AllAdmin";
 import AddCampaignManagers from "../pages/Pages/user/campaignManagers/AddCampaignManagers";
 import AllCampaignManagers from "../pages/Pages/user/campaignManagers/AllCampaignManagers";
 import AllEditors from "../pages/Pages/user/editors/AllEditors";
-import AddAdmin from "../pages/Pages/user/admin/AddAdmin";
 import AllAdmin from "../pages/Pages/user/admin/AllAdmin";
 import AddEditors from "../pages/Pages/user/editors/AddEditors";
 
@@ -292,6 +291,14 @@ import AddCampaign from "../pages/campaign/AddCampaign";
 import AllCampaign from "../pages/campaign/AllCampaign";
 import Email from "../pages/Email/Email";
 import EmailLog from "../pages/EmailLog/EmailLog";
+import SubscriberList from "../pages/Subscriber/SubscriberList";
+import Report from "../pages/Report/Report";
+import EmailList from "../pages/Email/EmailList";
+import AddEmail from "../pages/Email/AddEmail";
+import AdminList from "../pages/Admin/AdminList";
+import AddAdmin from "../pages/Admin/AddAdmin";
+import UserList from "../pages/Users/UserList";
+import AddUser from "../pages/Users/AddUser";
 
 const authProtectedRoutes = [
   { path: "/admin/dashboard", component: <AdminDashboard /> },
@@ -306,16 +313,15 @@ const authProtectedRoutes = [
   { path: "/admin/single-email", component: <Email /> },
   { path: "/admin/bulk-email", component: <Email /> },
   { path: "/admin/email-log", component: <EmailLog /> },
-  { path: "/admin/email-log-filter", component: <AdminDashboard /> },
-  { path: "/admin/subscriber-list", component: <AdminDashboard /> },
-  { path: "/admin/unsubscriber-list", component: <AdminDashboard /> },
-  { path: "/admin/user-report", component: <AdminDashboard /> },
-  { path: "/admin/email-list", component: <AdminDashboard /> },
-  { path: "/admin/add-email", component: <AdminDashboard /> },
-  { path: "/admin/admin-list", component: <AdminDashboard /> },
-  { path: "/admin/add-admin", component: <AdminDashboard /> },
-  { path: "/admin/user-list", component: <AdminDashboard /> },
-  { path: "/admin/add-user", component: <AdminDashboard /> },
+  { path: "/admin/subscriber-list", component: <SubscriberList   /> },
+  { path: "/admin/unsubscriber-list", component: <SubscriberList /> },
+  { path: "/admin/report", component: <Report /> },
+  { path: "/admin/email-list", component: <EmailList /> },
+  { path: "/admin/add-email", component: <AddEmail /> },
+  { path: "/admin/admin-list", component: <AdminList /> },
+  { path: "/admin/add-admin", component: <AddAdmin /> },
+  { path: "/admin/user-list", component: <UserList /> },
+  { path: "/admin/add-user", component: <AddUser /> },
   { path: "*", component: <Navigate to="/admin/dashboard" /> },
 ];
 

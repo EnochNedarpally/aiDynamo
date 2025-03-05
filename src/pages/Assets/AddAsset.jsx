@@ -44,7 +44,8 @@ const AddAsset = () => {
   const navigate = useNavigate()
   const location = useLocation().state;
 
-
+console.log("selectedAsset",selectedAsset)
+console.log("asset",asset)
   useEffect(() => {
     if (location) {
       const assetData = {}
@@ -263,7 +264,7 @@ const AddAsset = () => {
                           <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
-                            value={asset.linkType}
+                            value={selectedAsset.linkType ?? asset.linkType}
                             label="Link Type"
                             sx={{ height: 40 }}
                             onChange={(e) => setAsset(prev => { return { ...prev, linkType: e.target.value } })}

@@ -277,13 +277,13 @@ const Navdata = () => {
         {
             id: "userReport",
             // label: "Pages",
-            label: "User Report",
+            label: "Report",
             icon: "ri-pages-line",
-            link: "/admin/user-report",
+            link: "/admin/report",
             click: function (e) {
                 e.preventDefault();
                 setIsUserReport(!isUserReport);
-                setIscurrentState('User Report');
+                setIscurrentState('Report');
                 updateIconSidebar(e);
             },
             

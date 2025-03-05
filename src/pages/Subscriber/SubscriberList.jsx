@@ -16,8 +16,9 @@ const initialState = {
     assetId: "",
 }
 
-const EmailLog = () => {
+const SubscriberList = () => {
     const token = useSelector(state => state.Login.token)
+    const path = useLocation().pathname.split("/").pop() == "subscriber-list" ? true : false
     const config = {
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -26,14 +27,11 @@ const EmailLog = () => {
     const navigate = useNavigate()
     const location = useLocation()?.pathname.split("/").pop()
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(false);
     const [accountOptions, setAccountOptions] = useState([]);
     const [campaignOptions, setCampaignOptions] = useState([]);
     const [assetOptions, setAssetOptions] = useState([]);
     const [emailFilter, setEmailFilter] = useState(initialState);
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
+    const [isSubscriberList, setIsSubscriberList] = useState(path);
 
     useEffect(() => {
         fetchAccountOptions()
@@ -41,7 +39,9 @@ const EmailLog = () => {
         fetchAssetOptions()
     }, [])
 
-    
+    useEffect(()=>{
+        setIsSubscriberList(path)
+    },[path])
       const columns = useMemo(
         () => [
     
@@ -60,33 +60,23 @@ const EmailLog = () => {
     
           },
           {
-            header: "Email",
+            header: "User Name",
+            accessorKey: "username",
+            enableColumnFilter: false,
+          },
+          {
+            header: "User Email",
             accessorKey: "email",
             enableColumnFilter: false,
           },
           {
-            header: "Mail Subject",
-            accessorKey: "subject",
+            header: "Company",
+            accessorKey: "company",
             enableColumnFilter: false,
           },
           {
-            header: "Read",
-            accessorKey: "read",
-            enableColumnFilter: false,
-          },
-          {
-            header: "Download",
-            accessorKey: "download",
-            enableColumnFilter: false,
-          },
-          {
-            header: "Bounce",
-            accessorKey: "bounce",
-            enableColumnFilter: false,
-          },
-          {
-            header: "Status",
-            accessorKey: "status",
+            header: "TSP",
+            accessorKey: "tsp",
             enableColumnFilter: false,
           },
           {
@@ -99,25 +89,25 @@ const EmailLog = () => {
             accessorKey: "date",
             enableColumnFilter: false,
           },
-          {
-            header: "Action",
-            cell: (cell) => {
-              return (
-                <ul className="list-inline hstack gap-2 mb-0">
-                  <li className="list-inline-item" title="Edit">
-                    <Link className="edit-item-btn" to="/admin/add-campaign"
-                      state={cell.row.original}
-                    >
-                      <i className="ri-pencil-fill align-bottom text-muted"></i>
-                    </Link>
-                  </li>
-    
-                </ul>
-              );
-            },
-          },
+          ...(isSubscriberList
+            ? [
+                {
+                  header: "Action",
+                  cell: (cell) => {
+                    return (
+                      <ul className="list-inline hstack gap-2 mb-0">
+                        <li className="list-inline-item" title="Edit">
+                          {/* Add your action logic here */}
+                          <i className="ri-eye-fill align-bottom text-muted"></i>
+                        </li>
+                      </ul>
+                    );
+                  },
+                },
+              ]
+            : []),
         ],
-        []
+        [isSubscriberList]
       );
 
     const fetchAccountOptions = async () => {
@@ -173,12 +163,9 @@ const EmailLog = () => {
         }
 
         setLoading(true);
-        setError(null);
-        setSuccess(false);
-        const API_URL = isBulkEmail ? `${api.API_URL}/api/mail/bulk` : `${api.API_URL}/api/mail/single`
         try {
             const response = await axios.post(
-                API_URL,
+                `${api.API_URL}/api/subscriber`,
                 formData,
                 {
                     headers: {
@@ -201,13 +188,6 @@ const EmailLog = () => {
         }
     };
 
-    const handleDateChange = (date, type) => {
-        if (date) {
-          const formattedDate = dayjs(date).format("DD-MM-YYYY");
-          type == "start" ? setStartDate(formattedDate) : setEndDate(formattedDate)
-        }
-      }
-
     return (
         <React.Fragment>
             <div className="page-content m-0">
@@ -217,7 +197,7 @@ const EmailLog = () => {
                         <Col lg={12}>
                             <Card>
                                 <CardHeader className="card-header m-0">
-                                    <h4 className="card-title mb-0">Email Log</h4>
+                                    <h4 className="card-title mb-0">{isSubscriberList ? "Subscriber List" : "UnSubscriber List"}</h4>
                                 </CardHeader>
                                 <CardBody className="m-0">
                                     <form onSubmit={handleSubmit}>
@@ -263,63 +243,10 @@ const EmailLog = () => {
                                                 value={assetOptions.find(option => option.id == emailFilter.assetId) || null}
                                             />
                                         </div>
-                                        <div className="mb-4 d-flex gap-2">
-                                            <Autocomplete
-                                                fullWidth
-                                                id="tags-outlined1"
-                                                 options={[{id:1,name:"True"},{id:2,name:"False"}]}
-                                                getOptionLabel={(option) => option.name}
-                                                onChange={(event, newValue) => {
-                                                    if (newValue) {
-                                                        setEmailFilter(prev => { return { ...prev, campaignId: newValue.id } })
-                                                    }
-                                                }}
-                                                renderInput={(params) => <TextField {...params} label="Read" />}
-                                                // value={campaignOptions.find(option => option.id == emailFilter.campaignId) || null}
-                                            />
-                                            <Autocomplete
-                                                fullWidth
-                                                id="tags-outlined1"
-                                                options={[{id:1,name:"True"},{id:2,name:"False"}]}
-                                                getOptionLabel={(option) => option.name}
-                                                onChange={(event, newValue) => {
-                                                    if (newValue) {
-                                                        setEmailFilter(prev => { return { ...prev, assetId: newValue.id } })
-                                                    }
-                                                }}
-                                                renderInput={(params) => <TextField {...params} label="Download" />}
-                                                // value={assetOptions.find(option => option.id == emailFilter.assetId) || null}
-                                            />
-                                            <Autocomplete
-                                                fullWidth
-                                                id="tags-outlined1"
-                                                 options={[{id:1,name:"True"},{id:2,name:"False"}]}
-                                                getOptionLabel={(option) => option.name}
-                                                onChange={(event, newValue) => {
-                                                    if (newValue) {
-                                                        setEmailFilter(prev => { return { ...prev, assetId: newValue.id } })
-                                                    }
-                                                }}
-                                                renderInput={(params) => <TextField {...params} label="Bounce" />}
-                                                // value={assetOptions.find(option => option.id == emailFilter.assetId) || null}
-                                            />
-                                        </div>
-                                        <div className="mb-4 d-flex gap-2">
-                                        <DatePicker 
-                                            label="Start Date"
-                                            onChange={(date) => handleDateChange(date, "start")}
-                                            sx={{display:"flex",flexGrow:1}}
-                                            />
-                                        <DatePicker 
-                                            label="End Date"
-                                            onChange={(date) => handleDateChange(date, "end")}
-                                            sx={{display:"flex",flexGrow:1}}
-                                        />
-                                            <button 
-                                                type="submit"
-                                                className="btn btn-primary flex flex-grow-1"> Download Excel
-                                            </button>
-                                        </div>
+                                        <button 
+                                            type="submit"
+                                            className="btn btn-primary flex flex-grow-1"> Apply Filter
+                                        </button>
                                     </form>
                                     <TableContainer
                                     columns={columns}
@@ -331,7 +258,7 @@ const EmailLog = () => {
                                     divClass="table-responsive table-card mb-2"
                                     tableClass="align-middle table-nowrap"
                                     theadClass="table-light"
-                                    SearchPlaceholder='Search for Email...'
+                                    SearchPlaceholder='Search for Subscriber...'
                                     />
                                 </CardBody>
                             </Card>
@@ -343,4 +270,4 @@ const EmailLog = () => {
     );
 };
 
-export default EmailLog;
+export default SubscriberList;

@@ -8,7 +8,7 @@ const Footer = () => {
                 <Container fluid>
                     <Row>
                         <Col sm={6}>
-                            {new Date().getFullYear()} © AiDynamo.
+                            {new Date().getFullYear()} © AI INFFEDU.
                         </Col>
                         <Col sm={6}>
                             <div className="text-sm-end d-none d-sm-block">
