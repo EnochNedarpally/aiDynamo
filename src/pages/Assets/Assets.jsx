@@ -1,7 +1,7 @@
 
 
 import React, { useEffect, useState, useMemo } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
     Col,
     Container,
@@ -27,15 +27,17 @@ const Assets = () => {
         },
     };
     const navigate = useNavigate()
+    const campaignId = useLocation()?.state
     const [Assets, setAssets] = useState([]);
-
+    
     useEffect(() => {
         fetchAssets()
     }, [])
 
     const fetchAssets = async () => {
+        const API_URL = campaignId ? `${api.API_URL}/api/asset/campaign/${campaignId}` :`${api.API_URL}/api/asset`
         try {
-            const data = await axios.get(`${api.API_URL}/api/asset`, config)
+            const data = await axios.get(API_URL, config)
             if (data.status) {
                 setAssets(data.responseData)
             }

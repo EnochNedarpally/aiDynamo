@@ -50,10 +50,7 @@ console.log("asset",asset)
     if (location) {
       const assetData = {}
       Object.keys(location).map((key) => {
-        if (key == "description") {
-          assetData["desc"] = location[key]
-        }
-        else assetData[key] = location[key]
+          assetData[key] = location[key]
       })
       setAsset(assetData)
     }
@@ -429,7 +426,7 @@ console.log("asset",asset)
                           <input
                             type="file"
                             id="emailTemplate"
-                            accept=".pdf"
+                            accept=".html"
                             className="form-control"
                             name="emailTemplate"
                             onChange={(e) => handleFileChange(e.target.files, e.target.name)}

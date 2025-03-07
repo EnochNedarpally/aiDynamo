@@ -180,7 +180,7 @@ const AddAccount = () => {
                           <input
                             type="file"
                             id="emailTemplate"
-                            accept=".pdf"
+                            accept=".html"
                             className="form-control"
                             onChange={(e) => handleEmailTemplate(e.target.files)}
                             required={!location}
