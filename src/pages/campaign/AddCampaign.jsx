@@ -76,7 +76,7 @@ const AddCampaign = () => {
     event.preventDefault();
 
     if(!location?.id){
-      if (!campaign.name || !campaign.description || !campaign.categoryId || !campaign.accountId || !campaign.emailTemplate || !campaign.webTemplate) {
+      if (!campaign.name || !campaign.description || !campaign.categoryId || !campaign.accountId) {
         alert('Please fill in all fields');
         return;
       }
@@ -240,7 +240,6 @@ const AddCampaign = () => {
                           accept=".html"
                           className='form-control'
                           onChange={(e) => handleFileChange(e.target.files)}
-                          required = {!location}
                         />
                       </div>
                       <div className='d-flex flex-column w-100'>
@@ -253,7 +252,6 @@ const AddCampaign = () => {
                           accept=".html"
                           className="form-control"
                           onChange={(e) => handleEmailTemplate(e.target.files)}
-                          required = {!location}
                         />
                       </div>
                     </div>

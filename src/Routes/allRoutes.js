@@ -299,6 +299,8 @@ import AdminList from "../pages/Admin/AdminList";
 import AddAdmin from "../pages/Admin/AddAdmin";
 import UserList from "../pages/Users/UserList";
 import AddUser from "../pages/Users/AddUser";
+import ViewAsset from "../pages/Assets/ViewAsset";
+import ConfirgureAsset from "../pages/Assets/ConfirgureAsset";
 
 const authProtectedRoutes = [
   { path: "/admin/dashboard", component: <AdminDashboard /> },
@@ -310,6 +312,8 @@ const authProtectedRoutes = [
   { path: "/admin/add-campaign", component: <AddCampaign /> },
   { path: "/admin/add-asset", component: <AddAsset /> },
   { path: "/admin/assets", component: <Assets /> },
+  { path: "/admin/view-asset", component: <ViewAsset /> },
+  { path: "/admin/configure-asset", component: <ConfirgureAsset /> },
   { path: "/admin/single-email", component: <Email /> },
   { path: "/admin/bulk-email", component: <Email /> },
   { path: "/admin/email-log", component: <EmailLog /> },

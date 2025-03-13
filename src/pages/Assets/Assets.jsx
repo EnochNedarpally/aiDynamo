@@ -86,7 +86,19 @@ const Assets = () => {
                                     <i className="ri-pencil-fill align-bottom text-muted"></i>
                                 </Link>
                             </li>
-
+                            <li className="list-inline-item" title="View Asset">
+                                <Link to="/admin/view-asset"
+                                    state={cell.row.original.id}
+                                >
+                                    <i className="ri-eye-fill align-bottom text-muted"></i>
+                                </Link>
+                            </li>
+                            <li className="list-inline-item" title="Configure Asset">
+                                <Link to="/admin/configure-asset"
+                                >
+                                    <i className="ri-lock-fill align-bottom text-muted"></i>
+                                </Link>
+                            </li>
                         </ul>
                     );
                 },

@@ -9,11 +9,14 @@ import dayjs from 'dayjs';
 import { api } from '../../config';
 import { DatePicker } from '@mui/x-date-pickers';
 import TableContainer from '../../Components/Common/TableContainer';
+import { downloadReport, formatDate } from '../../helpers/helper_utils';
 
 const initialState = {
     accountId: "",
     campaignId: "",
     assetId: "",
+    startDate:"",
+    endDate:""
 }
 
 const EmailLog = () => {
@@ -32,14 +35,18 @@ const EmailLog = () => {
     const [campaignOptions, setCampaignOptions] = useState([]);
     const [assetOptions, setAssetOptions] = useState([]);
     const [emailFilter, setEmailFilter] = useState(initialState);
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
+    const [emailLogs, setEmailLogs] = useState([]);
+    const [accountId, setAccountId] = useState("");
+    const [campaignId, setCampaignId] = useState("");
 
     useEffect(() => {
         fetchAccountOptions()
+    }, [])
+
+    useEffect(() => {
         fetchCampaignOptions()
         fetchAssetOptions()
-    }, [])
+    }, [accountId,campaignId])
 
     
       const columns = useMemo(
@@ -61,7 +68,7 @@ const EmailLog = () => {
           },
           {
             header: "Email",
-            accessorKey: "email",
+            accessorKey: "emailId",
             enableColumnFilter: false,
           },
           {
@@ -96,26 +103,31 @@ const EmailLog = () => {
           },
           {
             header: "Date",
-            accessorKey: "date",
+            accessorKey: "deliveredAt",
             enableColumnFilter: false,
+            cell: ({ cell }) => {
+                const rawDate = cell.getValue(); // Get the raw date value
+                const formattedDate = rawDate.split("T")[0]; // Extract the date portion
+                return formatDate(formattedDate);
+              },
           },
-          {
-            header: "Action",
-            cell: (cell) => {
-              return (
-                <ul className="list-inline hstack gap-2 mb-0">
-                  <li className="list-inline-item" title="Edit">
-                    <Link className="edit-item-btn" to="/admin/add-campaign"
-                      state={cell.row.original}
-                    >
-                      <i className="ri-pencil-fill align-bottom text-muted"></i>
-                    </Link>
-                  </li>
+        //   {
+        //     header: "Action",
+        //     cell: (cell) => {
+        //       return (
+        //         <ul className="list-inline hstack gap-2 mb-0">
+        //           <li className="list-inline-item" title="Edit">
+        //             <Link className="edit-item-btn" to="/admin/add-campaign"
+        //               state={cell.row.original}
+        //             >
+        //               <i className="ri-pencil-fill align-bottom text-muted"></i>
+        //             </Link>
+        //           </li>
     
-                </ul>
-              );
-            },
-          },
+        //         </ul>
+        //       );
+        //     },
+        //   },
         ],
         []
       );
@@ -132,10 +144,11 @@ const EmailLog = () => {
         }
     };
     const fetchCampaignOptions = async () => {
+        const END_POINT = accountId ? `api/campaign/options-by-account/${accountId}` : "api/campaign/options"
         try {
-            const res = await axios.get(`${api.API_URL}/api/campaign/options`, config)
+            const res = await axios.get(`${api.API_URL}/${END_POINT}`, config)
             if (res.status) {
-                setCampaignOptions(res.responseData.campaigns);
+                setCampaignOptions(res.responseData?.campaigns ?? res.responseData);
             }
             else toast.error(res?.responseData.message ?? "Error fetching search results:")
         } catch (error) {
@@ -143,8 +156,9 @@ const EmailLog = () => {
         }
     };
     const fetchAssetOptions = async () => {
+        const END_POINT = campaignId ? `api/asset/options/campaign/${campaignId}` : "api/asset/options"
         try {
-            const res = await axios.get(`${api.API_URL}/api/asset/options`, config)
+            const res = await axios.get(`${api.API_URL}/${END_POINT}`, config)
             if (res.status) {
                 setAssetOptions(res.responseData.assets);
             }
@@ -156,29 +170,16 @@ const EmailLog = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        let error = null
         const formData = new FormData();
         Object.keys(emailFilter).map(key => {
-            if (!emailFilter[key]) {
-                error = true
-                return;
-            }
-            else {
                 formData.append(key, emailFilter[key]);
-            }
         })
-        if (error) {
-            alert(`Please Fill in all fields`);
-            return
-        }
-
         setLoading(true);
         setError(null);
         setSuccess(false);
-        const API_URL = isBulkEmail ? `${api.API_URL}/api/mail/bulk` : `${api.API_URL}/api/mail/single`
         try {
             const response = await axios.post(
-                API_URL,
+                `${api.API_URL}/api/reports`,
                 formData,
                 {
                     headers: {
@@ -189,8 +190,7 @@ const EmailLog = () => {
             );
 
             if (response.status) {
-                setEmailFilter(initialState)
-                toast.success("Email successfully send")
+                setEmailLogs(response.responseData)
             }
             else toast.error(response?.responseData.message ?? "Enocuntered an error while sending emailFilter")
         } catch (err) {
@@ -204,7 +204,7 @@ const EmailLog = () => {
     const handleDateChange = (date, type) => {
         if (date) {
           const formattedDate = dayjs(date).format("DD-MM-YYYY");
-          type == "start" ? setStartDate(formattedDate) : setEndDate(formattedDate)
+          type == "start" ? setEmailFilter(prev => { return { ...prev, startDate: formattedDate } }) : setEmailFilter(prev => { return { ...prev, endDate: formattedDate } })
         }
       }
 
@@ -228,6 +228,7 @@ const EmailLog = () => {
                                                 getOptionLabel={(option) => option.name}
                                                 onChange={(event, newValue) => {
                                                     if (newValue) {
+                                                        setAccountId(newValue.id)
                                                         setEmailFilter(prev => { return { ...prev, accountId: newValue.id } })
                                                     }
                                                 }}
@@ -243,6 +244,7 @@ const EmailLog = () => {
                                                 getOptionLabel={(option) => option.name}
                                                 onChange={(event, newValue) => {
                                                     if (newValue) {
+                                                        setCampaignId(newValue.id)
                                                         setEmailFilter(prev => { return { ...prev, campaignId: newValue.id } })
                                                     }
                                                 }}
@@ -316,14 +318,26 @@ const EmailLog = () => {
                                             sx={{display:"flex",flexGrow:1}}
                                         />
                                             <button 
-                                                type="submit"
+                                                onClick={()=>{
+                                                    const formData = new FormData();
+                                                Object.keys(emailFilter).map(key => {
+                                                        formData.append(key, emailFilter[key]);
+                                                    })
+                                                    downloadReport(token, `${api.API_URL}/api/reports/download`,formData, "Reports.csv")
+                                                 }
+                                                }
+                                                type="button"
                                                 className="btn btn-primary flex flex-grow-1"> Download Excel
                                             </button>
                                         </div>
+                                        <button 
+                                                type="submit"
+                                                className="btn btn-primary flex flex-grow-1"> Apply Filter
+                                            </button>
                                     </form>
                                     <TableContainer
                                     columns={columns}
-                                    data={([])}
+                                    data={emailLogs ?? []}
                                     isGlobalFilter={true}
                                     isAddUserList={false}
                                     customPageSize={10}

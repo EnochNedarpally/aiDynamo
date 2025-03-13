@@ -133,6 +133,9 @@ $value in $theme-colors {
 
 
 // overlay
+.view-asset{
+    background: linear-gradient(to right, darken(rgba(0, 0, 0, 0.566), 6%), rgba(0, 0, 0, 0.741));
+}
 
 .bg-overlay {
     position: absolute;

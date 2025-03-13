@@ -17,8 +17,6 @@ const initialState = {
   code: "",
   videoLink: "",
   subject: "",
-  formTitle: "",
-  formButton: "",
   image: null,
   file: null,
   logo1: null,
@@ -44,8 +42,6 @@ const AddAsset = () => {
   const navigate = useNavigate()
   const location = useLocation().state;
 
-console.log("selectedAsset",selectedAsset)
-console.log("asset",asset)
   useEffect(() => {
     if (location) {
       const assetData = {}
@@ -107,6 +103,14 @@ console.log("asset",asset)
     let error = null
     const formData = new FormData();
     Object.keys(asset).map(key => {
+      if(key== "emailTemplate" || key == "webTemplate" || key == "videoLink" || key =="logo2" ){
+        formData.append(key, asset[key]);
+        return
+      }
+      if(key == "file" && asset.linkType =="video"){
+        formData.append(key, asset[key]);
+        return
+      }
       if (!asset[key]) {
         error = true
         return;
@@ -192,12 +196,12 @@ console.log("asset",asset)
                   <form onSubmit={location ? handleUpdate : handleSubmit}>
                     <div className="mb-3">
                       <div className="mb-3">
-                        <label htmlFor="title" className="form-label">
+                        <label htmlFor="assetName" className="form-label">
                           Asset Name
                         </label>
                         <input
                           type="text"
-                          id="title"
+                          id="assetName"
                           name="name"
                           className="form-control"
                           value={selectedAsset?.name ?? asset.name}
@@ -206,12 +210,12 @@ console.log("asset",asset)
                         />
                       </div>
                       <div className="mb-3">
-                        <label htmlFor="title" className="form-label">
+                        <label htmlFor="assetCode" className="form-label">
                           Asset Code
                         </label>
                         <input
                           type="text"
-                          id="title"
+                          id="assetCode"
                           name="code"
                           className="form-control"
                           value={selectedAsset?.code ?? asset.code}
@@ -266,24 +270,24 @@ console.log("asset",asset)
                             sx={{ height: 40 }}
                             onChange={(e) => setAsset(prev => { return { ...prev, linkType: e.target.value } })}
                           >
-                            <MenuItem value={"image"}>Image</MenuItem>
                             <MenuItem value={"video"}>Video</MenuItem>
+                            <MenuItem value={"pdf"}>PDF</MenuItem>
                           </Select>
                         </FormControl>
-                        <div className='d-flex flex-column w-100'>
-                          <label htmlFor="title" className="form-label">
+                        {asset.linkType == "video" &&<div className="d-flex flex-column w-100">
+                          <label htmlFor="videoUrl" className="form-label">
                             Video Url
                           </label>
                           <input
                             type="text"
-                            id="title"
-                            name="videoLink"
+                            id="videoUrl"
                             className="form-control w-100"
+                            name="videoLink"
                             value={selectedAsset?.videoLink ?? asset.videoLink}
                             onChange={(e) => handleInputChange(e)}
-                            required={!location}
-                          />
-                        </div>
+                            required={!location && asset.linkType =="video"}
+                          />  
+                        </div>}
                       </div>
                       <div className="mb-3">
                         <label htmlFor="title" className="form-label">
@@ -298,36 +302,6 @@ console.log("asset",asset)
                           onChange={(e) => handleInputChange(e)}
                           required={!location}
                         />
-                      </div>
-                      <div className='d-flex justify-content-between gap-5 align-items-center mb-3'>
-                        <div className='d-flex flex-column w-100'>
-                          <label htmlFor="title" className="form-label">
-                            Form title
-                          </label>
-                          <input
-                            type="text"
-                            id="title"
-                            className="form-control w-100"
-                            name="formTitle"
-                            value={selectedAsset?.formTitle ?? asset.formTitle}
-                            onChange={(e) => handleInputChange(e)}
-                            required={!location}
-                          />
-                        </div>
-                        <div className='d-flex flex-column w-100'>
-                          <label htmlFor="title" className="form-label">
-                            Form Button text
-                          </label>
-                          <input
-                            type="text"
-                            id="title"
-                            name="formButton"
-                            className="form-control w-100"
-                            value={selectedAsset?.formButton ?? asset.formButton}
-                            onChange={(e) => handleInputChange(e)}
-                            required={!location}
-                          />
-                        </div>
                       </div>
                       <div className='d-flex justify-content-between gap-5 align-items-center mb-3'>
                         <div className='d-flex flex-column w-100'>
@@ -358,6 +332,20 @@ console.log("asset",asset)
                             required={!location}
                           />
                         </div>
+                        {/* <div className='d-flex flex-column w-100'>
+                          <label htmlFor="downloadButtonTitle" className="form-label">
+                            Form Submit Button
+                          </label>
+                          <input
+                            type="text"
+                            id="submitButton"
+                            name="submitButton"
+                            className="form-control w-100"
+                            value={selectedAsset?.submitButton ?? asset.submitButton}
+                            onChange={(e) => handleInputChange(e)}
+                            required={!location}
+                          />
+                        </div> */}
                       </div>
                       <div>
                         <label className="form-label">Download Form Confirmation text</label>
@@ -384,6 +372,7 @@ console.log("asset",asset)
                             className='form-control'
                             name="file"
                             onChange={(e) => handleFileChange(e.target.files, e.target.name)}
+                            required={!location && asset.linkType =="pdf"}
                           />
                         </div>
                         <div className='d-flex flex-column flex-grow-1'>
@@ -395,6 +384,7 @@ console.log("asset",asset)
                             className='form-control'
                             name="logo1"
                             onChange={(e) => handleFileChange(e.target.files, e.target.name)}
+                            required={!location}
                           />
                         </div>
                         <div className='d-flex flex-column flex-grow-1'>
@@ -430,7 +420,6 @@ console.log("asset",asset)
                             className="form-control"
                             name="emailTemplate"
                             onChange={(e) => handleFileChange(e.target.files, e.target.name)}
-                            required={!location}
                           />
                         </div>
                       </div>
