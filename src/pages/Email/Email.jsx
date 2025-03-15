@@ -38,12 +38,17 @@ const Email = () => {
     const [assetOptions, setAssetOptions] = useState([]);
     const [email, setEmail] = useState(initialStateSingleEmail);
     const [isBulkEmail, setIsBulkEmail] = useState(false);
+    const [campaignId, setCampaignId] = useState("");
+    const [accountId, setAccountId] = useState("");
 
     useEffect(() => {
         fetchAccountOptions()
-        fetchCampaignOptions()
-        fetchAssetOptions()
     }, [])
+
+    useEffect(() => {
+            fetchCampaignOptions()
+            fetchAssetOptions()
+        }, [accountId,campaignId])
 
     useEffect(() => {
         if (location == "bulk-email") {
@@ -67,10 +72,11 @@ const Email = () => {
         }
     };
     const fetchCampaignOptions = async () => {
+        const END_POINT = accountId ? `api/campaign/options-by-account/${accountId}` : "api/campaign/options"
         try {
-            const res = await axios.get(`${api.API_URL}/api/campaign/options`, config)
+            const res = await axios.get(`${api.API_URL}/${END_POINT}`, config)
             if (res.status) {
-                setCampaignOptions(res.responseData.campaigns);
+                setCampaignOptions(res.responseData?.campaigns ?? res.responseData);
             }
             else toast.error(res?.responseData.message ?? "Error fetching search results:")
         } catch (error) {
@@ -78,8 +84,9 @@ const Email = () => {
         }
     };
     const fetchAssetOptions = async () => {
+        const END_POINT = campaignId ? `api/asset/options/campaign/${campaignId}` : "api/asset/options"
         try {
-            const res = await axios.get(`${api.API_URL}/api/asset/options`, config)
+            const res = await axios.get(`${api.API_URL}/${END_POINT}`, config)
             if (res.status) {
                 setAssetOptions(res.responseData.assets);
             }
@@ -160,11 +167,11 @@ const Email = () => {
                                                 getOptionLabel={(option) => option.name}
                                                 onChange={(event, newValue) => {
                                                     if (newValue) {
+                                                        setAccountId(newValue.id)
                                                         setEmail(prev => { return { ...prev, accountId: newValue.id } })
                                                     }
                                                 }}
                                                 renderInput={(params) => <TextField {...params} label="Account" />}
-                                                value={accountOptions.find(option => option.id == email.accountId) || null}
                                             />
                                         </div>
                                         <div className="mb-4 d-flex gap-2">
@@ -175,11 +182,11 @@ const Email = () => {
                                                 getOptionLabel={(option) => option.name}
                                                 onChange={(event, newValue) => {
                                                     if (newValue) {
+                                                        setCampaignId(newValue.id)
                                                         setEmail(prev => { return { ...prev, campaignId: newValue.id } })
                                                     }
                                                 }}
                                                 renderInput={(params) => <TextField {...params} label="Campaign" />}
-                                                value={campaignOptions.find(option => option.id == email.campaignId) || null}
                                             />
                                             <Autocomplete
                                                 freeSolo
@@ -193,7 +200,6 @@ const Email = () => {
                                                     }
                                                 }}
                                                 renderInput={(params) => <TextField {...params} label="Assets" />}
-                                                value={assetOptions.find(option => option.id == email.assetId) || null}
                                             />
                                         </div>
                                         {!isBulkEmail ? (<div className="mb-4 d-flex align-items-center gap-2">

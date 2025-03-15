@@ -106,8 +106,8 @@ const EmailLog = () => {
             accessorKey: "deliveredAt",
             enableColumnFilter: false,
             cell: ({ cell }) => {
-                const rawDate = cell.getValue(); // Get the raw date value
-                const formattedDate = rawDate.split("T")[0]; // Extract the date portion
+                const rawDate = cell.getValue(); 
+                const formattedDate = rawDate.split("T")[0]; 
                 return formatDate(formattedDate);
               },
           },
@@ -233,7 +233,6 @@ const EmailLog = () => {
                                                     }
                                                 }}
                                                 renderInput={(params) => <TextField {...params} label="Account" />}
-                                                value={accountOptions.find(option => option.id == emailFilter.accountId) || null}
                                             />
                                         </div>
                                         <div className="mb-4 d-flex gap-2">
@@ -249,7 +248,6 @@ const EmailLog = () => {
                                                     }
                                                 }}
                                                 renderInput={(params) => <TextField {...params} label="Campaign" />}
-                                                value={campaignOptions.find(option => option.id == emailFilter.campaignId) || null}
                                             />
                                             <Autocomplete
                                                 fullWidth
@@ -262,7 +260,6 @@ const EmailLog = () => {
                                                     }
                                                 }}
                                                 renderInput={(params) => <TextField {...params} label="Assets" />}
-                                                value={assetOptions.find(option => option.id == emailFilter.assetId) || null}
                                             />
                                         </div>
                                         <div className="mb-4 d-flex gap-2">

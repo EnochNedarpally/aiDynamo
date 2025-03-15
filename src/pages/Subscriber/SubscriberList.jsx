@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import { api } from '../../config';
 import { DatePicker } from '@mui/x-date-pickers';
 import TableContainer from '../../Components/Common/TableContainer';
+import { downloadReport, formatDate } from '../../helpers/helper_utils';
 
 const initialState = {
     accountId: "",
@@ -30,14 +31,20 @@ const SubscriberList = () => {
     const [accountOptions, setAccountOptions] = useState([]);
     const [campaignOptions, setCampaignOptions] = useState([]);
     const [assetOptions, setAssetOptions] = useState([]);
-    const [emailFilter, setEmailFilter] = useState(initialState);
+    const [filters, setFilters] = useState(initialState);
     const [isSubscriberList, setIsSubscriberList] = useState(path);
+    const [accountId, setAccountId] = useState("");
+    const [campaignId, setCampaignId] = useState("");
+    const [reports, setReports] = useState([]);
 
     useEffect(() => {
         fetchAccountOptions()
+    }, [])
+
+    useEffect(()=>{
         fetchCampaignOptions()
         fetchAssetOptions()
-    }, [])
+    },[accountId,campaignId])
 
     useEffect(()=>{
         setIsSubscriberList(path)
@@ -70,11 +77,6 @@ const SubscriberList = () => {
             enableColumnFilter: false,
           },
           {
-            header: "Company",
-            accessorKey: "company",
-            enableColumnFilter: false,
-          },
-          {
             header: "TSP",
             accessorKey: "tsp",
             enableColumnFilter: false,
@@ -86,8 +88,13 @@ const SubscriberList = () => {
           },
           {
             header: "Date",
-            accessorKey: "date",
+            accessorKey: "dt1",
             enableColumnFilter: false,
+            cell: ({ cell }) => {
+            const rawDate = cell.getValue(); 
+            const formattedDate = rawDate.split("T")[0]; 
+            return formatDate(formattedDate);
+            },
           },
           ...(isSubscriberList
             ? [
@@ -122,10 +129,11 @@ const SubscriberList = () => {
         }
     };
     const fetchCampaignOptions = async () => {
+        const END_POINT = accountId ? `api/campaign/options-by-account/${accountId}` : "api/campaign/options"
         try {
-            const res = await axios.get(`${api.API_URL}/api/campaign/options`, config)
+            const res = await axios.get(`${api.API_URL}/${END_POINT}`, config)
             if (res.status) {
-                setCampaignOptions(res.responseData.campaigns);
+                setCampaignOptions(res.responseData?.campaigns ?? res.responseData);
             }
             else toast.error(res?.responseData.message ?? "Error fetching search results:")
         } catch (error) {
@@ -133,8 +141,9 @@ const SubscriberList = () => {
         }
     };
     const fetchAssetOptions = async () => {
+        const END_POINT = campaignId ? `api/asset/options/campaign/${campaignId}` : "api/asset/options"
         try {
-            const res = await axios.get(`${api.API_URL}/api/asset/options`, config)
+            const res = await axios.get(`${api.API_URL}/${END_POINT}`, config)
             if (res.status) {
                 setAssetOptions(res.responseData.assets);
             }
@@ -146,26 +155,15 @@ const SubscriberList = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        let error = null
         const formData = new FormData();
-        Object.keys(emailFilter).map(key => {
-            if (!emailFilter[key]) {
-                error = true
-                return;
-            }
-            else {
-                formData.append(key, emailFilter[key]);
-            }
+        Object.keys(filters).map(key => {
+                formData.append(key, filters[key]);
         })
-        if (error) {
-            alert(`Please Fill in all fields`);
-            return
-        }
-
         setLoading(true);
+        const END_POINT = isSubscriberList ? "api/reports/subscribe" : "api/reports/unsubscribe"
         try {
             const response = await axios.post(
-                `${api.API_URL}/api/subscriber`,
+                `${api.API_URL}/${END_POINT}`,
                 formData,
                 {
                     headers: {
@@ -176,12 +174,12 @@ const SubscriberList = () => {
             );
 
             if (response.status) {
-                setEmailFilter(initialState)
-                toast.success("Email successfully send")
+                setReports(response.responseData)
+                toast.success("Filtered Applied")
             }
-            else toast.error(response?.responseData.message ?? "Enocuntered an error while sending emailFilter")
+            else toast.error(response?.responseData.message ?? "Unable to fetch reports")
         } catch (err) {
-            toast.error(err?.responseData?.message ?? 'Enocuntered an error while sending emailFilter');
+            toast.error(err?.responseData?.message ?? 'Unable to fetch reports');
             console.error(err);
         } finally {
             setLoading(false);
@@ -208,11 +206,11 @@ const SubscriberList = () => {
                                                 getOptionLabel={(option) => option.name}
                                                 onChange={(event, newValue) => {
                                                     if (newValue) {
-                                                        setEmailFilter(prev => { return { ...prev, accountId: newValue.id } })
+                                                        setAccountId(newValue.id)
+                                                        setFilters(prev => { return { ...prev, accountId: newValue.id } })
                                                     }
                                                 }}
                                                 renderInput={(params) => <TextField {...params} label="Account" />}
-                                                value={accountOptions.find(option => option.id == emailFilter.accountId) || null}
                                             />
                                         </div>
                                         <div className="mb-4 d-flex gap-2">
@@ -223,11 +221,11 @@ const SubscriberList = () => {
                                                 getOptionLabel={(option) => option.name}
                                                 onChange={(event, newValue) => {
                                                     if (newValue) {
-                                                        setEmailFilter(prev => { return { ...prev, campaignId: newValue.id } })
+                                                        setCampaignId(newValue.id)
+                                                        setFilters(prev => { return { ...prev, campaignId: newValue.id } })
                                                     }
                                                 }}
                                                 renderInput={(params) => <TextField {...params} label="Campaign" />}
-                                                value={campaignOptions.find(option => option.id == emailFilter.campaignId) || null}
                                             />
                                             <Autocomplete
                                                 fullWidth
@@ -236,21 +234,35 @@ const SubscriberList = () => {
                                                 getOptionLabel={(option) => option.name}
                                                 onChange={(event, newValue) => {
                                                     if (newValue) {
-                                                        setEmailFilter(prev => { return { ...prev, assetId: newValue.id } })
+                                                        setFilters(prev => { return { ...prev, assetId: newValue.id } })
                                                     }
                                                 }}
                                                 renderInput={(params) => <TextField {...params} label="Assets" />}
-                                                value={assetOptions.find(option => option.id == emailFilter.assetId) || null}
                                             />
                                         </div>
+                                        <div className='d-flex gap-2'>
                                         <button 
                                             type="submit"
-                                            className="btn btn-primary flex flex-grow-1"> Apply Filter
+                                            className="btn btn-primary"> Apply Filter
                                         </button>
+                                        <button 
+                                            type="button"
+                                            onClick={()=>{
+                                                    const END_POINT = isSubscriberList ? "api/reports/subscribe/downloads" : "api/reports/unsubscribe-downloads"
+                                                    const formData = new FormData();
+                                                    Object.keys(filters).map(key => {
+                                                            formData.append(key, filters[key]);
+                                                        })
+                                                        downloadReport(token, `${api.API_URL}/${END_POINT}`,formData, "Reports.csv")
+                                                        }
+                                                    }
+                                            className="btn btn-primary "> Download Excel
+                                        </button>
+                                        </div>
                                     </form>
                                     <TableContainer
                                     columns={columns}
-                                    data={([])}
+                                    data={reports ?? []}
                                     isGlobalFilter={true}
                                     isAddUserList={false}
                                     customPageSize={10}

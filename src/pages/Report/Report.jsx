@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import { api } from '../../config';
 import { DatePicker } from '@mui/x-date-pickers';
 import TableContainer from '../../Components/Common/TableContainer';
+import { downloadReport } from '../../helpers/helper_utils';
 
 const initialState = {
     accountId: "",
@@ -26,12 +27,17 @@ const Report = () => {
     const [loading, setLoading] = useState(false);
     const [accountOptions, setAccountOptions] = useState([]);
     const [campaignOptions, setCampaignOptions] = useState([]);
-    const [emailFilter, setEmailFilter] = useState(initialState);
+    const [reportFilter, setReportFilter] = useState(initialState);
+    const [reports, setReports] = useState([]);
+    const [accountId, setAccountId] = useState("");
 
     useEffect(() => {
         fetchAccountOptions()
-        fetchCampaignOptions()
     }, [])
+
+    useEffect(() => {
+            fetchCampaignOptions()
+        }, [accountId])
 
     const columns = useMemo(
             () => [
@@ -51,28 +57,23 @@ const Report = () => {
         
               },
               {
-                header: "Asset Name",
-                accessorKey: "email",
-                enableColumnFilter: false,
-              },
-              {
                 header: "Subject",
                 accessorKey: "subject",
                 enableColumnFilter: false,
               },
               {
                 header: "User name",
-                accessorKey: "username",
+                accessorKey: "firstName",
                 enableColumnFilter: false,
               },
               {
                 header: "Email",
-                accessorKey: "email",
+                accessorKey: "emailId",
                 enableColumnFilter: false,
               },
               {
                 header: "Sent",
-                accessorKey: "sent",
+                accessorKey: "delivered",
                 enableColumnFilter: false,
               },
               {
@@ -87,17 +88,7 @@ const Report = () => {
               },
               {
                 header: "Bounce",
-                accessorKey: "bounce",
-                enableColumnFilter: false,
-              },
-              {
-                header: "Sent By",
-                accessorKey: "sentBy",
-                enableColumnFilter: false,
-              },
-              {
-                header: "Sent From",
-                accessorKey: "sentFrom",
+                accessorKey: "bounced",
                 enableColumnFilter: false,
               },
             ],
@@ -115,11 +106,13 @@ const Report = () => {
             console.error('Error fetching search results:', error);
         }
     };
+
     const fetchCampaignOptions = async () => {
+        const END_POINT = accountId ? `api/campaign/options-by-account/${accountId}` : "api/campaign/options"
         try {
-            const res = await axios.get(`${api.API_URL}/api/campaign/options`, config)
+            const res = await axios.get(`${api.API_URL}/${END_POINT}`, config)
             if (res.status) {
-                setCampaignOptions(res.responseData.campaigns);
+                setCampaignOptions(res.responseData?.campaigns ?? res.responseData);
             }
             else toast.error(res?.responseData.message ?? "Error fetching search results:")
         } catch (error) {
@@ -129,26 +122,14 @@ const Report = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        let error = null
         const formData = new FormData();
-        Object.keys(emailFilter).map(key => {
-            if (!emailFilter[key]) {
-                error = true
-                return;
-            }
-            else {
-                formData.append(key, emailFilter[key]);
-            }
+        Object.keys(reportFilter).map(key => {
+                formData.append(key, reportFilter[key]);
         })
-        if (error) {
-            alert(`Please Fill in all fields`);
-            return
-        }
-
         setLoading(true);
         try {
             const response = await axios.post(
-                `${api.API_URL}/api/subscriber`,
+                `${api.API_URL}/api/reports`,
                 formData,
                 {
                     headers: {
@@ -159,12 +140,11 @@ const Report = () => {
             );
 
             if (response.status) {
-                setEmailFilter(initialState)
-                toast.success("Email successfully send")
+                setReports(response.responseData)
             }
-            else toast.error(response?.responseData.message ?? "Enocuntered an error while sending emailFilter")
+            else toast.error(response?.responseData.message ?? "Unable to fetch reports")
         } catch (err) {
-            toast.error(err?.responseData?.message ?? 'Enocuntered an error while sending emailFilter');
+            toast.error(err?.responseData?.message ?? 'Unable to fetch reports');
             console.error(err);
         } finally {
             setLoading(false);
@@ -191,11 +171,12 @@ const Report = () => {
                                                 getOptionLabel={(option) => option.name}
                                                 onChange={(event, newValue) => {
                                                     if (newValue) {
-                                                        setEmailFilter(prev => { return { ...prev, accountId: newValue.id } })
+                                                        setAccountId(newValue.id)
+                                                        setReportFilter(prev => { return { ...prev, accountId: newValue.id } })
                                                     }
                                                 }}
                                                 renderInput={(params) => <TextField {...params} label="Account" />}
-                                                value={accountOptions.find(option => option.id == emailFilter.accountId) || null}
+                                                value={accountOptions.find(option => option.id == reportFilter.accountId) || null}
                                             />
                                         </div>
                                         <div className="mb-4 d-flex gap-2">
@@ -206,21 +187,35 @@ const Report = () => {
                                                 getOptionLabel={(option) => option.name}
                                                 onChange={(event, newValue) => {
                                                     if (newValue) {
-                                                        setEmailFilter(prev => { return { ...prev, campaignId: newValue.id } })
+                                                        setReportFilter(prev => { return { ...prev, campaignId: newValue.id } })
                                                     }
                                                 }}
                                                 renderInput={(params) => <TextField {...params} label="Campaign" />}
-                                                value={campaignOptions.find(option => option.id == emailFilter.campaignId) || null}
+                                                value={campaignOptions.find(option => option.id == reportFilter.campaignId) || null}
                                             />
                                         </div>
+                                        <div className='d-flex gap-2 w-25'>
                                         <button 
                                             type="submit"
-                                            className="btn btn-primary d-flex flex-grow-1 "> Download Excel
+                                            className="btn btn-primary "> Apply Filter
                                         </button>
+                                        <button 
+                                            type="button"
+                                            onClick={()=>{
+                                                    const formData = new FormData();
+                                                    Object.keys(reportFilter).map(key => {
+                                                            formData.append(key, reportFilter[key]);
+                                                        })
+                                                        downloadReport(token, `${api.API_URL}/api/reports/download`,formData, "Reports.csv")
+                                                        }
+                                                    }
+                                            className="btn btn-primary "> Download Excel
+                                        </button>
+                                        </div>
                                     </form>
                                     <TableContainer
                                     columns={columns}
-                                    data={([])}
+                                    data={reports ?? []}
                                     isGlobalFilter={true}
                                     isAddUserList={false}
                                     customPageSize={10}

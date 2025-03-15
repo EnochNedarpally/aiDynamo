@@ -12,8 +12,7 @@ import { Autocomplete, TextField } from '@mui/material';
 import { Password } from '@mui/icons-material';
 
 const initialState = {
-  firstName: "",
-  lastName: "",
+  name: "",
   email: "",
   password: "",
   phoneNumber: ""
@@ -51,20 +50,20 @@ const AddAdmin = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!admin.firstName || !admin.lastName || !admin.email || !admin.password || !admin.phoneNumber) {
+    if (!admin.name || !admin.email || !admin.password) {
       alert('Please fill in all fields');
       return;
     }
 
     const formData = new FormData();
-    Object.keys(admin).map(key => {
+    Object.keys(initialState).map(key => {
       formData.append(key, admin[key]);
     })
 
     setLoading(true);
     try {
       const response = await axios.post(
-        `${api.API_URL}/api/admin`,
+        `${api.API_URL}/admin/register`,
 
         formData,
         {
@@ -136,29 +135,15 @@ const AddAdmin = () => {
                   <form onSubmit={location ? handleUpdate : handleSubmit}>
                     <div className="mb-3 d-flex flex-wrap gap-4">
                       <div className="mb-3 " style={{ minWidth: '500px' }}>
-                        <label htmlFor="firstName" className="form-label">
-                          First Name
+                        <label htmlFor="name" className="form-label">
+                          Name
                         </label>
                         <input
                           type="text"
-                          id="firstName"
+                          id="name"
                           className="form-control"
-                          name="firstName"
-                          value={selectedAdmin?.firstName ?? admin.firstName}
-                          onChange={(e) => handleInputChange(e)}
-                          required={!location}
-                        />
-                      </div>
-                      <div className="mb-3 " style={{ minWidth: '500px' }}>
-                        <label htmlFor="lastName" className="form-label">
-                          Last Name
-                        </label>
-                        <input
-                          type="text"
-                          id="lastName"
-                          name="lastName"
-                          className="form-control"
-                          value={selectedAdmin?.lastName ?? admin.lastName}
+                          name="name"
+                          value={selectedAdmin?.name ?? admin.name}
                           onChange={(e) => handleInputChange(e)}
                           required={!location}
                         />
@@ -202,7 +187,6 @@ const AddAdmin = () => {
                           className="form-control"
                           value={selectedAdmin?.phoneNumber ?? admin.phoneNumber}
                           onChange={(e) => handleInputChange(e)}
-                          required={!location}
                         />
                       </div>
                     </div>

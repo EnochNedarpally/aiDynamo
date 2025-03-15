@@ -50,7 +50,7 @@ const AddAccount = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!account.webTemplate || !account.desc || !account.name || !account.emailTemplate) {
+    if (!account.name) {
       alert('Please fill in all fields');
       return;
     }
@@ -159,7 +159,6 @@ const AddAccount = () => {
                           rows={6}
                           value={selectedAccount?.desc ?? account.desc}
                           onChange={(e) => location ? setSelectedAccount(prev => { return { ...prev, desc: e.target.value } }) : setAccount(prev => { return { ...prev, desc: e.target.value } })}
-                          required={!location}
                         />
                       </div>
                       <div className="mb-3 d-flex align-items-center gap-2">
@@ -183,7 +182,6 @@ const AddAccount = () => {
                             accept=".html"
                             className="form-control"
                             onChange={(e) => handleEmailTemplate(e.target.files)}
-                            required={!location}
                           />
                         </div>
                       </div>
