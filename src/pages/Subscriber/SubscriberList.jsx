@@ -37,6 +37,10 @@ const SubscriberList = () => {
     const [campaignId, setCampaignId] = useState("");
     const [reports, setReports] = useState([]);
 
+    useEffect(()=>{
+        handleSubmit()
+    },[])
+
     useEffect(() => {
         fetchAccountOptions()
     }, [])
@@ -74,11 +78,6 @@ const SubscriberList = () => {
           {
             header: "User Email",
             accessorKey: "email",
-            enableColumnFilter: false,
-          },
-          {
-            header: "TSP",
-            accessorKey: "tsp",
             enableColumnFilter: false,
           },
           {
@@ -154,13 +153,17 @@ const SubscriberList = () => {
     };
 
     const handleSubmit = async (event) => {
-        event.preventDefault();
+        if(event){
+            event.preventDefault();
+        }
         const formData = new FormData();
         Object.keys(filters).map(key => {
+            if(filters[key]){
                 formData.append(key, filters[key]);
+            }
         })
         setLoading(true);
-        const END_POINT = isSubscriberList ? "api/reports/subscribe" : "api/reports/unsubscribe"
+        const END_POINT = isSubscriberList ? "api/subscriber" : "api/reports/unsubscribe"
         try {
             const response = await axios.post(
                 `${api.API_URL}/${END_POINT}`,

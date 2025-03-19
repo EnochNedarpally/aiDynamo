@@ -39,6 +39,10 @@ const EmailLog = () => {
     const [accountId, setAccountId] = useState("");
     const [campaignId, setCampaignId] = useState("");
 
+    useEffect(()=>{
+        handleSubmit()
+    },[])
+
     useEffect(() => {
         fetchAccountOptions()
     }, [])
@@ -80,16 +84,28 @@ const EmailLog = () => {
             header: "Read",
             accessorKey: "read",
             enableColumnFilter: false,
+            cell: ({ cell }) => {
+                const value = cell.getValue(); 
+                return value == "true" ? "Yes" : "No"
+              },
           },
           {
             header: "Download",
             accessorKey: "download",
             enableColumnFilter: false,
+            cell: ({ cell }) => {
+                const value = cell.getValue(); 
+                return value == "true" ? "Yes" : "No"
+              },
           },
           {
             header: "Bounce",
-            accessorKey: "bounce",
+            accessorKey: "bounced",
             enableColumnFilter: false,
+            cell: ({ cell }) => {
+                const value = cell.getValue(); 
+                return value == "true" ? "Yes" : "No"
+              },
           },
           {
             header: "Status",
@@ -103,7 +119,7 @@ const EmailLog = () => {
           },
           {
             header: "Date",
-            accessorKey: "deliveredAt",
+            accessorKey: "date",
             enableColumnFilter: false,
             cell: ({ cell }) => {
                 const rawDate = cell.getValue(); 
@@ -169,17 +185,21 @@ const EmailLog = () => {
     };
 
     const handleSubmit = async (event) => {
-        event.preventDefault();
+        if(event){
+            event.preventDefault();
+        }
         const formData = new FormData();
         Object.keys(emailFilter).map(key => {
-                formData.append(key, emailFilter[key]);
+                if(emailFilter[key]){
+                    formData.append(key, emailFilter[key]);
+                }
         })
         setLoading(true);
         setError(null);
         setSuccess(false);
         try {
             const response = await axios.post(
-                `${api.API_URL}/api/reports`,
+                `${api.API_URL}/api/reports/brevo-mail`,
                 formData,
                 {
                     headers: {
@@ -203,7 +223,7 @@ const EmailLog = () => {
 
     const handleDateChange = (date, type) => {
         if (date) {
-          const formattedDate = dayjs(date).format("DD-MM-YYYY");
+          const formattedDate = dayjs(date).format("YYYY-MM-DD");
           type == "start" ? setEmailFilter(prev => { return { ...prev, startDate: formattedDate } }) : setEmailFilter(prev => { return { ...prev, endDate: formattedDate } })
         }
       }
@@ -320,7 +340,7 @@ const EmailLog = () => {
                                                 Object.keys(emailFilter).map(key => {
                                                         formData.append(key, emailFilter[key]);
                                                     })
-                                                    downloadReport(token, `${api.API_URL}/api/reports/download`,formData, "Reports.csv")
+                                                    downloadReport(token, `${api.API_URL}/api/reports/brevo-mail-download-csv`,formData, "Reports.csv")
                                                  }
                                                 }
                                                 type="button"

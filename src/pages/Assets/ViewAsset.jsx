@@ -39,16 +39,16 @@ const ViewAsset = () => {
       <Container fluid className="p-4 mb-8">
         <Row className="mb-4 align-items-center view-asset" style={{ height: 200, position: "relative" }}>
           <ToastContainer />
-          <Col xs={12} md={2} className="text-center">
+          <Col xs={12} md={2} className="text-center" >
             <img
-              src="https://tse1.mm.bing.net/th?id=OIP.svIy8aBlVXVjHC4spgiqXwHaE8&pid=Api&P=0&h=180"
+              src={asset.image}
               alt="Asset Thumbnail"
               className="img-fluid rounded"
               style={{ maxWidth: "200px", marginBottom: 40 }}
             />
           </Col>
-          <Col xs={12} md={10} >
-            <h3 className="fw-bold text-white">{asset.name}</h3>
+          <Col xs={12} md={10} style={{paddingBottom:"2rem"}} >
+            <h3 className="fw-bold text-white mb-2">{asset.name}</h3>
           </Col>
           <Row className="mb-4" style={{ position: "absolute", top: "80%" }}>
             <Row>
