@@ -81,8 +81,8 @@ const AllCampaign = () => {
         enableColumnFilter: false,
       },
       {
-        header: "Status",
-        accessorKey: "status",
+        header: "Account",
+        accessorKey: "accounts.name",
         enableColumnFilter: false,
       },
       {
@@ -92,7 +92,7 @@ const AllCampaign = () => {
             <ul className="list-inline hstack gap-2 mb-0">
               <li className="list-inline-item" title="View Asset">
                 <Link to="/admin/assets"
-                  state={cell.row.original.id}
+                  state={{camapignId:cell.row.original.id}}
                 >
                   <i className="ri-eye-fill align-bottom text-muted"></i>
                 </Link>

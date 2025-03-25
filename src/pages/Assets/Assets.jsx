@@ -1,6 +1,6 @@
 
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
     Col,
@@ -9,6 +9,13 @@ import {
     Card,
     CardBody,
     Button,
+    Modal,
+    ModalHeader,
+    Form,
+    ModalBody,
+    Label,
+    Input,
+    ModalFooter,
 } from "reactstrap";
 
 import { toast, ToastContainer } from 'react-toastify';
@@ -27,8 +34,11 @@ const Assets = () => {
         },
     };
     const navigate = useNavigate()
-    const campaignId = useLocation()?.state
+    const campaignId = useLocation()?.state?.camapignId
     const [Assets, setAssets] = useState([]);
+    const [modal, setModal] = useState(false);
+    const [status, setStatus] = useState("1");
+    const [assetId, setAssetId] = useState("")
     
     useEffect(() => {
         fetchAssets()
@@ -47,6 +57,32 @@ const Assets = () => {
             console.log("error", error)
         }
     }
+
+    const handleStatus = async () => {
+        const formData = new FormData();
+        formData.append('value', status);
+        try {
+          const config = {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              'Authorization': `Bearer ${token}`
+            }
+          };
+          await axios.post(`${api.API_URL}/api/asset/update-status/${assetId}`, formData, config)
+            fetchAssets()
+          setModal(false)
+        } catch (error) {
+          toast.error(error)
+        }
+      }
+
+    const toggle = useCallback(() => {
+        if (modal) {
+            setModal(false);
+        } else {
+            setModal(true);
+        }
+    }, [modal]);
 
     const columns = useMemo(
         () => [
@@ -81,7 +117,7 @@ const Assets = () => {
                         <ul className="list-inline hstack gap-2 mb-0">
                             <li className="list-inline-item" title="Edit">
                                 <Link className="edit-item-btn" to="/admin/add-asset"
-                                    state={cell.row.original}
+                                    state={{...cell.row.original,campaignId:campaignId}}
                                 >
                                     <i className="ri-pencil-fill align-bottom text-muted"></i>
                                 </Link>
@@ -98,6 +134,9 @@ const Assets = () => {
                                 >
                                     <i className="ri-lock-fill align-bottom text-muted"></i>
                                 </Link>
+                            </li>
+                            <li onClick={() => {setModal(true);setAssetId(cell.row.original.id) }} className="list-inline-item" title={`${cell.row.original.status == "APPROVED" ? "Active" :"Inactive"}`}>
+                                    <i style={{color:cell.row.original.status == "APPROVED" ?  "#1db61d" :"orange"}} className="ri-circle-fill align-bottom"></i>
                             </li>
                         </ul>
                     );
@@ -122,7 +161,7 @@ const Assets = () => {
                                             <Button
                                                 color="secondary"
                                                 style={{ backgroundColor: 'purple', borderColor: 'purple' }}
-                                                onClick={() => navigate("/admin/add-Asset")}
+                                                onClick={() => navigate("/admin/add-Asset",{state:{campaignId:campaignId}})}
                                             >
                                                 <i className="ri-add-fill me-1 align-bottom"></i> Add Asset
                                             </Button>
@@ -140,6 +179,55 @@ const Assets = () => {
                                             SearchPlaceholder='Search for Asset...'
                                         />
                                     </div>
+                                    {<Modal id="showModal" isOpen={modal} toggle={toggle} centered>
+                                        <ModalHeader className="bg-info-subtle p-3" toggle={toggle}>
+                                            Edit Status
+                                        </ModalHeader>
+                                        <Form className="tablelist-form" onSubmit={(e) => {
+                                            handleStatus()
+                                            e.preventDefault();
+                                            return false;
+                                        }}>
+                                            <ModalBody>
+                                                <input type="hidden" id="id-field" />
+                                                <Row className="g-3">
+                                                    <Col lg={6}>
+                                                        <div>
+                                                            <Label
+                                                                htmlFor="owner-field"
+                                                                className="form-label"
+                                                            >
+                                                                Status
+                                                            </Label>
+                                                            <Input
+                                                                bsSize="lg"
+                                                                className="mb-3"
+                                                                type="select"
+                                                                onChange={(e) => setStatus(e.target.value)}
+                                                                defaultValue="Select Status"
+                                                            >
+                                                                <option value="">
+                                                                    Select status
+                                                                </option>
+                                                                <option value="1">
+                                                                    Active
+                                                                </option>
+                                                                <option value="0">
+                                                                    InActive
+                                                                </option>
+                                                            </Input>
+                                                        </div>
+                                                    </Col>
+                                                </Row>
+                                            </ModalBody>
+                                            <ModalFooter>
+                                                <div className="hstack gap-2 justify-content-end bg-info-subtle">
+                                                    <Button color="light" onClick={() => { setModal(false); }} > Close </Button>
+                                                    <Button onClick={handleStatus} style={{ backgroundColor: 'purple', borderColor: 'purple' }} type="submit" color="success" id="add-btn" >  Update</Button>
+                                                </div>
+                                            </ModalFooter>
+                                        </Form>
+                                    </Modal>}
                                     <ToastContainer closeButton={false} limit={1} />
                                 </CardBody>
                             </Card>

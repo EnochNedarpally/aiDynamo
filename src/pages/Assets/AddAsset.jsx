@@ -14,7 +14,6 @@ import { Autocomplete, FormControl, InputLabel, MenuItem, Select, TextField } fr
 const initialState = {
   name: "",
   linkType: "",
-  code: "",
   videoLink: "",
   subject: "",
   image: null,
@@ -28,9 +27,10 @@ const initialState = {
   infeeduCategoryId: "",
   campaignId: "",
   downloadButtonTitle: "",
-  downloadTitle: ""
+  downloadTitle: "",
+  submitButton:"Read More",
+  thankyouTemplate:null
 }
-
 const AddAsset = () => {
   const [loading, setLoading] = useState(false);
   const [asset, setAsset] = useState(initialState)
@@ -40,8 +40,12 @@ const AddAsset = () => {
   const [isOpen, setIsOpen] = useState(false)
   const token = useSelector(state => state.Login.token)
   const navigate = useNavigate()
-  const location = useLocation().state;
-
+  const state = useLocation().state;
+  const location = { ...state };
+  delete location.campaignId;
+  const campaignId = state?.campaignId;
+  const nonMandatoryFields = ["emailTemplate","webTemplate","thankyouTemplate","videoLink","logo2"]
+ 
   useEffect(() => {
     if (location) {
       const assetData = {}
@@ -50,7 +54,7 @@ const AddAsset = () => {
       })
       setAsset(assetData)
     }
-  }, [location])
+  }, [state])
 
   useEffect(() => {
     fetchCategoryOptions()
@@ -92,10 +96,10 @@ const AddAsset = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    location ? setSelectedAsset(prev => { return { ...prev, [name]: value } }) : setAsset(prev => { return { ...prev, [name]: value } })
+    location[name] ? setSelectedAsset(prev => { return { ...prev, [name]: value } }) : setAsset(prev => { return { ...prev, [name]: value } })
   }
   const handleFileChange = (acceptedFiles, name) => {
-    location ? setSelectedAsset(prev => { return { ...prev, [name]: acceptedFiles[0] } }) : setAsset(prev => { return { ...prev, [name]: acceptedFiles[0] } })
+    location[name] ? setSelectedAsset(prev => { return { ...prev, [name]: acceptedFiles[0] } }) : setAsset(prev => { return { ...prev, [name]: acceptedFiles[0] } })
   };
 
   const handleSubmit = async (event) => {
@@ -103,7 +107,7 @@ const AddAsset = () => {
     let error = null
     const formData = new FormData();
     Object.keys(asset).map(key => {
-      if(key== "emailTemplate" || key == "webTemplate" || key == "videoLink" || key =="logo2" ){
+      if(nonMandatoryFields.includes(key)){
         formData.append(key, asset[key]);
         return
       }
@@ -119,6 +123,9 @@ const AddAsset = () => {
         formData.append(key, asset[key]);
       }
     })
+    if(campaignId){
+      formData.append("campaignId", campaignId);
+    }
     if (error) {
       alert(`Please Fill in all fields`);
       return
@@ -139,7 +146,7 @@ const AddAsset = () => {
       if (response.status) {
         toast.success("Asset added")
         setAsset({ initialState })
-        navigate("/admin/assets")
+        navigate("/admin/assets",{state:{campaignId:campaignId}})
       } else toast.error("Encountered an error while creating an asset")
     } catch (err) {
       toast.error("Encountered an error while creating an asset")
@@ -171,7 +178,7 @@ const AddAsset = () => {
       if (response.status) {
         toast.success("Asset added")
         setAsset(initialState)
-        navigate("/admin/Assets")
+        navigate("/admin/Assets",{state:{campaignId:campaignId}})
       } else toast.error("Encountered an error while creating an asset")
     } catch (err) {
       toast.error("Encountered an error while creating an asset")
@@ -193,7 +200,7 @@ const AddAsset = () => {
                   <h4 className="card-title mb-0">Add Asset </h4>
                 </CardHeader>
                 <CardBody>
-                  <form onSubmit={location ? handleUpdate : handleSubmit}>
+                  <form onSubmit={location?.name ? handleUpdate  : handleSubmit }>
                     <div className="mb-3">
                       <div className="mb-3">
                         <label htmlFor="assetName" className="form-label">
@@ -209,20 +216,6 @@ const AddAsset = () => {
                           required={!location}
                         />
                       </div>
-                      <div className="mb-3">
-                        <label htmlFor="assetCode" className="form-label">
-                          Asset Code
-                        </label>
-                        <input
-                          type="text"
-                          id="assetCode"
-                          name="code"
-                          className="form-control"
-                          value={selectedAsset?.code ?? asset.code}
-                          onChange={(e) => handleInputChange(e)}
-                          required={!location}
-                        />
-                      </div>
                       <div className="mb-4 d-flex gap-2">
                         <Autocomplete
                           fullWidth
@@ -231,29 +224,29 @@ const AddAsset = () => {
                           getOptionLabel={(option) => option.name}
                           onChange={(event, newValue) => {
                             if (newValue) {
-                              location ? setSelectedAsset(prev => { return { ...prev, infeeduCategoryId: newValue.id } }) : setAsset(prev => { return { ...prev, infeeduCategoryId: newValue.id } })
+                              location?.name ? setSelectedAsset(prev => { return { ...prev, infeeduCategoryId: newValue.id } }) : setAsset(prev => { return { ...prev, infeeduCategoryId: newValue.id } })
                             }
                           }}
                           renderInput={(params) => <TextField {...params} label="Category" />}
                           value={categoryOptions.find(option => selectedAsset?.infeeduCategoryId
-                            ? option.id == selectedAsset.infeeduCategoryId
-                            : option.id == asset.infeeduCategoryId) || null}
+                            ? option.id == selectedAsset?.infeeduCategoryId
+                            : option.id == asset?.infeeduCategoryId) || null}
                         />
-                        <Autocomplete
+                        {!campaignId &&<Autocomplete
                           fullWidth
                           id="tags-outlined1"
                           options={campaignOptions ?? []}
                           getOptionLabel={(option) => option.name}
                           onChange={(event, newValue) => {
                             if (newValue) {
-                              location ? setSelectedAsset(prev => { return { ...prev, campaignId: newValue.id } }) : setAsset(prev => { return { ...prev, campaignId: newValue.id } })
+                              location[campaignId] ? setSelectedAsset(prev => { return { ...prev, campaignId: newValue.id } }) : setAsset(prev => { return { ...prev, campaignId: newValue.id } })
                             }
                           }}
                           renderInput={(params) => <TextField {...params} label="Campaign" />}
                           value={campaignOptions.find(option => selectedAsset?.campaignId
                             ? option.id == selectedAsset.campaignId
                             : option.id == asset.campaignId) || null}
-                        />
+                        />}
                       </div>
                       <div>
                         <label className="form-label">Description</label>
@@ -285,7 +278,7 @@ const AddAsset = () => {
                             name="videoLink"
                             value={selectedAsset?.videoLink ?? asset.videoLink}
                             onChange={(e) => handleInputChange(e)}
-                            required={!location && asset.linkType =="video"}
+                            required={!location.linkType && asset.linkType =="video"}
                           />  
                         </div>}
                       </div>
@@ -300,7 +293,7 @@ const AddAsset = () => {
                           name="subject"
                           value={selectedAsset?.subject ?? asset.subject}
                           onChange={(e) => handleInputChange(e)}
-                          required={!location}
+                          required={!location.subject}
                         />
                       </div>
                       <div className='d-flex justify-content-between gap-5 align-items-center mb-3'>
@@ -315,7 +308,7 @@ const AddAsset = () => {
                             name="downloadTitle"
                             value={selectedAsset?.downloadTitle ?? asset.downloadTitle}
                             onChange={(e) => handleInputChange(e)}
-                            required={!location}
+                            required={!location.downloadTitle}
                           />
                         </div>
                         <div className='d-flex flex-column w-100'>
@@ -329,12 +322,12 @@ const AddAsset = () => {
                             className="form-control w-100"
                             value={selectedAsset?.downloadButtonTitle ?? asset.downloadButtonTitle}
                             onChange={(e) => handleInputChange(e)}
-                            required={!location}
+                            required={!location.downloadButtonTitle}
                           />
                         </div>
-                        {/* <div className='d-flex flex-column w-100'>
+                        <div className='d-flex flex-column w-100'>
                           <label htmlFor="downloadButtonTitle" className="form-label">
-                            Form Submit Button
+                            Download Form Submit Button
                           </label>
                           <input
                             type="text"
@@ -343,9 +336,8 @@ const AddAsset = () => {
                             className="form-control w-100"
                             value={selectedAsset?.submitButton ?? asset.submitButton}
                             onChange={(e) => handleInputChange(e)}
-                            required={!location}
                           />
-                        </div> */}
+                        </div>
                       </div>
                       <div>
                         <label className="form-label">Download Form Confirmation text</label>
@@ -372,7 +364,7 @@ const AddAsset = () => {
                             className='form-control'
                             name="file"
                             onChange={(e) => handleFileChange(e.target.files, e.target.name)}
-                            required={!location && asset.linkType =="pdf"}
+                            required={!location.linkType && asset.linkType =="pdf"}
                           />
                         </div>
                         <div className='d-flex flex-column flex-grow-1'>
@@ -384,7 +376,7 @@ const AddAsset = () => {
                             className='form-control'
                             name="logo1"
                             onChange={(e) => handleFileChange(e.target.files, e.target.name)}
-                            required={!location}
+                            required={!location.name}
                           />
                         </div>
                         <div className='d-flex flex-column flex-grow-1'>
@@ -422,6 +414,19 @@ const AddAsset = () => {
                             onChange={(e) => handleFileChange(e.target.files, e.target.name)}
                           />
                         </div>
+                        <div className='d-flex flex-column flex-grow-1'>
+                          <label htmlFor="thankyouTemplate" className="form-label">
+                            Upload Thank you Template File:
+                          </label>
+                          <input
+                            type="file"
+                            id="thankyouTemplate"
+                            accept=".html"
+                            className="form-control"
+                            name="thankyouTemplate"
+                            onChange={(e) => handleFileChange(e.target.files, e.target.name)}
+                          />
+                        </div>
                       </div>
                     </div>
                     <div className="d-flex justify-content-between">
@@ -432,7 +437,7 @@ const AddAsset = () => {
                       >
                         {loading ? 'Uploading...' : 'Submit'}
                       </button>
-                      {location && (<button
+                      {location.name && (<button
                         type="button"
                         style={{ backgroundColor: "red", color: "white" }}
                         className="btn "

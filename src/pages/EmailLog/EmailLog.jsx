@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 import { api } from '../../config';
 import { DatePicker } from '@mui/x-date-pickers';
 import TableContainer from '../../Components/Common/TableContainer';
-import { downloadReport, formatDate } from '../../helpers/helper_utils';
+import { downloadReport, formatDate, formatToDDMMYY } from '../../helpers/helper_utils';
 
 const initialState = {
     accountId: "",
@@ -86,8 +86,12 @@ const EmailLog = () => {
             enableColumnFilter: false,
             cell: ({ cell }) => {
                 const value = cell.getValue(); 
-                return value == "true" ? "Yes" : "No"
-              },
+                return  (
+                <>
+                {value == "true" ? <i style={{color:"#1db61d",fontSize:"2rem"}} className="ri-check-line d-flex justify-content-center"></i> :  <i style={{color:"red",fontSize:"2rem"}} className="ri-close-fill d-flex justify-content-center"></i>}
+                </>
+                ) 
+            },
           },
           {
             header: "Download",
@@ -95,8 +99,12 @@ const EmailLog = () => {
             enableColumnFilter: false,
             cell: ({ cell }) => {
                 const value = cell.getValue(); 
-                return value == "true" ? "Yes" : "No"
-              },
+                return  (
+                <>
+                {value == "true" ? <i style={{color:"#1db61d",fontSize:"2rem"}} className="ri-check-line d-flex justify-content-center"></i> :  <i style={{color:"red",fontSize:"2rem"}} className="ri-close-fill d-flex justify-content-center"></i>}
+                </>
+                ) 
+            },
           },
           {
             header: "Bounce",
@@ -104,8 +112,12 @@ const EmailLog = () => {
             enableColumnFilter: false,
             cell: ({ cell }) => {
                 const value = cell.getValue(); 
-                return value == "true" ? "Yes" : "No"
-              },
+                return  (
+                <>
+                {value == "true" ? <i style={{color:"#1db61d",fontSize:"2rem"}} className="ri-check-line d-flex justify-content-center"></i> :  <i style={{color:"red",fontSize:"2rem"}} className="ri-close-fill d-flex justify-content-center"></i>}
+                </>
+                ) 
+            },
           },
           {
             header: "Status",
@@ -124,7 +136,7 @@ const EmailLog = () => {
             cell: ({ cell }) => {
                 const rawDate = cell.getValue(); 
                 const formattedDate = rawDate.split("T")[0]; 
-                return formatDate(formattedDate);
+                return formatToDDMMYY(formattedDate);
               },
           },
         //   {

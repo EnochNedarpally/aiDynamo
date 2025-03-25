@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 import { api } from '../../config';
 import { DatePicker } from '@mui/x-date-pickers';
 import TableContainer from '../../Components/Common/TableContainer';
-import { downloadReport, formatDate } from '../../helpers/helper_utils';
+import { downloadReport, formatDate, formatToDDMMYY } from '../../helpers/helper_utils';
 
 const initialState = {
     accountId: "",
@@ -39,7 +39,7 @@ const SubscriberList = () => {
 
     useEffect(()=>{
         handleSubmit()
-    },[])
+    },[isSubscriberList])
 
     useEffect(() => {
         fetchAccountOptions()
@@ -72,7 +72,7 @@ const SubscriberList = () => {
           },
           {
             header: "User Name",
-            accessorKey: "username",
+            accessorKey: "fullName",
             enableColumnFilter: false,
           },
           {
@@ -92,7 +92,7 @@ const SubscriberList = () => {
             cell: ({ cell }) => {
             const rawDate = cell.getValue(); 
             const formattedDate = rawDate.split("T")[0]; 
-            return formatDate(formattedDate);
+            return formatToDDMMYY(formattedDate);
             },
           },
           ...(isSubscriberList
@@ -178,7 +178,7 @@ const SubscriberList = () => {
 
             if (response.status) {
                 setReports(response.responseData)
-                toast.success("Filtered Applied")
+                toast.success("Filter Applied")
             }
             else toast.error(response?.responseData.message ?? "Unable to fetch reports")
         } catch (err) {
