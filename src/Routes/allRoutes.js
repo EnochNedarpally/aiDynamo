@@ -301,6 +301,7 @@ import UserList from "../pages/Users/UserList";
 import AddUser from "../pages/Users/AddUser";
 import ViewAsset from "../pages/Assets/ViewAsset";
 import ConfirgureAsset from "../pages/Assets/ConfirgureAsset";
+import ViewSubscriber from "../pages/Subscriber/ViewSubscriber";
 
 const authProtectedRoutes = [
   { path: "/admin/dashboard", component: <AdminDashboard /> },
@@ -317,7 +318,8 @@ const authProtectedRoutes = [
   { path: "/admin/single-email", component: <Email /> },
   { path: "/admin/bulk-email", component: <Email /> },
   { path: "/admin/email-log", component: <EmailLog /> },
-  { path: "/admin/subscriber-list", component: <SubscriberList   /> },
+  { path: "/admin/subscriber-list", component: <SubscriberList/> },
+  { path: "/admin/view-subscriber", component: <ViewSubscriber/> },
   { path: "/admin/unsubscriber-list", component: <SubscriberList /> },
   { path: "/admin/report", component: <Report /> },
   { path: "/admin/email-list", component: <EmailList /> },

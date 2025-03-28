@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Autocomplete, Input, TextField } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { api } from '../../config';
 import { DatePicker } from '@mui/x-date-pickers';
@@ -98,14 +98,21 @@ const SubscriberList = () => {
           ...(isSubscriberList
             ? [
                 {
+                    header: "Time Spent",
+                    accessorKey: "tsp",
+                    enableColumnFilter: false,
+                  },
+                {
                   header: "Action",
                   cell: (cell) => {
                     return (
                       <ul className="list-inline hstack gap-2 mb-0">
-                        <li className="list-inline-item" title="Edit">
+                        <Link to="/admin/view-subscriber" state={cell.row.original.id}>
+                        <li className="list-inline-item" title="View Subscriber">
                           {/* Add your action logic here */}
                           <i className="ri-eye-fill align-bottom text-muted"></i>
                         </li>
+                        </Link>
                       </ul>
                     );
                   },

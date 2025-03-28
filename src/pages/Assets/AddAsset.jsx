@@ -26,10 +26,11 @@ const initialState = {
   confirmationText: "",
   infeeduCategoryId: "",
   campaignId: "",
-  downloadButtonTitle: "",
-  downloadTitle: "",
+  downloadButtonTitle: "Submit",
+  downloadTitle: "Please fill in the information below to access this resource",
   submitButton:"Read More",
-  thankyouTemplate:null
+  thankyouTemplate:null,
+  thanksMessage:""
 }
 const AddAsset = () => {
   const [loading, setLoading] = useState(false);
@@ -44,7 +45,7 @@ const AddAsset = () => {
   const location = { ...state };
   delete location.campaignId;
   const campaignId = state?.campaignId;
-  const nonMandatoryFields = ["emailTemplate","webTemplate","thankyouTemplate","videoLink","logo2"]
+  const nonMandatoryFields = ["emailTemplate","webTemplate","thankyouTemplate","videoLink","logo2","thanksMessage"]
  
   useEffect(() => {
     if (location) {
@@ -96,10 +97,10 @@ const AddAsset = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    location[name] ? setSelectedAsset(prev => { return { ...prev, [name]: value } }) : setAsset(prev => { return { ...prev, [name]: value } })
+    location.id ? setSelectedAsset(prev => { return { ...prev, [name]: value } }) : setAsset(prev => { return { ...prev, [name]: value } })
   }
   const handleFileChange = (acceptedFiles, name) => {
-    location[name] ? setSelectedAsset(prev => { return { ...prev, [name]: acceptedFiles[0] } }) : setAsset(prev => { return { ...prev, [name]: acceptedFiles[0] } })
+    location.id ? setSelectedAsset(prev => { return { ...prev, [name]: acceptedFiles[0] } }) : setAsset(prev => { return { ...prev, [name]: acceptedFiles[0] } })
   };
 
   const handleSubmit = async (event) => {
@@ -200,7 +201,7 @@ const AddAsset = () => {
                   <h4 className="card-title mb-0">Add Asset </h4>
                 </CardHeader>
                 <CardBody>
-                  <form onSubmit={location?.name ? handleUpdate  : handleSubmit }>
+                  <form onSubmit={location?.id ? handleUpdate  : handleSubmit }>
                     <div className="mb-3">
                       <div className="mb-3">
                         <label htmlFor="assetName" className="form-label">
@@ -224,7 +225,7 @@ const AddAsset = () => {
                           getOptionLabel={(option) => option.name}
                           onChange={(event, newValue) => {
                             if (newValue) {
-                              location?.name ? setSelectedAsset(prev => { return { ...prev, infeeduCategoryId: newValue.id } }) : setAsset(prev => { return { ...prev, infeeduCategoryId: newValue.id } })
+                              location?.id ? setSelectedAsset(prev => { return { ...prev, infeeduCategoryId: newValue.id } }) : setAsset(prev => { return { ...prev, infeeduCategoryId: newValue.id } })
                             }
                           }}
                           renderInput={(params) => <TextField {...params} label="Category" />}
@@ -239,7 +240,7 @@ const AddAsset = () => {
                           getOptionLabel={(option) => option.name}
                           onChange={(event, newValue) => {
                             if (newValue) {
-                              location[campaignId] ? setSelectedAsset(prev => { return { ...prev, campaignId: newValue.id } }) : setAsset(prev => { return { ...prev, campaignId: newValue.id } })
+                              location.id ? setSelectedAsset(prev => { return { ...prev, campaignId: newValue.id } }) : setAsset(prev => { return { ...prev, campaignId: newValue.id } })
                             }
                           }}
                           renderInput={(params) => <TextField {...params} label="Campaign" />}
@@ -250,24 +251,25 @@ const AddAsset = () => {
                       </div>
                       <div>
                         <label className="form-label">Description</label>
-                        <ContentEditor content={selectedAsset?.description ? selectedAsset.description : asset.description} setContent={selectedAsset?.description ? setSelectedAsset : setAsset} name="description" />
+                        <ContentEditor content={selectedAsset.description ?? asset.description} setContent={location.id ? setSelectedAsset : setAsset} name="description" />
                       </div>
                       <div className='d-flex justify-content-between gap-5 align-items-center mb-3'>
                         <FormControl fullWidth>
-                          <label id="demo-simple-select-label">Link Type</label>
+                          <label id="demo-simple-select-label">Resource Type</label>
                           <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={selectedAsset.linkType ?? asset.linkType}
-                            label="Link Type"
+                            label="Resource Type"
                             sx={{ height: 40 }}
-                            onChange={(e) => setAsset(prev => { return { ...prev, linkType: e.target.value } })}
+                            onChange={(e) => location.id ? setSelectedAsset(prev => { return { ...prev, linkType: e.target.value } }) : setAsset(prev => { return { ...prev, linkType: e.target.value } })}
                           >
                             <MenuItem value={"video"}>Video</MenuItem>
                             <MenuItem value={"pdf"}>PDF</MenuItem>
+                            <MenuItem value={"thanksTemplate"}>Thanks Template</MenuItem>
                           </Select>
                         </FormControl>
-                        {asset.linkType == "video" &&<div className="d-flex flex-column w-100">
+                        {asset.linkType !== "pdf" &&<div className="d-flex flex-column w-100">
                           <label htmlFor="videoUrl" className="form-label">
                             Video Url
                           </label>
@@ -327,7 +329,7 @@ const AddAsset = () => {
                         </div>
                         <div className='d-flex flex-column w-100'>
                           <label htmlFor="downloadButtonTitle" className="form-label">
-                            Download Form Submit Button
+                            Mail Button
                           </label>
                           <input
                             type="text"
@@ -341,7 +343,16 @@ const AddAsset = () => {
                       </div>
                       <div>
                         <label className="form-label">Download Form Confirmation text</label>
-                        <ContentEditor content={selectedAsset.confirmationText ?? asset.confirmationText} setContent={setAsset} name="confirmationText" />
+                        <ContentEditor content={selectedAsset.confirmationText ?? asset.confirmationText} setContent={location.id ? setSelectedAsset : setAsset} name="confirmationText" />
+                      </div>
+                      <div className='mb-3'>
+                        <label className="form-label">Thank you message</label>
+                        <textarea
+                            id="thanksMessage"
+                            name="thanksMessage"
+                            className='form-control'
+                            onChange={(e) => handleInputChange(e)}
+                          />
                       </div>
                       <div className="mb-3 d-flex align-items-center gap-2 flex-wrap" style={{ boxSizing: 'border-box' }}>
                         <div className='d-flex flex-column flex-grow-1'>
@@ -437,7 +448,7 @@ const AddAsset = () => {
                       >
                         {loading ? 'Uploading...' : 'Submit'}
                       </button>
-                      {location.name && (<button
+                      {location.id && (<button
                         type="button"
                         style={{ backgroundColor: "red", color: "white" }}
                         className="btn "

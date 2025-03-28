@@ -76,7 +76,7 @@ const AddCampaign = () => {
     event.preventDefault();
 
     if(!location?.id){
-      if (!campaign.name || !campaign.description || !campaign.categoryId || !campaign.accountId) {
+      if (!campaign.name || !campaign.categoryId || !campaign.accountId) {
         alert('Please fill in all fields');
         return;
       }
@@ -227,7 +227,6 @@ const AddCampaign = () => {
                         className="form-control"
                         value={selectedCampaign.description ?? campaign.description}
                         onChange={(e) => location ? setSelectedCampaign(prev => { return { ...prev, description: e.target.value } }) : setCampaign(prev => { return { ...prev, description: e.target.value } })}
-                        required = {!location}
                         rows={5}
                       />
                     </div>

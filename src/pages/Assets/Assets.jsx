@@ -131,6 +131,7 @@ const Assets = () => {
                             </li>
                             <li className="list-inline-item" title="Configure Asset">
                                 <Link to="/admin/configure-asset"
+                                state={cell.row.original}
                                 >
                                     <i className="ri-lock-fill align-bottom text-muted"></i>
                                 </Link>
