@@ -202,11 +202,7 @@ const Report = () => {
                                         <button 
                                             type="button"
                                             onClick={()=>{
-                                                    const formData = new FormData();
-                                                    Object.keys(reportFilter).map(key => {
-                                                            formData.append(key, reportFilter[key]);
-                                                        })
-                                                        downloadReport(token, `${api.API_URL}/api/reports/download`,formData, "Reports.csv")
+                                                        downloadReport(token, `${api.API_URL}/api/reports/download`,reportFilter, "Reports.csv")
                                                         }
                                                     }
                                             className="btn btn-primary "> Download Excel

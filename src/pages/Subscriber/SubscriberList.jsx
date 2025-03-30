@@ -259,11 +259,7 @@ const SubscriberList = () => {
                                             type="button"
                                             onClick={()=>{
                                                     const END_POINT = isSubscriberList ? "api/reports/subscribe/downloads" : "api/reports/unsubscribe-downloads"
-                                                    const formData = new FormData();
-                                                    Object.keys(filters).map(key => {
-                                                            formData.append(key, filters[key]);
-                                                        })
-                                                        downloadReport(token, `${api.API_URL}/${END_POINT}`,formData, "Reports.csv")
+                                                        downloadReport(token, `${api.API_URL}/${END_POINT}`,filters, "Reports.csv")
                                                         }
                                                     }
                                             className="btn btn-primary "> Download Excel

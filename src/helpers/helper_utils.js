@@ -1,14 +1,22 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-export const downloadReport = async (token, url, formData, filename) => {
+export const downloadReport = async (token, url, data, filename) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
     },
 
     responseType: 'blob',
   };
+
+  const formData = new FormData();
+  Object.keys(data).map(key => {
+    if (data[key]) {
+      formData.append(key, data[key]);
+    }
+  })
 
   try {
     const res = await axios.post(

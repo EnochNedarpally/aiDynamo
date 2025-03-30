@@ -348,11 +348,7 @@ const EmailLog = () => {
                                         />
                                             <button 
                                                 onClick={()=>{
-                                                    const formData = new FormData();
-                                                Object.keys(emailFilter).map(key => {
-                                                        formData.append(key, emailFilter[key]);
-                                                    })
-                                                    downloadReport(token, `${api.API_URL}/api/reports/brevo-mail-download-csv`,formData, "Reports.csv")
+                                                    downloadReport(token, `${api.API_URL}/api/reports/brevo-mail-download-csv`,emailFilter, "Reports.csv")
                                                  }
                                                 }
                                                 type="button"

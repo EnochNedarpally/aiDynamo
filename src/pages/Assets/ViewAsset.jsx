@@ -110,6 +110,7 @@ const ViewAsset = () => {
                 }
                 <p><strong>Mail Template:</strong> <Button onClick={() => window.open(asset.emailTemplate, '_blank')} color="link" className="p-0">View mail template</Button></p>
                 <p><strong>Web Template:</strong> <Button onClick={() => window.open(asset.webTemplate, '_blank')} color="link" className="p-0">View web template</Button></p>
+                <p><strong>Thank You Template:</strong> <Button onClick={() => window.open(asset.thankyouTemplate, '_blank')} color="link" className="p-0">View Thank you template</Button></p>
               </CardBody>
             </Card>
           </Col>
