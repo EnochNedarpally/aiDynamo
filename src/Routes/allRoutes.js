@@ -302,6 +302,7 @@ import AddUser from "../pages/Users/AddUser";
 import ViewAsset from "../pages/Assets/ViewAsset";
 import ConfirgureAsset from "../pages/Assets/ConfirgureAsset";
 import ViewSubscriber from "../pages/Subscriber/ViewSubscriber";
+import VerifyEmail from "../pages/Email/VerifyEmail";
 
 const authProtectedRoutes = [
   { path: "/admin/dashboard", component: <AdminDashboard /> },
@@ -317,6 +318,7 @@ const authProtectedRoutes = [
   { path: "/admin/configure-asset", component: <ConfirgureAsset /> },
   { path: "/admin/single-email", component: <Email /> },
   { path: "/admin/bulk-email", component: <Email /> },
+  { path: "/admin/verify-email", component: <VerifyEmail /> },
   { path: "/admin/email-log", component: <EmailLog /> },
   { path: "/admin/subscriber-list", component: <SubscriberList/> },
   { path: "/admin/view-subscriber", component: <ViewSubscriber/> },

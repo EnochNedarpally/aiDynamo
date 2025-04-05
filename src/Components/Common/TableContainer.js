@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { CardBody, Col, Row, Table } from "reactstrap";
+import { CardBody, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row, Table } from "reactstrap";
 import { Link } from "react-router-dom";
 
 import {
@@ -109,6 +109,8 @@ const TableContainer = ({
   const [columnFilters, setColumnFilters] = useState ([]);
   const [globalFilter, setGlobalFilter] = useState('');
   const [currentPaginationRange, setCurrentPaginationRange] = useState([0, 9]); 
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [tablePageSize, setTablePageSize] = useState(10);
   
 
   const fuzzyFilter = (row, columnId, value, addMeta) => {
@@ -164,6 +166,14 @@ const TableContainer = ({
   }, [customPageSize, setPageSize]);
   const pageButtons = getPageOptions().slice(currentPaginationRange[0], currentPaginationRange[1]);
   const length = getPageOptions().length
+
+  const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
+
+  const handlePageSizeChange = (size) => {
+    setPageSize(size);
+    setTablePageSize(size); 
+  };
+
   return (
     <Fragment>
       {isGlobalFilter && <Row className="mb-3">
@@ -274,7 +284,17 @@ const TableContainer = ({
       </div>
 
       <Row className="align-items-center mt-2 g-3 text-center text-sm-start">
-        <div className="col-sm">
+        <div className="col-sm d-flex align-items-center gap-2">
+        <Dropdown  isOpen={dropdownOpen} toggle={toggleDropdown}>
+        <DropdownToggle style={{ backgroundColor: "#687cfe",borderColor:"white" }} caret>Page Size: {tablePageSize}</DropdownToggle>
+        <DropdownMenu >
+          {[10, 20, 30, 50 ,100].map((size) => (
+            <DropdownItem key={size} onClick={() => handlePageSizeChange(size)}>
+              {size}
+            </DropdownItem>
+          ))}
+        </DropdownMenu>
+      </Dropdown>
           <div className="text-muted">Showing<span className="fw-semibold ms-1">{getState().pagination.pageSize}</span> of <span className="fw-semibold">{data.length}</span> Results
           </div>
         </div>

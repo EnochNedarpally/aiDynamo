@@ -27,9 +27,7 @@ const ViewAsset = () => {
   const fetchStats= async () => {
     try {
       const data = await axios.get(`${api.API_URL}/api/asset/mail-report-by-asset/${assetId}`, config)
-      if (data.status) {
         setAssetStats(data.responseData)
-      }
     } catch (error) {
       toast.error("Unable to fetch Asset")
       console.log("error", error)
@@ -73,10 +71,10 @@ const ViewAsset = () => {
                   <CardBody>
                     <h5 className="fw-bold">Email Progress</h5>
                     <div className="d-flex gap-2 justify-content-between">
-                      <p className="d-flex flex-column "><strong>30</strong> Sent</p>
-                      <p className="d-flex flex-column text-success"><strong>23</strong> Read</p>
-                      <p className="d-flex flex-column text-warning"><strong>0</strong> Downloads</p>
-                      <p className="d-flex flex-column text-danger"><strong>13</strong> Bounce</p>
+                      <p className="d-flex flex-column "><strong>{assetStats.sent}</strong> Sent</p>
+                      <p className="d-flex flex-column text-success"><strong>{assetStats.read}</strong> Read</p>
+                      <p className="d-flex flex-column text-warning"><strong>{assetStats.download}</strong> Downloads</p>
+                      <p className="d-flex flex-column text-danger"><strong>{assetStats.bounce}</strong> Bounce</p>
                     </div>
                     <Progress value={12} color="primary" className="mt-2" />
                   </CardBody>

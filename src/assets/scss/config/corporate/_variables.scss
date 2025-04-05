@@ -917,9 +917,9 @@ $form-text-color:                       var(--#{$prefix}secondary-color);
 
 // scss-docs-start form-label-variables
 $form-label-margin-bottom:              .5rem;
-$form-label-font-size:                  null;
+$form-label-font-size:                  1rem;
 $form-label-font-style:                 null;
-$form-label-font-weight:                null;
+$form-label-font-weight:                500;
 $form-label-color:                      null;
 // scss-docs-end form-label-variables
 

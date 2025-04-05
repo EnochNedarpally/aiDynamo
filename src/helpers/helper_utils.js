@@ -61,3 +61,9 @@ export  const formatToDDMMYY=(input)=> {
   const seconds = String(date.getSeconds()).padStart(2, '0');
   return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
 }
+
+export const iconStyle={
+  primary:{backgroundColor:"#405189",padding:"6px 8px",borderRadius:5},
+  secondary:{backgroundColor:"#7e7cba",padding:"6px 8px",borderRadius:5},
+  ternary:{backgroundColor:"#299cdb",padding:"6px 8px",borderRadius:5}
+}

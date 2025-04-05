@@ -56,15 +56,16 @@ const ViewSubscriber = () => {
             <Card>
                 <CardBody>
                     <ToastContainer />
-                    <h6 className="fw-bold mb-3">Subscriber Details</h6>
+                    <h6 className="fw-bold mb-3" style={{fontSize:'1.1rem'}}>Subscriber Details</h6>
+                    <hr/>
                     <Row>
                         {Object.keys(subscriber).map(key => {
                             if (key == "id") return <></>
                             else return (<div className='d-flex gap-2'>
-                                <p style={{ width: "120px" }}>
+                                <p style={{ width: "120px",fontSize:"15px" }}>
                                     <strong>{fields[key]}: </strong>
                                 </p>
-                                <p>{key == "dt1" ? formatToDDMMYY(subscriber[key]) : subscriber[key]}</p>
+                                <p className='text-muted' style={{fontSize:"15px",color:""}}>{key == "dt1" ? formatToDDMMYY(subscriber[key]) : subscriber[key]}</p>
                             </div>)
                         }
                         )}

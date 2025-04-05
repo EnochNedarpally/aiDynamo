@@ -165,7 +165,7 @@ const Navdata = () => {
             id: "category",
             // label: "Pages",
             label: "Category",
-            icon: "ri-pages-line",
+            icon: "ri-attachment-2",
             link: "/#",
             click: function (e) {
                 e.preventDefault();
@@ -207,8 +207,8 @@ const Navdata = () => {
         },
         {
             id: "email",
-            label: "Email",
-            icon: "ri-dashboard-2-line",
+            label: "Send Email",
+            icon: "ri-mail-send-fill",
             link: "/#",
             stateVariables: isDashboard,
             subItems: [
@@ -218,7 +218,8 @@ const Navdata = () => {
                     label: "Single Email",
                     link: "/admin/single-email",
                 },
-                { id: "bulkEmail", label: "Bulk Email", link: "/admin/bulk-email", parentId: "pages" },
+                { id: "bulkEmail", label: "Bulk Email", link: "/admin/bulk-email"},
+                { id: "validateEmail", label: "Verify Email Account", link: "/admin/verify-email"},
              
             ],
             click: function (e) {
@@ -233,7 +234,7 @@ const Navdata = () => {
             id: "emailLogList",
             // label: "Pages",
             label: "Email Log",
-            icon: "ri-pages-line",
+            icon: "ri-mail-download-line",
             link: "/admin/email-log",
             click: function (e) {
                 e.preventDefault();
@@ -248,7 +249,7 @@ const Navdata = () => {
             id: "subscriberList",
             // label: "Pages",
             label: "Subscriber List",
-            icon: "ri-pages-line",
+            icon: "ri-user-add-line",
             link: "/admin/subscriber-list",
             click: function (e) {
                 e.preventDefault();
@@ -263,7 +264,7 @@ const Navdata = () => {
             id: "unsubscriberList",
             // label: "Pages",
             label: "UnSubscriber List",
-            icon: "ri-pages-line",
+            icon: "ri-user-unfollow-line",
             link: "/admin/unsubscriber-list",
             click: function (e) {
                 e.preventDefault();
@@ -293,7 +294,7 @@ const Navdata = () => {
         {
             id: "email",
             label: "Emails",
-            icon: "ri-map-pin-line",
+            icon: "ri-mail-line",
             link: "/#",
             click: function (e) {
                 e.preventDefault();
@@ -310,7 +311,7 @@ const Navdata = () => {
         {
             id: "admin",
             label: "Admin",
-            icon: "ri-file-list-3-line",
+            icon: "ri-admin-fill",
             link: "/#",
             click: function (e) {
                 e.preventDefault();
@@ -338,7 +339,7 @@ const Navdata = () => {
         {
             id: "users",
             label: "Users",
-            icon: "ri-pie-chart-line",
+            icon: "ri-user-line",
             link: "/#",
             click: function (e) {
                 e.preventDefault();

@@ -10,6 +10,7 @@ import { api } from '../../config';
 import { DatePicker } from '@mui/x-date-pickers';
 import TableContainer from '../../Components/Common/TableContainer';
 import { downloadReport, formatDate, formatToDDMMYY } from '../../helpers/helper_utils';
+import { Cancel, CheckCircle } from '@mui/icons-material';
 
 const initialState = {
     accountId: "",
@@ -87,9 +88,9 @@ const EmailLog = () => {
             cell: ({ cell }) => {
                 const value = cell.getValue(); 
                 return  (
-                <>
-                {value == "true" ? <i style={{color:"#1db61d",fontSize:"2rem"}} className="ri-check-line d-flex justify-content-center"></i> :  <i style={{color:"red",fontSize:"2rem"}} className="ri-close-fill d-flex justify-content-center"></i>}
-                </>
+                <div className='text-center'>
+                {value == "true" ? <CheckCircle  sx={{fontSize:'17px',color:"#1db61d"}}/> :  <Cancel sx={{fontSize:'17px',color:"red"}}/>}
+                </div>
                 ) 
             },
           },
@@ -100,9 +101,9 @@ const EmailLog = () => {
             cell: ({ cell }) => {
                 const value = cell.getValue(); 
                 return  (
-                <>
-                {value == "true" ? <i style={{color:"#1db61d",fontSize:"2rem"}} className="ri-check-line d-flex justify-content-center"></i> :  <i style={{color:"red",fontSize:"2rem"}} className="ri-close-fill d-flex justify-content-center"></i>}
-                </>
+                <div className='text-center'>
+                {value == "true" ? <CheckCircle sx={{fontSize:'17px',color:"#1db61d"}}/> :  <Cancel sx={{fontSize:'17px',color:"red"}}/>}
+                </div>
                 ) 
             },
           },
@@ -113,9 +114,9 @@ const EmailLog = () => {
             cell: ({ cell }) => {
                 const value = cell.getValue(); 
                 return  (
-                <>
-                {value == "true" ? <i style={{color:"#1db61d",fontSize:"2rem"}} className="ri-check-line d-flex justify-content-center"></i> :  <i style={{color:"red",fontSize:"2rem"}} className="ri-close-fill d-flex justify-content-center"></i>}
-                </>
+                <div className='text-center'>
+                {value == "true" ? <CheckCircle sx={{fontSize:'17px',color:"#1db61d"}}/> :  <Cancel sx={{fontSize:'17px',color:"red"}}/>}
+                </div>
                 ) 
             },
           },

@@ -154,10 +154,10 @@ layout settings
                     <React.Fragment key={key}>
                         {/* Main Header */}
                         {item['isHeader'] ?
-                            <li className="menu-title"><span data-key="t-menu">{props.t(item.label)} </span></li>
+                            <li className="menu-title "><span data-key="t-menu">{props.t(item.label)} </span></li>
                             : (
                                 (item.subItems ? (
-                                    <li className="nav-item">
+                                    <li className="nav-item my-1">
                                         <Link
                                             onClick={item.click}
                                             className="nav-link menu-link"
@@ -247,7 +247,7 @@ layout settings
                                         </Collapse>
                                     </li>
                                 ) : (
-                                    <li className="nav-item">
+                                    <li className="nav-item my-1">
                                         <Link
                                             className="nav-link menu-link"
                                             to={item.link ? item.link : "/#"}>

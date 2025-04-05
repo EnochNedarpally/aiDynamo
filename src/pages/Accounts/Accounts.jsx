@@ -17,6 +17,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import TableContainer from "../../Components/Common/TableContainer";
 import { api } from "../../config";
+import { EditCalendar } from "@mui/icons-material";
+import { iconStyle } from "../../helpers/helper_utils";
 
 
 const Accounts = () => {
@@ -81,11 +83,11 @@ const Accounts = () => {
                 cell: (cell) => {
                     return (
                         <ul className="list-inline hstack gap-2 mb-0">
-                            <li className="list-inline-item" title="Edit">
+                            <li className="list-inline-item list-icons-primary" style={iconStyle.primary} title="Edit">
                                 <Link className="edit-item-btn" to="/admin/add-account" 
                                     state={cell.row.original}
                                 >
-                                    <i className="ri-pencil-fill align-bottom text-muted"></i>
+                                    <EditCalendar sx={{color:"white"}}/>
                                 </Link>
                             </li>
 

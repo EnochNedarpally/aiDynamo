@@ -9,7 +9,8 @@ import dayjs from 'dayjs';
 import { api } from '../../config';
 import { DatePicker } from '@mui/x-date-pickers';
 import TableContainer from '../../Components/Common/TableContainer';
-import { downloadReport, formatDate, formatToDDMMYY } from '../../helpers/helper_utils';
+import { downloadReport, formatDate, formatToDDMMYY, iconStyle } from '../../helpers/helper_utils';
+import { Visibility } from '@mui/icons-material';
 
 const initialState = {
     accountId: "",
@@ -108,9 +109,8 @@ const SubscriberList = () => {
                     return (
                       <ul className="list-inline hstack gap-2 mb-0">
                         <Link to="/admin/view-subscriber" state={cell.row.original.id}>
-                        <li className="list-inline-item" title="View Subscriber">
-                          {/* Add your action logic here */}
-                          <i className="ri-eye-fill align-bottom text-muted"></i>
+                        <li className="list-inline-item" title="View Subscriber" style={iconStyle.secondary}>
+                          <Visibility sx={{color:"white"}}/>
                         </li>
                         </Link>
                       </ul>

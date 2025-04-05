@@ -24,6 +24,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import TableContainer from "../../Components/Common/TableContainer";
 import { api } from "../../config";
+import { EditCalendar, HelpOutline, ToggleOff, ToggleOn, Visibility } from "@mui/icons-material";
 
 
 const Assets = () => {
@@ -115,29 +116,32 @@ const Assets = () => {
                 cell: (cell) => {
                     return (
                         <ul className="list-inline hstack gap-2 mb-0">
-                            <li className="list-inline-item" title="Edit">
+                            <li className="list-inline-item" title="Edit" style={{backgroundColor:"#405189",padding:"6px 8px",borderRadius:5}}>
                                 <Link className="edit-item-btn" to="/admin/add-asset"
                                     state={{...cell.row.original,campaignId:campaignId}}
                                 >
-                                    <i className="ri-pencil-fill align-bottom text-muted"></i>
+                                    <EditCalendar sx={{color:"white"}}/>
+                                    {/* <i className="ri-pencil-fill align-bottom text-muted"></i> */}
                                 </Link>
                             </li>
-                            <li className="list-inline-item" title="View Asset">
+                            <li className="list-inline-item" title="View Asset" style={{backgroundColor:"#7e7cba",padding:"6px 8px",borderRadius:5}}>
                                 <Link to="/admin/view-asset"
                                     state={cell.row.original.id}
                                 >
-                                    <i className="ri-eye-fill align-bottom text-muted"></i>
+                                    {/* <i className="ri-eye-fill align-bottom text-muted"></i> */}
+                                    <Visibility sx={{color:"white"}}/>
                                 </Link>
                             </li>
-                            <li className="list-inline-item" title="Configure Asset">
+                            <li className="list-inline-item" title="Configure Asset" style={{backgroundColor:"#299cdb",padding:"6px 8px",borderRadius:5}}>
                                 <Link to="/admin/configure-asset"
                                 state={cell.row.original}
                                 >
-                                    <i className="ri-lock-fill align-bottom text-muted"></i>
+                                    {/* <i className="ri-lock-fill align-bottom text-muted"></i> */}
+                                    <HelpOutline sx={{color:"white"}}/>
                                 </Link>
                             </li>
                             <li onClick={() => {setModal(true);setAssetId(cell.row.original.id) }} className="list-inline-item" title={`${cell.row.original.status == "APPROVED" ? "Active" :"Inactive"}`}>
-                                    <i style={{color:cell.row.original.status == "APPROVED" ?  "#1db61d" :"orange"}} className="ri-circle-fill align-bottom"></i>
+                                    {cell.row.original.status == "APPROVED" ?  <ToggleOn color="success"/> : <ToggleOff color="warning"/>}
                             </li>
                         </ul>
                     );

@@ -28,6 +28,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { api } from "../../config";
 import TableContainer from "../../Components/Common/TableContainer";
+import { iconStyle } from "../../helpers/helper_utils";
+import { EditCalendar, Visibility } from "@mui/icons-material";
 
 const AllCampaign = () => {
   const token = useSelector(state => state.Login.token)
@@ -90,18 +92,18 @@ const AllCampaign = () => {
         cell: (cell) => {
           return (
             <ul className="list-inline hstack gap-2 mb-0">
-              <li className="list-inline-item" title="View Asset">
+              <li className="list-inline-item" title="View Asset" style={iconStyle.secondary}>
                 <Link to="/admin/assets"
                   state={{camapignId:cell.row.original.id}}
                 >
-                  <i className="ri-eye-fill align-bottom text-muted"></i>
+                  <Visibility sx={{color:"white"}}/>
                 </Link>
               </li>
-              <li className="list-inline-item" title="Edit">
+              <li className="list-inline-item" title="Edit" style={iconStyle.primary}>
                 <Link className="edit-item-btn" to="/admin/add-campaign"
                   state={cell.row.original}
                 >
-                  <i className="ri-pencil-fill align-bottom text-muted"></i>
+                  <EditCalendar sx={{color:"white"}}/>
                 </Link>
               </li>
 

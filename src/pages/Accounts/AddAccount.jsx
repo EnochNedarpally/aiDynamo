@@ -130,7 +130,7 @@ const AddAccount = () => {
             <Col lg={12}>
               <Card>
                 <CardHeader className="card-header">
-                  <h4 className="card-title mb-0">Add Account </h4>
+                  <h4 style={{fontSize:"1.1rem",color:"#5a5a5a"}} className="card-title mb-0">Add Account </h4>
                 </CardHeader>
                 <CardBody>
                   <form onSubmit={location ? handleUpdate : handleSubmit}>
