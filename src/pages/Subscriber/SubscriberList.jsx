@@ -11,6 +11,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 import TableContainer from '../../Components/Common/TableContainer';
 import { downloadReport, formatDate, formatToDDMMYY, iconStyle } from '../../helpers/helper_utils';
 import { Visibility } from '@mui/icons-material';
+import { useDispatch } from 'react-redux';
 
 const initialState = {
     accountId: "",
@@ -27,6 +28,7 @@ const SubscriberList = () => {
         },
     };
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const location = useLocation()?.pathname.split("/").pop()
     const [loading, setLoading] = useState(false);
     const [accountOptions, setAccountOptions] = useState([]);
@@ -40,6 +42,7 @@ const SubscriberList = () => {
 
     useEffect(()=>{
         handleSubmit()
+        setFilters(initialState)
     },[isSubscriberList])
 
     useEffect(() => {
@@ -259,7 +262,7 @@ const SubscriberList = () => {
                                             type="button"
                                             onClick={()=>{
                                                     const END_POINT = isSubscriberList ? "api/reports/subscribe/downloads" : "api/reports/unsubscribe-downloads"
-                                                        downloadReport(token, `${api.API_URL}/${END_POINT}`,filters, "Reports.csv")
+                                                        downloadReport(token, `${api.API_URL}/${END_POINT}`,filters, "Reports.csv",dispatch)
                                                         }
                                                     }
                                             className="btn btn-primary "> Download Excel

@@ -20,10 +20,12 @@ import LightDark from '../Components/Common/LightDark';
 import { changeSidebarVisibility } from '../slices/thunks';
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from 'reselect';
+import { LinearProgress } from '@mui/material';
 
 const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }) => {
     const dispatch = useDispatch();
-
+    const loading = useSelector(state => state.Login.loading)
+    
     const selectDashboardData = createSelector(
         (state) => state.Layout,
         (sidebarVisibilitytype) => sidebarVisibilitytype.sidebarVisibilitytype
@@ -153,6 +155,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }) => {
                         </div>
                     </div>
                 </div>
+            {loading && <LinearProgress/>}
             </header>
         </React.Fragment>
     );

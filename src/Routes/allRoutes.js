@@ -305,7 +305,7 @@ import ViewSubscriber from "../pages/Subscriber/ViewSubscriber";
 import VerifyEmail from "../pages/Email/VerifyEmail";
 
 const authProtectedRoutes = [
-  { path: "/admin/dashboard", component: <AdminDashboard /> },
+  { path: "/admin/dashboard", component: <AdminDashboard />,role:"user" },
   { path: "/admin/accounts", component: <Accounts /> },
   { path: "/admin/add-account", component: <AddAccount /> },
   { path: "/admin/category", component: <Category /> },
@@ -316,13 +316,13 @@ const authProtectedRoutes = [
   { path: "/admin/assets", component: <Assets /> },
   { path: "/admin/view-asset", component: <ViewAsset /> },
   { path: "/admin/configure-asset", component: <ConfirgureAsset /> },
-  { path: "/admin/single-email", component: <Email /> },
-  { path: "/admin/bulk-email", component: <Email /> },
+  { path: "/admin/single-email", component: <Email />,role:"user" },
+  { path: "/admin/bulk-email", component: <Email />,role:"user" },
   { path: "/admin/verify-email", component: <VerifyEmail /> },
-  { path: "/admin/email-log", component: <EmailLog /> },
-  { path: "/admin/subscriber-list", component: <SubscriberList/> },
-  { path: "/admin/view-subscriber", component: <ViewSubscriber/> },
-  { path: "/admin/unsubscriber-list", component: <SubscriberList /> },
+  { path: "/admin/email-log", component: <EmailLog />,role:"user" },
+  { path: "/admin/subscriber-list", component: <SubscriberList/>,role:"user" },
+  { path: "/admin/view-subscriber", component: <ViewSubscriber/>,role:"user" },
+  { path: "/admin/unsubscriber-list", component: <SubscriberList />,role:"user" },
   { path: "/admin/report", component: <Report /> },
   { path: "/admin/email-list", component: <EmailList /> },
   { path: "/admin/add-email", component: <AddEmail /> },
@@ -330,7 +330,8 @@ const authProtectedRoutes = [
   { path: "/admin/add-admin", component: <AddAdmin /> },
   { path: "/admin/user-list", component: <UserList /> },
   { path: "/admin/add-user", component: <AddUser /> },
-  { path: "*", component: <Navigate to="/admin/dashboard" /> },
+  { path: "/admin/login",exact:true, component: <Navigate to="/admin/dashboard" />,role:"user" },
+  { path: "*", component: <Navigate to="/admin/dashboard" />,role:"user" },
 ];
 
 const publicRoutes = [

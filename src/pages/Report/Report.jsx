@@ -10,6 +10,7 @@ import { api } from '../../config';
 import { DatePicker } from '@mui/x-date-pickers';
 import TableContainer from '../../Components/Common/TableContainer';
 import { downloadReport } from '../../helpers/helper_utils';
+import { useDispatch } from 'react-redux';
 
 const initialState = {
     accountId: "",
@@ -24,6 +25,7 @@ const Report = () => {
         },
     };
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [loading, setLoading] = useState(false);
     const [accountOptions, setAccountOptions] = useState([]);
     const [campaignOptions, setCampaignOptions] = useState([]);
@@ -202,7 +204,7 @@ const Report = () => {
                                         <button 
                                             type="button"
                                             onClick={()=>{
-                                                        downloadReport(token, `${api.API_URL}/api/reports/download`,reportFilter, "Reports.csv")
+                                                        downloadReport(token, `${api.API_URL}/api/reports/download`,reportFilter, "Reports.csv",dispatch)
                                                         }
                                                     }
                                             className="btn btn-primary "> Download Excel

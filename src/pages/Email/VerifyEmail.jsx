@@ -5,10 +5,12 @@ import { api } from '../../config';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { downloadReport } from '../../helpers/helper_utils';
+import { useDispatch } from 'react-redux';
 
 const VerifyEmail = () => {
     const [file, setFile] = useState(null);
     const token = useSelector(state => state.Login.token)
+    const dispatch = useDispatch()
 
     const handleFileChange = (acceptedFiles) => {
         setFile(acceptedFiles[0]);
@@ -33,7 +35,7 @@ const VerifyEmail = () => {
             //   if (response.status) {
             //     setFile(null);
             //   }
-            downloadReport(token, `${api.API_URL}/validate-emails-from-csv`, { file: file }, "ValidateEmails.csv")
+            downloadReport(token, `${api.API_URL}/validate-emails-from-csv`, { file: file }, "ValidateEmails.csv",dispatch)
         } catch (err) {
 
             toast.error(err?.response?.data?.message ?? 'Error uploading file')

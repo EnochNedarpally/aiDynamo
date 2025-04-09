@@ -6,7 +6,7 @@ import ParticlesAuth from "../AuthenticationInner/ParticlesAuth";
 //redux
 import { useSelector, useDispatch } from "react-redux";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import withRouter from "../../Components/Common/withRouter";
 // Formik validation
 import * as Yup from "yup";
@@ -21,7 +21,7 @@ import { createSelector } from 'reselect';
 
 const Login = (props) => {
     const dispatch = useDispatch();
-
+    const navigate = useNavigate()
     const selectLayoutState = (state) => state;
     const loginpageData = createSelector(
         selectLayoutState,
@@ -34,15 +34,24 @@ const Login = (props) => {
             token:state.Login.token
         })
     );
-  
+    
     // Inside your component
     const {
         user, error, loading, errorMsg,loginMsg,token
     } = useSelector(loginpageData);
+    const userToken = useSelector(state => state.Login.token)
    
     const [userLogin, setUserLogin] = useState([]);
     const [passwordShow, setPasswordShow] = useState(false);
     const [otp, setOtp] = useState("");
+
+    useEffect(() => {
+      if(userToken){
+        navigate("/admin/dashboard")
+      }
+    
+    }, [userToken])
+    
 
     useEffect(() => {
         if (user ) {
@@ -60,8 +69,8 @@ const Login = (props) => {
         enableReinitialize: true,
 
         initialValues: {
-            email: userLogin.email || "superadmin@demanday.info" || '',
-            password: userLogin.password || "1234" || '',
+            email: userLogin.email || '',
+            password: userLogin.password || '',
         },
         validationSchema: Yup.object({
             email: Yup.string().required("Please Enter Your Email"),

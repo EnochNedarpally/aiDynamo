@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Navdata = () => {
@@ -33,7 +34,7 @@ const Navdata = () => {
 
     const [iscurrentState, setIscurrentState] = useState('Dashboard');
     // to show menu according to userRole
-    
+    const role = useSelector(state => state.Login.role)
   useEffect(() => {
     const path = location.pathname;
 
@@ -135,6 +136,7 @@ const Navdata = () => {
             id: "dashboard",
             label: "Dashboards",
             icon: "ri-dashboard-2-line",
+            role:"user",
             link: "/admin/dashboard",
             stateVariables: isDashboard,
             click: function (e) {
@@ -206,10 +208,24 @@ const Navdata = () => {
             ],
         },
         {
+            id: "validateEmail",
+            label: "Email Validator",
+            icon: "ri-mail-check-line",
+            link: "/admin/verify-email",
+            click: function (e) {
+                e.preventDefault();
+                setIsIcons(!isIcons);
+                setIscurrentState('Icons');
+                updateIconSidebar(e);
+            },
+            stateVariables: isIcons,
+        },
+        {
             id: "email",
             label: "Send Email",
             icon: "ri-mail-send-fill",
             link: "/#",
+            role:"user",
             stateVariables: isDashboard,
             subItems: [
                
@@ -219,7 +235,7 @@ const Navdata = () => {
                     link: "/admin/single-email",
                 },
                 { id: "bulkEmail", label: "Bulk Email", link: "/admin/bulk-email"},
-                { id: "validateEmail", label: "Verify Email Account", link: "/admin/verify-email"},
+                // { id: "validateEmail", label: "Verify Email Account", link: "/admin/verify-email"},
              
             ],
             click: function (e) {
@@ -235,6 +251,7 @@ const Navdata = () => {
             // label: "Pages",
             label: "Email Log",
             icon: "ri-mail-download-line",
+            role:"user",
             link: "/admin/email-log",
             click: function (e) {
                 e.preventDefault();
@@ -250,6 +267,7 @@ const Navdata = () => {
             // label: "Pages",
             label: "Subscriber List",
             icon: "ri-user-add-line",
+            role:"user",
             link: "/admin/subscriber-list",
             click: function (e) {
                 e.preventDefault();
@@ -265,6 +283,7 @@ const Navdata = () => {
             // label: "Pages",
             label: "UnSubscriber List",
             icon: "ri-user-unfollow-line",
+            role:"user",
             link: "/admin/unsubscriber-list",
             click: function (e) {
                 e.preventDefault();
@@ -357,11 +376,9 @@ const Navdata = () => {
     ];
  const getFilteredMenuItems = () => {
   return menuItems.filter((item) => {
-    if (userType === "vendor") {
+    if (role === "user") {
       // Show only vendor-related items and headers
-      return item.isHeader === true
-        ? item.label === "Vendor"
-        : item.link?.startsWith("/vendor") || (item.label === "Profile" && item.link?.startsWith("/vendor"));
+      return item.role == "user"
     }
 
     if (userType === "user") {

@@ -11,13 +11,17 @@ import { DatePicker } from '@mui/x-date-pickers';
 import TableContainer from '../../Components/Common/TableContainer';
 import { downloadReport, formatDate, formatToDDMMYY } from '../../helpers/helper_utils';
 import { Cancel, CheckCircle } from '@mui/icons-material';
+import { useDispatch } from 'react-redux';
 
 const initialState = {
     accountId: "",
     campaignId: "",
     assetId: "",
     startDate:"",
-    endDate:""
+    endDate:"",
+    download:"",
+    read:"",
+    bounce:""
 }
 
 const EmailLog = () => {
@@ -28,6 +32,7 @@ const EmailLog = () => {
         },
     };
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const location = useLocation()?.pathname.split("/").pop()
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -202,8 +207,9 @@ const EmailLog = () => {
             event.preventDefault();
         }
         const formData = new FormData();
-        Object.keys(emailFilter).map(key => {
-                if(emailFilter[key]){
+        if(emailFilter.accountId || emailFilter.assetId || emailFilter.campaignId){
+            Object.keys(emailFilter).map(key => {
+                if(emailFilter[key] !== ""){
                     formData.append(key, emailFilter[key]);
                 }
         })
@@ -232,6 +238,8 @@ const EmailLog = () => {
         } finally {
             setLoading(false);
         }
+        }
+        else toast.warn("At least one of Campaign, Asset, or Account must be provided")
     };
 
     const handleDateChange = (date, type) => {
@@ -299,11 +307,11 @@ const EmailLog = () => {
                                             <Autocomplete
                                                 fullWidth
                                                 id="tags-outlined1"
-                                                 options={[{id:1,name:"True"},{id:2,name:"False"}]}
+                                                 options={[{id:1,name:"True"},{id:0,name:"False"}]}
                                                 getOptionLabel={(option) => option.name}
                                                 onChange={(event, newValue) => {
                                                     if (newValue) {
-                                                        setEmailFilter(prev => { return { ...prev, campaignId: newValue.id } })
+                                                        setEmailFilter(prev => { return { ...prev, read: newValue.id } })
                                                     }
                                                 }}
                                                 renderInput={(params) => <TextField {...params} label="Read" />}
@@ -312,11 +320,11 @@ const EmailLog = () => {
                                             <Autocomplete
                                                 fullWidth
                                                 id="tags-outlined1"
-                                                options={[{id:1,name:"True"},{id:2,name:"False"}]}
+                                                options={[{id:1,name:"True"},{id:0,name:"False"}]}
                                                 getOptionLabel={(option) => option.name}
                                                 onChange={(event, newValue) => {
                                                     if (newValue) {
-                                                        setEmailFilter(prev => { return { ...prev, assetId: newValue.id } })
+                                                        setEmailFilter(prev => { return { ...prev, download: newValue.id } })
                                                     }
                                                 }}
                                                 renderInput={(params) => <TextField {...params} label="Download" />}
@@ -325,11 +333,11 @@ const EmailLog = () => {
                                             <Autocomplete
                                                 fullWidth
                                                 id="tags-outlined1"
-                                                 options={[{id:1,name:"True"},{id:2,name:"False"}]}
+                                                 options={[{id:1,name:"True"},{id:0,name:"False"}]}
                                                 getOptionLabel={(option) => option.name}
                                                 onChange={(event, newValue) => {
                                                     if (newValue) {
-                                                        setEmailFilter(prev => { return { ...prev, assetId: newValue.id } })
+                                                        setEmailFilter(prev => { return { ...prev, bounce: newValue.id } })
                                                     }
                                                 }}
                                                 renderInput={(params) => <TextField {...params} label="Bounce" />}
@@ -349,7 +357,7 @@ const EmailLog = () => {
                                         />
                                             <button 
                                                 onClick={()=>{
-                                                    downloadReport(token, `${api.API_URL}/api/reports/brevo-mail-download-csv`,emailFilter, "Reports.csv")
+                                                    downloadReport(token, `${api.API_URL}/api/reports/brevo-mail-download-csv`,emailFilter, "Reports.csv",dispatch)
                                                  }
                                                 }
                                                 type="button"

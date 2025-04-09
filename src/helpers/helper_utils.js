@@ -1,7 +1,8 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import { updateLoading } from "../slices/auth/login/reducer";
 
-export const downloadReport = async (token, url, data, filename) => {
+export const downloadReport = async (token, url, data, filename,dispatch) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -17,7 +18,7 @@ export const downloadReport = async (token, url, data, filename) => {
       formData.append(key, data[key]);
     }
   })
-
+  dispatch && dispatch(updateLoading(true))
   try {
     const res = await axios.post(
       url,
@@ -35,11 +36,12 @@ export const downloadReport = async (token, url, data, filename) => {
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(downloadUrl);
-
+    dispatch && dispatch(updateLoading(false))
     toast.success('Report downloaded.');
   } catch (error) {
     toast.error('Unable to fetch reports');
     console.error('Error:', error);
+    dispatch && dispatch(updateLoading(false))
   }
 };
 export const formatDate = (dateString) => {
