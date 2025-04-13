@@ -1,7 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const initialState = {
-  user: {},
+  user: {
+    name:JSON.parse(sessionStorage.getItem("authUser"))?.name ?? null,
+    profilePic:JSON.parse(sessionStorage.getItem("authUser"))?.profilePic ?? null
+  },
   error: "", // for error message
   loading: false,
   isUserLogout: false,
@@ -38,6 +41,10 @@ const loginSlice = createSlice({
       state.errorMsg = false;
       state.token= JSON.parse(sessionStorage.getItem("authUser"))?.jwtToken
       state.role= JSON.parse(sessionStorage.getItem("authUser"))?.role
+      state.user= {
+        name:JSON.parse(sessionStorage.getItem("authUser"))?.name ?? null,
+        profilePic:JSON.parse(sessionStorage.getItem("authUser"))?.profilePic ?? null
+      }
     },
     logoutUserSuccess(state, action) {
       state.error = null

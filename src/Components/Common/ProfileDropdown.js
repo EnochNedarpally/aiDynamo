@@ -9,7 +9,7 @@ import {
 } from "reactstrap";
 
 //import images
-import avatar1 from "../../assets/images/atul.jpeg";
+import Person from "../../assets/images/personIcon.png";
 import { createSelector } from "reselect";
 
 const ProfileDropdown = () => {
@@ -22,7 +22,8 @@ const ProfileDropdown = () => {
     token:state.Login.token
 }));
   // Inside your component
-  const {user,token} = useSelector(profiledropdownData);
+  const token = useSelector(state => state.Login.token)
+  const user = useSelector(state => state.Login.user)
 
   const [userName, setUserName] = useState("Admin");
   const authUserData = JSON.parse(sessionStorage.getItem("authUser"));
@@ -48,7 +49,7 @@ const ProfileDropdown = () => {
   const toggleProfileDropdown = () => {
     setIsProfileDropdown(!isProfileDropdown);
   };
-
+console.log("user",user)
   return (
     <React.Fragment>
       {/* <Dropdown isOpen={isProfileDropdown} toggle={toggleProfileDropdown} className="ms-sm-3 header-item topbar-user"> */}
@@ -62,16 +63,13 @@ const ProfileDropdown = () => {
           <span className="d-flex align-items-center">
             <img
               className="rounded-circle header-profile-user"
-              src={avatar1}
+              src={user?.profilePic ? user?.profilePic :  Person}
               alt="Header Avatar"
             />
             <span className="text-start ms-xl-2">
               {/* <span className="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{userName}</span> */}
               <span className="d-none d-xl-inline-block ms-1 fw-medium user-name-text">
-                {authUserData?.data?.first_name || "N/A"}
-              </span>
-              <span className="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">
-                {authUserData?.data?.role || "N/A"}
+                {user?.name || "N/A"}
               </span>
             </span>
           </span>
