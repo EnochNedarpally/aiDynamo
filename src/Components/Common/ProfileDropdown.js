@@ -49,7 +49,7 @@ const ProfileDropdown = () => {
   const toggleProfileDropdown = () => {
     setIsProfileDropdown(!isProfileDropdown);
   };
-console.log("user",user)
+
   return (
     <React.Fragment>
       {/* <Dropdown isOpen={isProfileDropdown} toggle={toggleProfileDropdown} className="ms-sm-3 header-item topbar-user"> */}

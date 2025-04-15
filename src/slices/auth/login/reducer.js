@@ -33,6 +33,7 @@ const loginSlice = createSlice({
       state.error= false
       state.errorMsg = false;
       state.loginMsg = action.payload.message
+      state.role = action.payload.responseData.role ?? JSON.parse(sessionStorage.getItem("authUser"))?.role
     },
     verifyOtpSuccess(state, action) {
       state.loginMsg = action.payload.message

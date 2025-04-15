@@ -35,6 +35,11 @@ const Navdata = () => {
     const [iscurrentState, setIscurrentState] = useState('Dashboard');
     // to show menu according to userRole
     const role = useSelector(state => state.Login.role)
+
+    useEffect(() => {
+        getFilteredMenuItems()
+    }, [role])
+  
   useEffect(() => {
     const path = location.pathname;
 
