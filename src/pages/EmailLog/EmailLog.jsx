@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 import { api } from '../../config';
 import { DatePicker } from '@mui/x-date-pickers';
 import TableContainer from '../../Components/Common/TableContainer';
-import { downloadReport, formatDate, formatToDDMMYY } from '../../helpers/helper_utils';
+import { downloadReport, formatDate, formatToDDMMYY, getCurrentTimestamp } from '../../helpers/helper_utils';
 import { Cancel, CheckCircle } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
 
@@ -357,7 +357,8 @@ const EmailLog = () => {
                                         />
                                             <button 
                                                 onClick={()=>{
-                                                    downloadReport(token, `${api.API_URL}/api/reports/brevo-mail-download-csv`,emailFilter, "Reports.csv",dispatch)
+                                                    const filename = "mailReports_" + getCurrentTimestamp()
+                                                    downloadReport(token, `${api.API_URL}/api/reports/brevo-mail-download-csv`,emailFilter, filename,dispatch)
                                                  }
                                                 }
                                                 type="button"

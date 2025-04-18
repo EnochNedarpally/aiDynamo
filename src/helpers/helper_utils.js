@@ -64,8 +64,22 @@ export  const formatToDDMMYY=(input)=> {
   return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
 }
 
+export const getCurrentTimestamp = () => {
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+
+  return `${year}${month}${day}_${hours}${minutes}${seconds}`;
+}
+
 export const iconStyle={
   primary:{backgroundColor:"#405189",padding:"6px 8px",borderRadius:5},
   secondary:{backgroundColor:"#7e7cba",padding:"6px 8px",borderRadius:5},
-  ternary:{backgroundColor:"#299cdb",padding:"6px 8px",borderRadius:5}
-}
+  ternary:{backgroundColor:"#299cdb",padding:"6px 8px",borderRadius:5},
+  dashboardHeader:{backgroundColor:"#c8d6fe",padding:8,borderRadius:"20px 20px 0 0",fontWeight:"bold",fontSize:"16px",paddingLeft:"20px"}}

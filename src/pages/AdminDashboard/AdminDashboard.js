@@ -16,6 +16,13 @@ import BalanceOverview from "../DashboardCrm/BalanceOverview";
 import TotalVisitors from "../DashboardCrm/BalanceOverview";
 import CrmCompanies from "./MostDownloadedPDFList ";
 import MostDownloadedPDFList from "./MostDownloadedPDFList ";
+import { Grid2 } from "@mui/material";
+import LiveUsersByCountry from "../DashboardEcommerce/LiveUserByCountry";
+import CountriesSession from "../DashboardEcommerce/CountriesSession";
+import UsersByDeviceChart from "../DashboardEcommerce/UsersByDevice";
+import AssetTable from "../DashboardEcommerce/AssetTable";
+import { Background } from "@tsparticles/engine";
+import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 
 const AdminDashboard = () => {
   //document.title = "Dashboard | Velzon - React Admin & Dashboard Template";
@@ -27,23 +34,31 @@ const AdminDashboard = () => {
 
   return (
     <React.Fragment>
-      <div className="page-content">
+      <div className="page-content" style={{marginTop:30}}>
         <Container fluid>
         
           <Row>
             <Col>
               <div className="h-100 m-0">
-                <Section rightClickBtn={toggleRightColumn} />
+                {/* <Section rightClickBtn={toggleRightColumn} /> */}
                 <Row>
-                  <Widget />
-                </Row>
-                <Row>
-                  <Col xl={8}>
-                  
-                    <TotalVisitors />
-                    <div className="p-0 m-0 d-flex justify-content-center text-center">Visitors</div>
-                  </Col>
-                  <Region />
+                  <Row className="mb-3">
+                    <Col md={8}>
+                      <Widget />
+                      <LiveUsersByCountry />
+                    </Col>
+                    <Col md={4}>
+                      <CountriesSession />
+                    </Col>
+                  </Row>
+                  <Row >
+                    <Col md={4}>
+                      <UsersByDeviceChart  />
+                    </Col>
+                    <Col md={8}>
+                      <AssetTable />
+                    </Col>
+                  </Row>
                 </Row>
                 {/* <Row>
   <Col xl={8}>

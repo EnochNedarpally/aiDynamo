@@ -1047,7 +1047,7 @@
 
         .main-content {
             margin-left: calc(var(--#{$prefix}vertical-menu-width) + 25px);
-            padding: 0 var(--#{$prefix}semibox-width);
+            // padding: 0 var(--#{$prefix}semibox-width);
         }
 
         .footer {
@@ -1056,8 +1056,8 @@
         }
 
         #page-topbar {
-            left: calc(var(--#{$prefix}vertical-menu-width) + var(--#{$prefix}semibox-width) + #{$grid-gutter-width} + 25px);
-            right: calc(var(--#{$prefix}semibox-width) + #{$grid-gutter-width});
+            left: calc(var(--#{$prefix}vertical-menu-width) + var(--#{$prefix}semibox-width) + #{$grid-gutter-width} - 15px);
+            right: calc(var(--#{$prefix}semibox-width) - 15px );
             top: 25px;
             border-radius: $border-radius;
             transition: all 0.5s ease;
