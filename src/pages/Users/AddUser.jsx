@@ -25,10 +25,16 @@ const AddUser = () => {
   const [user, setUser] = useState(initialState)
   const [selectedUser, setSelectedUser] = useState({})
   const [isOpen, setIsOpen] = useState(false)
+  const [accountOptions, setAccountOptions] = useState([]);
 
   const token = useSelector(state => state.Login.token)
   const navigate = useNavigate()
   const location = useLocation().state;
+  const config = {
+    headers: {
+        'Authorization': `Bearer ${token}`,
+    },
+};
 
 
   useEffect(() => {
@@ -43,6 +49,22 @@ const AddUser = () => {
       setUser(userData)
     }
   }, [location])
+
+   useEffect(() => {
+          fetchAccountOptions()
+      }, [])
+
+  const fetchAccountOptions = async () => {
+    try {
+        const res = await axios.get(`${api.API_URL}/api/accounts/options`, config)
+        if (res.status) {
+            setAccountOptions(res.responseData.accounts);
+        }
+        else toast.error(res?.responseData.message ?? "Error fetching search results:")
+    } catch (error) {
+        console.error('Error fetching search results:', error);
+    }
+};
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -64,7 +86,7 @@ const AddUser = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${api.API_URL}/api/user`,
+        `${api.API_URL}/api/user/register`,
 
         formData,
         {
@@ -205,18 +227,17 @@ const AddUser = () => {
                           required={!location}
                         />
                       </div>
-                      <Autocomplete
-                        fullWidth
-                        id="tags-outlined1"
-                        options={[{ id: 1, name: "kurt@nirvana" }, { id: 2, name: "chester@lp.com" }, { id: 3, name: "tyler@top.com" }, { id: 4, name: "travis@barker.com" }]}
-                        getOptionLabel={(option) => option.name}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            location ? setSelectedUser(prev => { return { ...prev, emailAccount: newValue.id } }) : setUser(prev => { return { ...prev, emailAccount: newValue.id } })
-                          }
-                        }}
-                        renderInput={(params) => <TextField {...params} label="Account" />}
-                      // value={accountOptions.find(option => option.id == campaign.accountId) || null}
+                       <Autocomplete
+                       fullWidth
+                          id="tags-outlined1"
+                          options={accountOptions ?? []}
+                          getOptionLabel={(option) => option.name}
+                          onChange={(event, newValue) => {
+                            if (newValue) {
+                              location ? setSelectedUser(prev => { return { ...prev, emailAccount: newValue.id } }) : setUser(prev => { return { ...prev, emailAccount: newValue.id } })
+                            }
+                          }}
+                          renderInput={(params) => <TextField {...params} label="Account" />}
                       />
                     </div>
                     <div className="d-flex justify-content-between">

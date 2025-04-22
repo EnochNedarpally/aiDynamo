@@ -37,7 +37,7 @@ const UserList = () => {
 
     const fetchUser = async () => {
         try {
-            const data = await axios.get(`${api.API_URL}/api/users`, config)
+            const data = await axios.get(`${api.API_URL}/api/user/all`, config)
             if (data.status) {
                 setUsers(data.responseData)
             }
@@ -75,37 +75,27 @@ const UserList = () => {
                 enableColumnFilter: false,
             },
             {
-                header: "Email Account",
-                accessorKey: "email",
+                header: "Phone No",
+                accessorKey: "phoneNumber",
                 enableColumnFilter: false,
             },
-            {
-                header: "Date",
-                accessorKey: "date",
-                enableColumnFilter: false,
-            },
-            {
-                header: "Status",
-                accessorKey: "status",
-                enableColumnFilter: false,
-            },
-            {
-                header: "Action",
-                cell: (cell) => {
-                    return (
-                        <ul className="list-inline hstack gap-2 mb-0">
-                            <li className="list-inline-item" title="Edit" style={iconStyle.primary}>
-                                <Link className="edit-item-btn" to="//admin/add-user"
-                                    state={cell.row.original}
-                                >
-                                    <EditCalendar sx={{color:"white"}}/>
-                                </Link>
-                            </li>
+            // {
+            //     header: "Action",
+            //     cell: (cell) => {
+            //         return (
+            //             <ul className="list-inline hstack gap-2 mb-0">
+            //                 <li className="list-inline-item" title="Edit" style={iconStyle.primary}>
+            //                     <Link className="edit-item-btn" to="//admin/add-user"
+            //                         state={cell.row.original}
+            //                     >
+            //                         <EditCalendar sx={{color:"white"}}/>
+            //                     </Link>
+            //                 </li>
 
-                        </ul>
-                    );
-                },
-            },
+            //             </ul>
+            //         );
+            //     },
+            // },
         ],
         []
     );
