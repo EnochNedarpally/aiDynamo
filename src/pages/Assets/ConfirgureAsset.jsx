@@ -1,4 +1,4 @@
-import { Box, FormControl, Input, InputLabel, MenuItem, Modal, Select, Typography } from '@mui/material'
+import { Box, FormControl, IconButton, Input, InputLabel, MenuItem, Modal, Select, Typography } from '@mui/material'
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Card, Container } from 'reactstrap'
@@ -21,7 +21,7 @@ const style = {
 
 const ConfirgureAsset = () => {
 
-  const inputType = ["text", "checkbox", "radio", "select"]
+  const inputType = ["Text", "Choice", "Radio", "Select"]
   const [inputFields, setInputFields] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [input, setInput] = useState('');
@@ -63,7 +63,7 @@ const ConfirgureAsset = () => {
       assetId:asset.id,
       questions:questions
     }
-    const END_POINT = asset?.questions?.length > 0 ?`${api.API_URL}/api/store-question/${asset.id}` : `${api.API_URL}/api/store-question`
+    const END_POINT = asset?.questions?.length > 0 ?`${api.API_URL}/api/update-question/${asset.id}` : `${api.API_URL}/api/store-question`
     const method = asset?.questions?.length > 0 ? "put" : "post"
     try {
       const response = await axios({
@@ -90,21 +90,53 @@ const ConfirgureAsset = () => {
   const addQuestion = ()=>{
     setQuestions(prev=>[...prev,{questionType:"",questionName:"",optionValues:[]}])
   } 
+  const addOption = (oid)=>{
+    const question = [...questions]
+    question[oid].optionValues.push("")
+    setQuestions(question)
+  } 
 
 const handleRemove=(id)=>{
   const quest = [...questions]
   quest.splice(id,1)
   setQuestions(quest)
 }
+const deleteOption=(id,oid)=>{
+  const quest = [...questions]
+  quest[id].optionValues.splice(oid,1)
+  setQuestions(quest)
+}
+
+const deleteQuestion=async()=>{
+  const config = {
+    headers: {
+        'Authorization': `Bearer ${token}`,
+    },
+};
+  try {
+    const response = await axios.delete(`${api.API_URL}/api/delete-question/${asset.id}`,config);
+    if (response) {
+      toast.warn("Question Deleted")
+      navigate("/admin/assets",{state:{campaignId:asset.campaign.id}})
+    } else toast.error("Encountered an error while Deleting questions")
+  } catch (err) { 
+    toast.error("Encountered an error while Deleting questions")
+    console.log(err, "err")
+  } finally {
+  }
+}
+
 const displayOptions = (id)=>{
-  if(questions[id].questionType && questions[id].questionType !== "text"){
+  if(questions[id].questionType && questions[id].questionType !== "Text"){
     return (
-      optionArr.map((option,oid)=>(
+      <div div className='d-flex gap-5 align-items-center flex-wrap'>
+      {questions[id].optionValues.map((option,oid)=>(
 
         <div className='d-flex flex-column '>
         <label htmlFor={`input${oid}`} className="form-label">
           {`Option ${oid + 1}`} 
         </label>
+        <div className='d-flex'>
         <input
           type="text"
           oid={`option${oid + 1}`} 
@@ -113,8 +145,15 @@ const displayOptions = (id)=>{
           value={questions[id]?.optionValues[oid] ?? ""}
           onChange={(e)=>handleOptions(e,id,oid)}
         />
+        <IconButton>
+          <Delete onClick={()=>deleteOption(id,oid)}/>
+        </IconButton>
+        </div>
       </div>
-      ))
+      ))}
+      <button className='btn btn-primary' onClick={()=>{addOption(id)}}>Add Option
+      </button>
+      </div>
     )
   }
   else return
@@ -153,13 +192,13 @@ const displayOptions = (id)=>{
            id={`input${id}`} 
            className="form-control w-100"
            name="questionName" 
-           value={asset.questions[id]?.questionName ?? questions[id]?.questionName ?? ""}
+           value={questions[id]?.questionName ?? ""}
            onChange={(e)=>handleChange(e,id)}
          />
        </div>
        {asset?.questions?.length>0 && <Delete onClick={()=>handleRemove(id)}/>}
      </div>
-     <div className='d-flex justify-content-between gap-5 align-items-center flex-wrap'>
+     <div className=''>
      {displayOptions(id)}
      </div>
 
@@ -172,7 +211,10 @@ const displayOptions = (id)=>{
   
   return (
     <div className='page-content '>
+      <div className='d-flex justify-content-between p-2'>
         <button onClick={() => addQuestion()} className="btn btn-primary mb-1">Add Question</button>
+        {asset?.questions.length > 0  && <button onClick={() => deleteQuestion()} className="btn btn-danger mb-1">Delete Question</button>}
+        </div>
         {renderInputs()}
       {(questions.length > 0 || asset.questions.length > 0)&&  <button onClick={handleSubmit} className='btn btn-primary my-2'>Save</button>}
       <ToastContainer/>
