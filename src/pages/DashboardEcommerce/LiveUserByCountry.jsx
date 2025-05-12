@@ -29,7 +29,24 @@ const LiveUsersByCountry = () => {
     {  name: "South Africa", coordinates: [22.937506,-30.559482] },
   ];
   return (
-    <Paper sx={{ my: 2,borderRadius:"20px 20px 0 0" }}>
+    <Paper
+    sx={{
+      my:2,
+      flex: 1,
+      borderRadius:"20px 20px 4px 4px",
+      // background: `linear-gradient(145deg, #1e1e1e, #2e2e2e)`,
+      boxShadow: `
+      6px 6px 10px rgb(80, 78, 78),
+      0px 2px 5px #353535,
+      inset 0 0px 2px rgba(255,255,255,0.05),
+      inset 0 -1px 2px rgba(0,0,0,0.3)
+      `,
+      transition: "transform 0.3s ease, box-shadow 0.3s ease",
+      transformStyle: "preserve-3d",
+      transform: "rotateY(-10deg)",
+      color: "#fff",
+    }}
+    >
       <div style={iconStyle.dashboardHeader}>Live Users By Country</div>
       <Row className="p-2">
         <Col md={6}>

@@ -16,6 +16,7 @@ const CountriesSession = () => {
         type: "bar",
         height: 350,
         width: "100%",
+        color:"black",
         toolbar: {
           tools: {
             download: false,
@@ -55,7 +56,22 @@ const CountriesSession = () => {
   };
 
   return (
-    <Paper sx={{ mt: 2, borderRadius: "20px 20px 0 0" }}>
+    <Paper
+    sx={{
+      mt:2,
+      flex: 1,
+      borderRadius:"20px 20px 4px 4px",
+      boxShadow: `
+      6px 6px 10px rgb(80, 78, 78),
+      0px 2px 5px #353535,
+      inset 0 0px 2px rgba(255,255,255,0.05),
+      inset 0 -1px 2px rgba(0,0,0,0.3)
+      `,
+      transition: "transform 0.3s ease, box-shadow 0.3s ease",
+      transformStyle: "preserve-3d",
+      transform: "rotateX(0) rotateY(-6deg)",
+    }}
+    >
       <div style={iconStyle.dashboardHeader}>
         Sessions by Countries
       </div>
