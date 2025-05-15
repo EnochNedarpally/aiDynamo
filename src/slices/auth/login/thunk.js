@@ -15,7 +15,7 @@ import { update } from "lodash";
 // const fireBaseBackend = getFirebaseBackend();
 
 export const loginUser = (user, history) => async (dispatch) => {
-  dispatch(updateLoading())
+  dispatch(updateLoading(true))
   try {
     let response;
     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
@@ -53,7 +53,9 @@ export const loginUser = (user, history) => async (dispatch) => {
         finallogin = JSON.parse(finallogin)
         // data = finallogin.data;
         if (finallogin.status) {
+          localStorage.setItem("authUser", JSON.stringify(finallogin.responseData));
           dispatch(loginSuccess(data));
+          history('/admin/dashboard')
           // history('/dashboard')
         } else {
           dispatch(apiError(finallogin));
@@ -117,8 +119,8 @@ export const submitOtp = (email,otp, history) => async (dispatch) => {
 };
 
 export const logoutUser = () => async (dispatch) => {
+  localStorage.removeItem("authUser");
   try {
-    sessionStorage.removeItem("authUser");
     let fireBaseBackend = getFirebaseBackend();
     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
       const response = fireBaseBackend.logout;
@@ -158,6 +160,7 @@ export const socialLogin = (type, history) => async (dispatch) => {
 };
 
 export const resetLoginFlag = () => async (dispatch) => {
+  localStorage.removeItem("authUser")
   try {
     const response = dispatch(reset_login_flag());
     return response;

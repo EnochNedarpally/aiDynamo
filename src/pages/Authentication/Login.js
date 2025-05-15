@@ -260,7 +260,7 @@ const Login = (props) => {
                                     <Input className="form-check-input" type="checkbox" value="" id="auth-remember-check" />
                                     <Label className="form-check-label" htmlFor="auth-remember-check">Remember me</Label>
                                 </div>
-                                {loginMsg && (<>
+                                {/* {loginMsg && (<>
                                     <Input
                                         type="text"
                                         id="otp"
@@ -273,11 +273,11 @@ const Login = (props) => {
                                     /> </>)}
                                 {loginMsg && <Button disabled={otp.length !== 6} className="w-100 signinBtn mt-2" onClick={verifyOtp}>
                                     Verify Otp
-                                </Button>}
+                                </Button>} */}
                                 <div className="mt-4">
                                     <Button style={{ fontSize: "1.2rem", fontStyle: "bold" }} disabled={loading} className="w-100 signinBtn" type="submit">
-                                        {loading ? <Spinner size="sm" className='me-2'> Loading... </Spinner> : null}
-                                        Sign In
+                                        {loading ? <><Spinner size="sm" className='me-2'> Loading... </Spinner> Signing In...</> : "Sign In"}
+                                        
                                     </Button>
 
                                 </div>

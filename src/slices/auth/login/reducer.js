@@ -2,16 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const initialState = {
   user: {
-    name:JSON.parse(sessionStorage.getItem("authUser"))?.name ?? null,
-    profilePic:JSON.parse(sessionStorage.getItem("authUser"))?.profilePic ?? null
+    name:JSON.parse(localStorage.getItem("authUser"))?.name ?? null,
+    profilePic:JSON.parse(localStorage.getItem("authUser"))?.profilePic ?? null
   },
   error: "", // for error message
   loading: false,
   isUserLogout: false,
   errorMsg: false, // for error
   loginMsg:"",
-  token : JSON.parse(sessionStorage.getItem("authUser"))?.jwtToken ?? null,
-  role:JSON.parse(sessionStorage.getItem("authUser"))?.role ?? null,
+  token : JSON.parse(localStorage.getItem("authUser"))?.jwtToken ?? null,
+  role:JSON.parse(localStorage.getItem("authUser"))?.role ?? null,
 };
 
 const loginSlice = createSlice({
@@ -33,18 +33,23 @@ const loginSlice = createSlice({
       state.error= false
       state.errorMsg = false;
       state.loginMsg = action.payload.message
-      state.role = action.payload.responseData.role ?? JSON.parse(sessionStorage.getItem("authUser"))?.role
+      state.token= JSON.parse(localStorage.getItem("authUser"))?.jwtToken
+      state.role= JSON.parse(localStorage.getItem("authUser"))?.role
+      state.user= {
+        name:JSON.parse(localStorage.getItem("authUser"))?.name ?? null,
+        profilePic:JSON.parse(localStorage.getItem("authUser"))?.profilePic ?? null
+      }
     },
     verifyOtpSuccess(state, action) {
       state.loginMsg = action.payload.message
       state.error=false
       state.loading = false;
       state.errorMsg = false;
-      state.token= JSON.parse(sessionStorage.getItem("authUser"))?.jwtToken
-      state.role= JSON.parse(sessionStorage.getItem("authUser"))?.role
+      state.token= JSON.parse(localStorage.getItem("authUser"))?.jwtToken
+      state.role= JSON.parse(localStorage.getItem("authUser"))?.role
       state.user= {
-        name:JSON.parse(sessionStorage.getItem("authUser"))?.name ?? null,
-        profilePic:JSON.parse(sessionStorage.getItem("authUser"))?.profilePic ?? null
+        name:JSON.parse(localStorage.getItem("authUser"))?.name ?? null,
+        profilePic:JSON.parse(localStorage.getItem("authUser"))?.profilePic ?? null
       }
     },
     logoutUserSuccess(state, action) {

@@ -11,6 +11,8 @@ import {
 //import images
 import Person from "../../assets/images/personIcon.png";
 import { createSelector } from "reselect";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../../slices/thunks";
 
 const ProfileDropdown = () => {
   const selectLayoutState = (state) => state;
@@ -27,6 +29,7 @@ const ProfileDropdown = () => {
 
   const [userName, setUserName] = useState("Admin");
   const authUserData = JSON.parse(sessionStorage.getItem("authUser"));
+  const dispatch = useDispatch()
   
   useEffect(() => {
     // if (sessionStorage.getItem("authUser")) {
@@ -77,7 +80,10 @@ const ProfileDropdown = () => {
         <DropdownMenu className="dropdown-menu-end">
           <h6 className="dropdown-header">Welcome {userName}!</h6>
           <DropdownItem className="p-0">
-            <Link to="/logout" className="dropdown-item">
+            <Link to="/logout" className="dropdown-item" onClick={()=>{
+              dispatch(logoutUser())
+
+            }}>
               <i className="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>{" "}
               <span className="align-middle" data-key="t-logout">
                 Logout
