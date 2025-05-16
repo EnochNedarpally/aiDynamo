@@ -38,9 +38,9 @@ const Email = () => {
     const [assetOptions, setAssetOptions] = useState([]);
     const [email, setEmail] = useState(initialStateSingleEmail);
     const [isBulkEmail, setIsBulkEmail] = useState(false);
-    const [campaignId, setCampaignId] = useState("");
-    const [accountId, setAccountId] = useState("");
-
+    const [campaign, setCampaign] = useState(null);
+    const [account, setAccount] = useState(null);
+    const [asset, setAsset] = useState(null);
     useEffect(() => {
         fetchAccountOptions()
     }, [])
@@ -48,7 +48,7 @@ const Email = () => {
     useEffect(() => {
             fetchCampaignOptions()
             fetchAssetOptions()
-        }, [accountId,campaignId])
+        }, [account,campaign])
 
     useEffect(() => {
         if (location == "bulk-email") {
@@ -72,7 +72,7 @@ const Email = () => {
         }
     };
     const fetchCampaignOptions = async () => {
-        const END_POINT = accountId ? `api/campaign/options-by-account/${accountId}` : "api/campaign/options"
+        const END_POINT = account ? `api/campaign/options-by-account/${account.id}` : "api/campaign/options"
         try {
             const res = await axios.get(`${api.API_URL}/${END_POINT}`, config)
             if (res.status) {
@@ -84,7 +84,7 @@ const Email = () => {
         }
     };
     const fetchAssetOptions = async () => {
-        const END_POINT = campaignId ? `api/asset/options/campaign/${campaignId}` : "api/asset/options"
+        const END_POINT = campaign ? `api/asset/options/campaign/${campaign.id}` : "api/asset/options"
         try {
             const res = await axios.get(`${api.API_URL}/${END_POINT}`, config)
             if (res.status) {
@@ -132,6 +132,9 @@ const Email = () => {
 
             if (response.status) {
                 setEmail(isBulkEmail ? initialStateBulkEmail : initialStateSingleEmail)
+                setAccount(null)
+                setAsset(null)
+                setCampaign(null)
                 toast.success("Email successfully sent")
             }
             else toast.error(response?.responseData.message ?? "Enocuntered an error while sending email")
@@ -164,13 +167,18 @@ const Email = () => {
                                             <Autocomplete
                                                 id="tags-outlined1"
                                                 options={accountOptions ?? []}
-                                                getOptionLabel={(option) => option.name}
+                                                 getOptionLabel={(option) => {
+                                                if (typeof option === 'string') return option;
+                                                if (option && typeof option === 'object' && 'name' in option) return option.name;
+                                                return '';
+                                                }}
                                                 onChange={(event, newValue) => {
                                                     if (newValue) {
-                                                        setAccountId(newValue.id)
+                                                        setAccount(newValue)
                                                         setEmail(prev => { return { ...prev, accountId: newValue.id } })
                                                     }
                                                 }}
+                                                value={account?.name ?? ""}
                                                 renderInput={(params) => <TextField {...params} label="Account" />}
                                             />
                                         </div>
@@ -179,13 +187,18 @@ const Email = () => {
                                                 fullWidth
                                                 id="tags-outlined1"
                                                 options={campaignOptions ?? []}
-                                                getOptionLabel={(option) => option.name}
+                                                 getOptionLabel={(option) => {
+                                                if (typeof option === 'string') return option;
+                                                if (option && typeof option === 'object' && 'name' in option) return option.name;
+                                                return '';
+                                                }}
                                                 onChange={(event, newValue) => {
                                                     if (newValue) {
-                                                        setCampaignId(newValue.id)
+                                                        setCampaign(newValue)
                                                         setEmail(prev => { return { ...prev, campaignId: newValue.id } })
                                                     }
                                                 }}
+                                                value={campaign?.name ?? ""}
                                                 renderInput={(params) => <TextField {...params} label="Campaign" />}
                                             />
                                             <Autocomplete
@@ -193,12 +206,18 @@ const Email = () => {
                                                 fullWidth
                                                 id="tags-outlined1"
                                                 options={assetOptions ?? []}
-                                                getOptionLabel={(option) => option.name}
+                                                 getOptionLabel={(option) => {
+                                                if (typeof option === 'string') return option;
+                                                if (option && typeof option === 'object' && 'name' in option) return option.name;
+                                                return '';
+                                                }}
                                                 onChange={(event, newValue) => {
                                                     if (newValue) {
+                                                        setAsset(newValue)
                                                         setEmail(prev => { return { ...prev, assetId: newValue.id } })
                                                     }
                                                 }}
+                                                value={asset?.name ?? ""}
                                                 renderInput={(params) => <TextField {...params} label="Assets" />}
                                             />
                                         </div>

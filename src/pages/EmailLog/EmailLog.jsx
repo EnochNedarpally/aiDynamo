@@ -49,6 +49,16 @@ const EmailLog = () => {
         handleSubmit()
     },[])
 
+    useEffect(()=>{
+       const tmr= setInterval(()=>{
+            if(emailFilter.accountId || emailFilter.assetId || emailFilter.campaignId ){
+                handleSubmit()
+            }    
+       },30000)
+       return ()=> clearInterval(tmr)
+       
+    },[emailFilter])
+
     useEffect(() => {
         fetchAccountOptions()
     }, [])
