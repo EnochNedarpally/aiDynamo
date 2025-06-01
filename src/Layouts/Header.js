@@ -20,11 +20,12 @@ import LightDark from '../Components/Common/LightDark';
 import { changeSidebarVisibility } from '../slices/thunks';
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from 'reselect';
-import { LinearProgress } from '@mui/material';
+import { LinearProgress, Typography } from '@mui/material';
+import { Home } from '@mui/icons-material';
 const style={
     header:{
-      backgroundColor:"#c8d6fe",
-      padding:8,
+    //   backgroundColor:"#c8d6fe",
+    //   padding:8,
     }
   }
 const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }) => {
@@ -77,7 +78,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }) => {
     };
     return (
         <React.Fragment>
-            <header id="page-topbar" className={headerClass}>
+            <header id="page-topbar"  className={headerClass} style={{border:"none"}}>
                 <div className="layout-width">
                     <div className="navbar-header">
                         <div className="d-flex">
@@ -104,6 +105,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }) => {
 
                             <button
                                 onClick={toogleMenuBtn}
+                                style={{marginLeft:'325px'}}
                                 type="button"
                                 className="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger"
                                 id="topnav-hamburger-icon">
@@ -113,7 +115,10 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }) => {
                                     <span></span>
                                 </span>
                             </button>
-
+                            {location == "dashboard" && <div className='dashboard-header'>
+                    <Home sx={{fontSize:'2rem'}}/>
+                     <Typography variant="caption" sx={{fontSize:'1.6rem',fontWeight:"bold"}}>Dashboard</Typography>
+                </div>}
 
                             {/* <SearchOption /> */}
                         </div>
@@ -131,9 +136,6 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }) => {
                         </div>
                     </div>
                 </div>
-                {location == "dashboard" && <div style={style.header}>
-                    Dashboard
-                </div>}
             {loading && <LinearProgress/>}
             </header>
         </React.Fragment>

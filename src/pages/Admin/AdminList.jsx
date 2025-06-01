@@ -37,7 +37,7 @@ const AdminList = () => {
 
     const fetchAdmin = async () => {
         try {
-            const data = await axios.get(`${api.API_URL}/api/admin`, config)
+            const data = await axios.get(`${api.API_URL}/admin`, config)
             if (data.status) {
                 setAdmin(data.responseData)
             }
@@ -71,7 +71,7 @@ const AdminList = () => {
 
             {
                 header: "Admin Id",
-                accessorKey: "AdminId",
+                accessorKey: "email",
                 enableColumnFilter: false,
             },
             {

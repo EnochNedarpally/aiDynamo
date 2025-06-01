@@ -158,11 +158,11 @@ const RightSidebar = (props) => {
             </div>}
 
             <div>
-                <div className="customizer-setting d-none d-md-block">
+                {/* <div className="customizer-setting d-none d-md-block">
                     <div onClick={toggleLeftCanvas} className="btn-info rounded-pill shadow-lg btn btn-icon btn-lg p-2 rounded-pill">
                         <i className='mdi mdi-spin mdi-cog-outline fs-22'></i>
                     </div>
-                </div>
+                </div> */}
                 {/* <Offcanvas isOpen={open} toggle={toggleLeftCanvas} direction="end" className="offcanvas-end border-0"> */}
                 <Offcanvas toggle={toggleLeftCanvas} direction="end" className="offcanvas-end border-0">
                     <OffcanvasHeader className="d-flex align-items-center bg-primary bg-gradient p-3 offcanvas-header-dark" toggle={toggleLeftCanvas}>

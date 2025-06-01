@@ -78,8 +78,13 @@ export const getCurrentTimestamp = () => {
   return `${year}${month}${day}_${hours}${minutes}${seconds}`;
 }
 
+export const truncateWords = (text, wordLimit = 5) => {
+  const words = text.trim().split(/\s+/);
+  return words.length > wordLimit ? words.slice(0, wordLimit).join(' ') + '...' : text;
+};
+
 export const iconStyle={
   primary:{backgroundColor:"#405189",padding:"6px 8px",borderRadius:5},
   secondary:{backgroundColor:"#7e7cba",padding:"6px 8px",borderRadius:5},
   ternary:{backgroundColor:"#299cdb",padding:"6px 8px",borderRadius:5},
-  dashboardHeader:{backgroundColor:"#c8d6fe",padding:8,borderRadius:"20px 20px 0 0",fontWeight:"bold",fontSize:"16px",paddingLeft:"20px"}}
+  dashboardHeader:{padding:'1rem',paddingLeft:'2rem',borderRadius:"20px 20px 0 0",fontWeight:"bold",fontSize:"22px",color:'#252525',fontWeight:'400'}}

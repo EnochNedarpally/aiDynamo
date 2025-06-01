@@ -17,7 +17,6 @@ const initialState = {
   email: "",
   password: "",
   phoneNumber: "",
-  emailAccount: ""
 }
 
 const AddUser = () => {
@@ -25,7 +24,6 @@ const AddUser = () => {
   const [user, setUser] = useState(initialState)
   const [selectedUser, setSelectedUser] = useState({})
   const [isOpen, setIsOpen] = useState(false)
-  const [accountOptions, setAccountOptions] = useState([]);
 
   const token = useSelector(state => state.Login.token)
   const navigate = useNavigate()
@@ -50,22 +48,6 @@ const AddUser = () => {
     }
   }, [location])
 
-   useEffect(() => {
-          fetchAccountOptions()
-      }, [])
-
-  const fetchAccountOptions = async () => {
-    try {
-        const res = await axios.get(`${api.API_URL}/api/accounts/options`, config)
-        if (res.status) {
-            setAccountOptions(res.responseData.accounts);
-        }
-        else toast.error(res?.responseData.message ?? "Error fetching search results:")
-    } catch (error) {
-        console.error('Error fetching search results:', error);
-    }
-};
-
   const handleInputChange = (e) => {
     const { name, value } = e.target
     location ? setSelectedUser(prev => { return { ...prev, [name]: value } }) : setUser(prev => { return { ...prev, [name]: value } })
@@ -73,7 +55,7 @@ const AddUser = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!user.firstName || !user.lastName || !user.email || !user.password || !user.phoneNumber || !user.emailAccount) {
+    if (!user.firstName || !user.lastName || !user.email || !user.password || !user.phoneNumber) {
       alert('Please fill in all fields');
       return;
     }
@@ -99,7 +81,7 @@ const AddUser = () => {
       if (response.status) {
         toast.success("User added")
         setUser({ initialState })
-        navigate("/user/admin-list")
+        navigate("/admin/user-list")
       } else toast.error("Encountered an error while creating an user")
     } catch (err) {
       toast.error("Encountered an error while creating an user")
@@ -227,18 +209,6 @@ const AddUser = () => {
                           required={!location}
                         />
                       </div>
-                       <Autocomplete
-                       fullWidth
-                          id="tags-outlined1"
-                          options={accountOptions ?? []}
-                          getOptionLabel={(option) => option.name}
-                          onChange={(event, newValue) => {
-                            if (newValue) {
-                              location ? setSelectedUser(prev => { return { ...prev, emailAccount: newValue.id } }) : setUser(prev => { return { ...prev, emailAccount: newValue.id } })
-                            }
-                          }}
-                          renderInput={(params) => <TextField {...params} label="Account" />}
-                      />
                     </div>
                     <div className="d-flex justify-content-between">
                       <button

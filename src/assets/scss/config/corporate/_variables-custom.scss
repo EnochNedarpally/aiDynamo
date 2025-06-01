@@ -3,12 +3,12 @@
 //
 
 // Vertical menu
-$vertical-menu-width:                             250px;
+$vertical-menu-width:                             300px;
 $vertical-menu-width-md:                          180px;
-$vertical-menu-width-sm:                          70px;
+$vertical-menu-width-sm:                          140px;
 
 $vertical-menu-z-index:                           1002;
-$vertical-menu-item-font-size:                    0.9375rem;
+$vertical-menu-item-font-size:                    1.12rem;
 $vertical-menu-item-font-family:                  $font-family-secondary;
 $vertical-menu-sub-item-font-family:              $font-family-primary;
 $vertical-menu-item-padding-x:                    1.5rem;
@@ -19,17 +19,17 @@ $vertical-menu-sub-item-padding-x:                1.5rem;
 $vertical-menu-sub-item-padding-y:                0.55rem;
 
 // Light Menu
-$vertical-menu-bg:                                $white;
+$vertical-menu-bg:                                #252525;
 $vertical-menu-border:                            $white;
 $vertical-menu-item-color:                        darken($gray-600, 10%);
 $vertical-menu-item-bg:                           rgba($primary, .15);
-$vertical-menu-item-hover-color:                  #87ebec;
-$vertical-menu-item-active-color:                 #87ebec;
+$vertical-menu-item-hover-color:                  white;
+$vertical-menu-item-active-color:                 white;
 $vertical-menu-item-active-bg:                    rgba($primary, .15);
 $vertical-menu-sub-item-color:                    darken($gray-600, 4%);
-$vertical-menu-sub-item-hover-color:               #87ebec;
-$vertical-menu-sub-item-active-color:              #87ebec;
-$vertical-menu-title-color:                        #87ebec;
+$vertical-menu-sub-item-hover-color:               white;
+$vertical-menu-sub-item-active-color:              white;
+$vertical-menu-title-color:                        white;
 $vertical-menu-box-shadow:                        0 2px 4px rgba(15,34,58,0.12);
 $vertical-menu-dropdown-box-shadow:               0 2px 4px rgba(15, 34, 58, 0.12);
 
@@ -83,7 +83,7 @@ $vertical-menu-border-gradient-4:                 $orange-800;
 $twocolumn-menu-iconview-bg-gradient-4:           $orange-900;
 
 // Topbar - (Default Light)
-$header-height:                                   70px;
+$header-height:                                   110px;
 $header-bg:                                       $white;
 $header-border:                                   $border-color;
 $header-item-color:                               $gray-700;

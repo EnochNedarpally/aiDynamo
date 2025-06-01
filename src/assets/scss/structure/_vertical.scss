@@ -21,7 +21,9 @@
 }
 
 .page-content {
-    padding: calc(#{$header-height} + #{$grid-gutter-width}) calc(#{$grid-gutter-width} * 0.5) $footer-height calc(#{$grid-gutter-width} * 0.5);
+    padding: calc(60px + #{$grid-gutter-width}) calc(#{$grid-gutter-width} * 0.5) $footer-height calc(#{$grid-gutter-width} * 0.5);
+    padding-top: 0 !important;
+
 }
 
 .navbar-menu {
@@ -42,9 +44,10 @@
             display: flex;
             align-items: center;
             padding: $vertical-menu-item-padding-y $vertical-menu-item-padding-x;
-            color: white;
+            color: $text-color;
             font-size: $vertical-menu-item-font-size;
             font-family: $vertical-menu-item-font-family;
+            font-weight: bold;
 
             &.active {
                 color: var(--#{$prefix}vertical-menu-item-active-color);
@@ -192,7 +195,6 @@
 
 .navbar-brand-box {
     padding: 0 1.3rem;
-    text-align: center;
     transition: all .1s ease-out;
 
     @media (max-width: 767.98px) {
@@ -496,7 +498,7 @@
 
     &[data-sidebar-size="sm-hover-active"] {
         .navbar-brand-box {
-            text-align: left;
+            text-align: center;
         }
 
         .topnav-hamburger {
@@ -527,7 +529,7 @@
             width: var(--#{$prefix}vertical-menu-width-sm);
             z-index: 1;
             top: 0;
-            background-color: var(--#{$prefix}vertical-menu-bg);
+            // background-color: var(--#{$prefix}vertical-menu-bg);
         }
 
         .logo {
@@ -1037,11 +1039,11 @@
     @media (min-width: 1440px) {
 
         .page-content {
-            padding: calc(#{$header-height} + #{$grid-gutter-width} * 2) calc(#{$grid-gutter-width} * 0.5) $footer-height calc(#{$grid-gutter-width} * 0.5);
+            padding: calc(50px + #{$grid-gutter-width} * 2) calc(#{$grid-gutter-width} * 0.5) $footer-height calc(#{$grid-gutter-width} * 0.5);
         }
 
         .navbar-menu {
-            margin: 25px;
+            padding: 25px;
             border-radius: var(--#{$prefix}border-radius);
         }
 
@@ -1056,9 +1058,9 @@
         }
 
         #page-topbar {
-            left: calc(var(--#{$prefix}vertical-menu-width) + var(--#{$prefix}semibox-width) + #{$grid-gutter-width} - 15px);
-            right: calc(var(--#{$prefix}semibox-width) - 15px );
-            top: 25px;
+            // left: calc(var(--#{$prefix}vertical-menu-width) + var(--#{$prefix}semibox-width) + #{$grid-gutter-width} - 15px);
+            // right: calc(var(--#{$prefix}semibox-width) - 15px );
+            // top: 25px;
             border-radius: $border-radius;
             transition: all 0.5s ease;
             border: 1px solid var(--#{$prefix}header-border);
@@ -1089,7 +1091,7 @@
             }
 
             .navbar-brand-box {
-                top: 25px;
+                // top: 25px;
             }
 
             #page-topbar {

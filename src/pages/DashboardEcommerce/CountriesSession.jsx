@@ -1,86 +1,69 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
-import { Paper } from "@mui/material";
-import { iconStyle } from "../../helpers/helper_utils";
+import { Box, Paper, Typography } from "@mui/material";
+import axios from "axios";
+import { api } from "../../config";
+import { toast, ToastContainer } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const CountriesSession = () => {
-  const chartData = {
-    series: [
-      {
-        name: "Sessions",
-        data: [1010, 1640, 490, 1255, 1050, 689, 800, 420, 1085, 589],
-      },
-    ],
-    options: {
-      chart: {
-        type: "bar",
-        height: 350,
-        width: "100%",
-        color:"black",
-        toolbar: {
-          tools: {
-            download: false,
-          },
-        },
-      },
-      plotOptions: {
-        bar: {
-          horizontal: true,
-          borderRadius: 0,
-        },
-      },
-      dataLabels: {
-        enabled: true,
-      },
-      xaxis: {
-        categories: [
-          "India",
-          "United States",
-          "China",
-          "Indonesia",
-          "Russia",
-          "Bangladesh",
-          "Canada",
-          "Brazil",
-          "Vietnam",
-          "UK",
-        ],
-        labels: {
-          style: {
-            marginRight: "30px"
-          }
-        },
-      },
-      colors: ["#673ab7"],
+  const [countrySession, setCountrySession] = useState([]);
+  const token = useSelector(state => state.Login.token)
+  const config = {
+    headers: {
+      'Authorization': `Bearer ${token}`,
     },
   };
+  useEffect(() => {
+    fetchCountrySession()
+  }, [])
 
+  const fetchCountrySession = async () => {
+    try {
+      const data = await axios.get(`${api.API_URL}/dashboard/sessions-by-country`, config)
+      if (data?.countries) {
+        setCountrySession(data)
+      }
+    } catch (error) {
+      toast.error("Unable to fetch Country Session")
+      console.log("error", error)
+    }
+  }
+  const series = [{
+    name: 'Sessions',
+    data: countrySession?.sessions ?? [],
+  }];
+
+  const options = {
+    chart: { type: 'bar', toolbar: { show: false } },
+    xaxis: {
+      categories: countrySession?.countries ?? [],
+    },
+    grid: {
+      show: true,
+      borderColor: '#21130d',
+      strokeDashArray: 4,
+      position: 'back',
+      xaxis: {
+        lines: {
+          show: true,
+        }
+      },
+      yaxis: {
+        lines: {
+          show: true,
+        }
+      }
+    },
+    colors: ['#e28743', "#063970"],
+  };
   return (
-    <Paper
-    sx={{
-      mt:2,
-      flex: 1,
-      borderRadius:"20px 20px 4px 4px",
-      boxShadow: `
-      6px 6px 10px rgb(80, 78, 78),
-      0px 2px 5px #353535,
-      inset 0 0px 2px rgba(255,255,255,0.05),
-      inset 0 -1px 2px rgba(0,0,0,0.3)
-      `,
-      transition: "transform 0.3s ease, box-shadow 0.3s ease",
-      transformStyle: "preserve-3d",
-      transform: "rotateX(0) rotateY(-6deg)",
-    }}
-    >
-      <div style={iconStyle.dashboardHeader}>
-        Sessions by Countries
-      </div>
-      <ReactApexChart
-        options={chartData.options}
-        series={chartData.series}
-        type="bar"
-        height={350}
-      />
+    <Paper sx={{ height: '400px', background: "white" }}>
+      <ToastContainer />
+      <Box sx={{ p: 1, backgroundColor: '#b388eb' }}>
+        <Typography variant="h6" color="white">Session By Continents</Typography>
+      </Box>
+      <ReactApexChart options={options} series={series} type="bar" height={"80%"} />
     </Paper>
   );
 };

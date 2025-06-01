@@ -162,7 +162,20 @@ const AddAdmin = () => {
                           required={!location}
                         />
                       </div>
-                      <div className="mb-3 " style={{ minWidth: '500px' }}>
+                      {location ?<div className="mb-3 " style={{ minWidth: '500px' }}>
+                        <label htmlFor="password" className="form-label">
+                         Update Password
+                        </label>
+                        <input
+                          type="password"
+                          id="password"
+                          name="password"
+                          className="form-control"
+                          value={admin.password}
+                          onChange={(e) => handleInputChange(e)}
+                        />
+                      </div>:
+                       <div className="mb-3 " style={{ minWidth: '500px' }}>
                         <label htmlFor="password" className="form-label">
                           Password
                         </label>
@@ -175,7 +188,7 @@ const AddAdmin = () => {
                           onChange={(e) => handleInputChange(e)}
                           required={!location}
                         />
-                      </div>
+                      </div>}
                       <div className="mb-3 " style={{ minWidth: '500px' }}>
                         <label htmlFor="phoneNumber" className="form-label">
                           Phone Number

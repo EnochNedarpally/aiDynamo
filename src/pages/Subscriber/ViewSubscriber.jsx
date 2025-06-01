@@ -22,7 +22,6 @@ const ViewSubscriber = () => {
         mobile: "Mobile",
         companyName: "Company Name",
         designation: "Designation",
-        ipAddress: "IP Address",
         companySize: "Company Size",
         country: "Country",
         industry: "Industry",
@@ -31,7 +30,8 @@ const ViewSubscriber = () => {
         customField2: "Question 2",
         customField3: "Question 3",
         customField4: "Question 4",
-        dt1: "Date"
+        dt1: "Download Date",
+        ipAddress: "IP Address",
     }
 
 
@@ -62,7 +62,7 @@ const ViewSubscriber = () => {
                         {Object.keys(subscriber).map(key => {
                             if (key == "id") return <></>
                             else return (<div className='d-flex gap-2'>
-                                <p style={{ width: "120px",fontSize:"15px" }}>
+                                <p style={{ width: "200px",fontSize:"15px" }}>
                                     <strong>{fields[key]}: </strong>
                                 </p>
                                 <p className='text-muted' style={{fontSize:"15px",color:""}}>{key == "dt1" ? formatToDDMMYY(subscriber[key]) : subscriber[key]}</p>

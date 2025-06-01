@@ -8,6 +8,9 @@ import LiveUsersByCountry from "../DashboardEcommerce/LiveUserByCountry";
 import CountriesSession from "../DashboardEcommerce/CountriesSession";
 import UsersByDeviceChart from "../DashboardEcommerce/UsersByDevice";
 import AssetTable from "../DashboardEcommerce/AssetTable";
+import EmailActivity from "../DashboardEcommerce/EmailActivity";
+import Leads from "../DashboardEcommerce/Leads";
+import TopAccounts from "../DashboardEcommerce/TopAccounts";
 
 const AdminDashboard = () => {
 
@@ -18,7 +21,7 @@ const AdminDashboard = () => {
 
   return (
     <React.Fragment>
-      <div className="page-content" style={{marginTop:30}}>
+      <div className="page-content">
         <Container fluid>
         
           <Row>
@@ -27,20 +30,32 @@ const AdminDashboard = () => {
                 {/* <Section rightClickBtn={toggleRightColumn} /> */}
                 <Row>
                   <Row className="mb-3">
-                    <Col md={8}>
-                      <Widget />
+                    <Col md={12}>
                       <LiveUsersByCountry />
+                      <Widget />
                     </Col>
-                    <Col md={4}>
-                      <CountriesSession />
+                    <Col md={12}>
+                    <Row className="my-3">
+                      <Col md={5}>
+                      <EmailActivity/>
+                      </Col>
+                      <Col md={7}>
+                      <Leads/>
+                      </Col>
+                      </Row>
                     </Col>
-                  </Row>
-                  <Row >
-                    <Col md={4}>
-                      <UsersByDeviceChart  />
-                    </Col>
-                    <Col md={8}>
-                      <AssetTable />
+                    <Col md={12}>
+                    <Row className="my-3">
+                      <Col md={4}>
+                      <TopAccounts/>
+                      </Col>
+                      <Col md={4}>
+                      <CountriesSession/>
+                      </Col>
+                      <Col md={4}>
+                      <AssetTable/>
+                      </Col>
+                      </Row>
                     </Col>
                   </Row>
                 </Row>

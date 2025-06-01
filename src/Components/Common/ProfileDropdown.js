@@ -58,23 +58,23 @@ const ProfileDropdown = () => {
       {/* <Dropdown isOpen={isProfileDropdown} toggle={toggleProfileDropdown} className="ms-sm-3 header-item topbar-user"> */}
       <Dropdown
         toggle={toggleProfileDropdown}
-        className="ms-sm-3 header-item topbar-user"
+        className="ms-sm-3 header-item "
         isOpen={isProfileDropdown}
       >
         {/* isOpen={isProfileDropdown} */}
         <DropdownToggle tag="button" type="button" className="btn">
           <span className="d-flex align-items-center">
-            <img
-              className="rounded-circle header-profile-user"
-              src={user?.profilePic ? user?.profilePic :  Person}
-              alt="Header Avatar"
-            />
             <span className="text-start ms-xl-2">
               {/* <span className="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{userName}</span> */}
               <span className="d-none d-xl-inline-block ms-1 fw-medium user-name-text">
                 {user?.name || "N/A"}
               </span>
             </span>
+             <img
+              className="rounded-circle header-profile-user mx-2"
+              src={user?.profilePic ? user?.profilePic :  Person}
+              alt="Header Avatar"
+            />
           </span>
         </DropdownToggle>
         <DropdownMenu className="dropdown-menu-end">

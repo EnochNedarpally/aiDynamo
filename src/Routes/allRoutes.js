@@ -292,7 +292,6 @@ import AllCampaign from "../pages/campaign/AllCampaign";
 import Email from "../pages/Email/Email";
 import EmailLog from "../pages/EmailLog/EmailLog";
 import SubscriberList from "../pages/Subscriber/SubscriberList";
-import Report from "../pages/Report/Report";
 import EmailList from "../pages/Email/EmailList";
 import AddEmail from "../pages/Email/AddEmail";
 import AdminList from "../pages/Admin/AdminList";
@@ -323,7 +322,6 @@ const authProtectedRoutes = [
   { path: "/admin/subscriber-list", component: <SubscriberList/>,role:"user" },
   { path: "/admin/view-subscriber", component: <ViewSubscriber/>,role:"user" },
   { path: "/admin/unsubscriber-list", component: <SubscriberList />,role:"user" },
-  { path: "/admin/report", component: <Report /> },
   { path: "/admin/email-list", component: <EmailList /> },
   { path: "/admin/add-email", component: <AddEmail /> },
   { path: "/admin/admin-list", component: <AdminList /> },

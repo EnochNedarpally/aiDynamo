@@ -164,7 +164,7 @@ const Navdata = () => {
             },
             stateVariables: isAuth,
             subItems: [
-                { id: 2, label: "All Acount", link: "/admin/accounts" },
+                { id: 2, label: "All Account", link: "/admin/accounts" },
                 { id: 1, label: "Add Account", link: "/admin/add-account" },
             ]
         },
@@ -298,23 +298,7 @@ const Navdata = () => {
             },
             
             stateVariables: isUnsubsciberList,
-        },
-        {
-            id: "userReport",
-            // label: "Pages",
-            label: "Report",
-            icon: "ri-pages-line",
-            link: "/admin/report",
-            click: function (e) {
-                e.preventDefault();
-                setIsUserReport(!isUserReport);
-                setIscurrentState('Report');
-                updateIconSidebar(e);
-            },
-            
-            stateVariables: isUserReport,
-        },
-        
+        },        
         {
             id: "email",
             label: "Emails",

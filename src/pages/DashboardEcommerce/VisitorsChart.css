@@ -1,0 +1,38 @@
+.visitor-chart-container {
+  width: 100%;
+  max-width: 400px;
+  font-family: sans-serif;
+}
+
+.bar-container {
+  margin: 10px 0;
+}
+
+.region-label {
+  font-size: 14px;
+  display: block;
+  margin-bottom: 4px;
+  color: #252525;
+}
+
+.bar-background {
+  background-color: #18ffff;
+  border-radius: 20px;
+  height: 24px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: #b388eb;
+  border-radius: 20px;
+}
+
+.value-label {
+  font-size: 13px;
+  float: right;
+  margin-top: 2px;
+  color: #333;
+}
