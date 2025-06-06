@@ -57,6 +57,7 @@ const EmailLog = () => {
        dispatch(updateLoading(true))
         fetchSearchedEmail()
     }
+    else setEmailLogs([])
     },[debouncedInput])
     useEffect(()=>{
        const tmr= setInterval(()=>{
