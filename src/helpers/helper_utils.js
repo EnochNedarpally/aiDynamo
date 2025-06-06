@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { updateLoading } from "../slices/auth/login/reducer";
+import { Campaign, CloudDownload, DownloadForOfflineRounded, Drafts, EmailRounded, MarkEmailRead, PanToolAlt } from "@mui/icons-material";
 
 export const downloadReport = async (token, url, data, filename,dispatch) => {
   const config = {
@@ -88,3 +89,18 @@ export const iconStyle={
   secondary:{backgroundColor:"#7e7cba",padding:"6px 8px",borderRadius:5},
   ternary:{backgroundColor:"#299cdb",padding:"6px 8px",borderRadius:5},
   dashboardHeader:{padding:'1rem',paddingLeft:'2rem',borderRadius:"20px 20px 0 0",fontWeight:"bold",fontSize:"22px",color:'#252525',fontWeight:'400'}}
+
+export const getIcon = (name, size) => {
+  switch (name) {
+    case "Email": return <EmailRounded sx={{ fontSize: size ?? "2rem" }} />
+    case "PanToolAlt": return <PanToolAlt sx={{ fontSize: size ?? "2rem" }} />
+    case "Drafts": return <Drafts sx={{ fontSize: size ?? "2rem" }} />
+    case "DownloadForOfflineRounded": return <DownloadForOfflineRounded sx={{ fontSize: size ?? "2rem" }} />
+    case "CampaignIcon": return <Campaign sx={{ fontSize: size ?? "2rem" }} />
+    case "MarkEmailRead": return <MarkEmailRead sx={{ fontSize: size ?? "2rem" }} />
+    case "CloudDownloadIcon": return <CloudDownload sx={{ fontSize: size ?? "2rem" }} />
+
+    default: return <Drafts />
+      break;
+  }
+}

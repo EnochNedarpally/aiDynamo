@@ -9,7 +9,7 @@ import { api } from '../../config';
 import { useSelector } from 'react-redux';
 import ConfirmModal from '../../Components/Common/ConfirmModal';
 import ContentEditor from '../../Components/Common/ContentEditor';
-import { Autocomplete, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Autocomplete, FormControl, InputLabel, LinearProgress, MenuItem, Select, TextField } from '@mui/material';
 
 const initialState = {
   name: "",
@@ -55,13 +55,37 @@ const AddAsset = () => {
       })
       setAsset(assetData)
     }
+  }, [])
+  useEffect(() => {
+    if (location) {
+      fetchAsset()
+    }
   }, [state])
-
   useEffect(() => {
     fetchCategoryOptions()
     fetchCampaignOptions()
   }, [])
 
+  const fetchAsset = async () => {
+    setLoading(true)
+    try {
+      const res = await axios.get(`${api.API_URL}/api/asset/${location.id}`, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+      if (res.status) {
+        setAsset(res?.responseData);
+      }
+      else toast.error(res?.responseData.message ?? "Unable to fetch Asset")
+    } catch (error) {
+      console.error("Unable to fetch Asset", error);
+    }
+    finally{
+      setLoading(false)
+    }
+  };
   const fetchCategoryOptions = async () => {
     try {
       const res = await axios.get(`https://infeedu.com:8443/api/category`, {
@@ -190,6 +214,7 @@ const AddAsset = () => {
   };
   return (
     <React.Fragment>
+      {loading &&<LinearProgress/>}
       <div className="page-content">
         <Container fluid>
           {isOpen && <ConfirmModal url={`${api.API_URL}/api/asset/${asset?.id}`} navigate={navigate} token={token} setIsOpen={setIsOpen} navigateUrl={"/admin/assets"} />}

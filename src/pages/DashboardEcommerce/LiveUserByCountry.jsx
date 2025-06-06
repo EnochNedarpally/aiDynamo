@@ -3,32 +3,42 @@ import { iconStyle } from "../../helpers/helper_utils";
 import { Col, Row } from "reactstrap";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
 import VisitorsChart from "./VisitorsChart";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { api } from "../../config";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 
 const LiveUsersByCountry = () => {
-  const data = [
-    { duration: "0-30", sessions: 2250, views: 4250 },
-    { duration: "31-60", sessions: 1501, views: 2050 },
-    { duration: "61-120", sessions: 750, views: 1600 },
-    { duration: "121-240", sessions: 540, views: 1040 },
-  ];
+const [countries, setCountries] = useState([])
+const token = useSelector(state => state.Login.token)
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    };
 
-  const markers = [
-    {
-      name: "India",
-      coordinates: [77.231497, 28.65195]
-    },
-    { name: "USA", coordinates: [-95.712891, 37.09024] },
-    { name: "United Kingdom", coordinates: [-3.435973, 55.378051] },
-    { name: "Canada", coordinates: [-106.346771, 56.130366] },
-    { name: "Greenland", coordinates: [-42.1737, 69.6354] },
-    { name: "Brazil", coordinates: [-51.92528, -14.235004] },
-    { name: "Egypt", coordinates: [30.802498, 26.820553] },
-    { name: "Ukraine", coordinates: [31.16558, 48.379433] },
-    { name: "Russia", coordinates: [105.318756, 61.52401] },
-    { name: "China", coordinates: [104.195397, 35.86166] },
-    { name: "South Africa", coordinates: [22.937506, -30.559482] },
-  ];
+   useEffect(() => {
+          fetchCountries()
+      }, [])
+  
+      const fetchCountries = async () => {
+          try {
+              const data = await axios.get(`${api.API_URL}/dashboard/live-users`, config)
+              if (data) {
+                  setCountries(data)
+              }
+              
+              else{
+                setCountries([])
+              } 
+          } catch (error) {
+              toast.error("Unable to fetch Live User By Country")
+              console.log("error", error)
+          }
+      }
+
   return (
     <Paper
       sx={{
@@ -55,7 +65,7 @@ const LiveUsersByCountry = () => {
                 ))
               }
             </Geographies>
-            {markers.map(({ name, coordinates, markerOffset }) => (
+            {countries.map(({ name, coordinates, markerOffset }) => (
               <Marker key={name} coordinates={coordinates}>
                 <g
                   fill="#1edaab"

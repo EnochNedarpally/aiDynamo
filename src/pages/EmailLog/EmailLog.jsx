@@ -12,6 +12,8 @@ import TableContainer from '../../Components/Common/TableContainer';
 import { downloadReport, formatDate, formatToDDMMYY, getCurrentTimestamp } from '../../helpers/helper_utils';
 import { Cancel, CheckCircle } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
+import { updateLoading } from '../../slices/auth/login/reducer';
+import useDebounce from '../../helpers/useDebounce';
 
 const initialState = {
     accountId: "",
@@ -26,6 +28,7 @@ const initialState = {
 
 const EmailLog = () => {
     const token = useSelector(state => state.Login.token)
+    const loading = useSelector(state => state.Login.loading)
     const config = {
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -34,7 +37,6 @@ const EmailLog = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const location = useLocation()?.pathname.split("/").pop()
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
     const [accountOptions, setAccountOptions] = useState([]);
@@ -44,11 +46,18 @@ const EmailLog = () => {
     const [emailLogs, setEmailLogs] = useState([]);
     const [accountId, setAccountId] = useState("");
     const [campaignId, setCampaignId] = useState("");
-
+    const [emailSearchText, setEmailSearchText] = useState("");
+    const debouncedInput = useDebounce(emailSearchText, 500);
     useEffect(()=>{
         handleSubmit()
     },[])
 
+    useEffect(()=>{
+      if (debouncedInput) {
+       dispatch(updateLoading(true))
+        fetchSearchedEmail()
+    }
+    },[debouncedInput])
     useEffect(()=>{
        const tmr= setInterval(()=>{
             if(emailFilter.accountId || emailFilter.assetId || emailFilter.campaignId ){
@@ -64,11 +73,32 @@ const EmailLog = () => {
     }, [])
 
     useEffect(() => {
-        fetchCampaignOptions()
-        fetchAssetOptions()
-    }, [accountId,campaignId])
+        if(accountId){
+            fetchCampaignOptions()
+        }
+    }, [accountId])
+    useEffect(() => {
+        if(campaignId){
+            fetchAssetOptions()
+        }
+    }, [campaignId])
 
-    
+    const fetchSearchedEmail = async()=>{
+        const formData = new FormData()
+        formData.append("email",debouncedInput)
+         try {
+            const res = await axios.post(`${api.API_URL}/get-details-by-email-id?email=${debouncedInput}`,config)
+            if (res.status) {
+                setEmailLogs(res.responseData)
+            }
+            else toast.error(res?.responseData?.message ?? "Error fetching search results:")
+        } catch (error) {
+            console.error('Error fetching search results:', error);
+        }
+        finally{
+            dispatch(updateLoading(false))
+        }
+    }
       const columns = useMemo(
         () => [
     
@@ -177,6 +207,7 @@ const EmailLog = () => {
       );
 
     const fetchAccountOptions = async () => {
+        dispatch(updateLoading(true))
         try {
             const res = await axios.get(`${api.API_URL}/api/accounts/options`, config)
             if (res.status) {
@@ -185,10 +216,13 @@ const EmailLog = () => {
             else toast.error(res?.responseData.message ?? "Error fetching search results:")
         } catch (error) {
             console.error('Error fetching search results:', error);
+        } finally{
+            dispatch(updateLoading(false))
         }
     };
     const fetchCampaignOptions = async () => {
         const END_POINT = accountId ? `api/campaign/options-by-account/${accountId}` : "api/campaign/options"
+        dispatch(updateLoading(true))
         try {
             const res = await axios.get(`${api.API_URL}/${END_POINT}`, config)
             if (res.status) {
@@ -198,9 +232,13 @@ const EmailLog = () => {
         } catch (error) {
             console.error('Error fetching search results:', error);
         }
+        finally{
+              dispatch(updateLoading(false))
+        }
     };
     const fetchAssetOptions = async () => {
         const END_POINT = campaignId ? `api/asset/options/campaign/${campaignId}` : "api/asset/options"
+        dispatch(updateLoading(true))
         try {
             const res = await axios.get(`${api.API_URL}/${END_POINT}`, config)
             if (res.status) {
@@ -209,6 +247,9 @@ const EmailLog = () => {
             else toast.error(res?.responseData.message ?? "Error fetching search results:")
         } catch (error) {
             console.error('Error fetching search results:', error);
+        }
+        finally{
+            dispatch(updateLoading(false))
         }
     };
 
@@ -223,7 +264,7 @@ const EmailLog = () => {
                     formData.append(key, emailFilter[key]);
                 }
         })
-        setLoading(true);
+        dispatch(updateLoading(true));
         setError(null);
         setSuccess(false);
         try {
@@ -246,7 +287,7 @@ const EmailLog = () => {
             toast.error(err?.responseData?.message ?? 'Enocuntered an error while sending emailFilter');
             console.error(err);
         } finally {
-            setLoading(false);
+            dispatch(updateLoading(false));
         }
         }
         else toast.warn("At least one of Campaign, Asset, or Account must be provided")
@@ -276,6 +317,7 @@ const EmailLog = () => {
                                             <Autocomplete
                                                 id="tags-outlined1"
                                                 options={accountOptions ?? []}
+                                                loading={loading}
                                                 getOptionLabel={(option) => option.name}
                                                 onChange={(event, newValue) => {
                                                     if (newValue) {
@@ -290,6 +332,7 @@ const EmailLog = () => {
                                             <Autocomplete
                                                 fullWidth
                                                 id="tags-outlined1"
+                                                loading={loading}
                                                 options={campaignOptions ?? []}
                                                 getOptionLabel={(option) => option.name}
                                                 onChange={(event, newValue) => {
@@ -298,6 +341,7 @@ const EmailLog = () => {
                                                         setEmailFilter(prev => { return { ...prev, campaignId: newValue.id } })
                                                     }
                                                 }}
+                                                disabled={!accountId}
                                                 renderInput={(params) => <TextField {...params} label="Campaign" />}
                                             />
                                             <Autocomplete
@@ -305,11 +349,13 @@ const EmailLog = () => {
                                                 id="tags-outlined1"
                                                 options={assetOptions ?? []}
                                                 getOptionLabel={(option) => option.name}
+                                                loading={loading}
                                                 onChange={(event, newValue) => {
                                                     if (newValue) {
                                                         setEmailFilter(prev => { return { ...prev, assetId: newValue.id } })
                                                     }
                                                 }}
+                                                 disabled={!campaignId}
                                                 renderInput={(params) => <TextField {...params} label="Assets" />}
                                             />
                                         </div>
@@ -380,17 +426,30 @@ const EmailLog = () => {
                                                 className="btn btn-primary flex flex-grow-1"> Apply Filter
                                             </button>
                                     </form>
+                                    <Row>
+                                        <Col sm={5}>
+                                            <div className={"search-box me-2 mb-2 d-inline-block"}>
+                                                <input
+                                                    value={emailSearchText}
+                                                    id="search-bar-0"
+                                                    className="form-control search my-2"
+                                                    onChange={(e) => setEmailSearchText(e.target.value)}
+                                                    placeholder='Search for email...'
+                                                />
+                                                <i className="bx bx-search-alt search-icon"></i>
+                                            </div>
+                                        </Col>
+                                    </Row>
                                     <TableContainer
                                     columns={columns}
                                     data={emailLogs ?? []}
-                                    isGlobalFilter={true}
+                                    isGlobalFilter={false}
                                     isAddUserList={false}
                                     customPageSize={10}
                                     className="custom-header-css"
-                                    divClass="table-responsive table-card mb-2"
+                                    divClass="table-responsive table-card mt-2"
                                     tableClass="align-middle table-nowrap"
                                     theadClass="table-light"
-                                    SearchPlaceholder='Search for Email...'
                                     />
                                 </CardBody>
                             </Card>

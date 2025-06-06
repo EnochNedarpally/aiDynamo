@@ -1,4 +1,4 @@
-import { Box, FormControl, IconButton, Input, InputLabel, MenuItem, Modal, Select, Typography } from '@mui/material'
+import { Box, FormControl, IconButton, Input, InputLabel, LinearProgress, MenuItem, Modal, Select, Typography } from '@mui/material'
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Card, Container } from 'reactstrap'
@@ -25,7 +25,8 @@ const ConfirgureAsset = () => {
   const [inputFields, setInputFields] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [input, setInput] = useState('');
-  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
 
   const token = useSelector(state => state.Login.token)
     const config = {
@@ -38,8 +39,30 @@ const ConfirgureAsset = () => {
   const optionArr = ["option","option","option","option","option","option","option","option","option","option",];
 
   useEffect(()=>{
-    setQuestions(asset?.questions?? [])
+    if(asset?.id){
+      fetchQuestions()
+    }
   },[asset])
+  const fetchQuestions = async () => {
+    setLoading(true)
+    try {
+      const res = await axios.get(`${api.API_URL}/api/get-question/${asset.id}`, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+      if (res) {
+        setQuestions(res?.questions??[]);
+        setIsEdit(res?.questions?.length > 0)
+      }
+    } catch (error) {
+      console.error("Unable to fetch Question", error);
+    }
+    finally{
+      setLoading(false)
+    }
+  };
   const handleChange = (event,id) => {
     const {name,value} = event.target
     const quest = [...questions]
@@ -63,8 +86,9 @@ const ConfirgureAsset = () => {
       assetId:asset.id,
       questions:questions
     }
-    const END_POINT = asset?.questions?.length > 0 ?`${api.API_URL}/api/update-question/${asset.id}` : `${api.API_URL}/api/store-question`
-    const method = asset?.questions?.length > 0 ? "put" : "post"
+    setLoading(true)
+    const END_POINT = isEdit > 0 ?`${api.API_URL}/api/update-question/${asset.id}` : `${api.API_URL}/api/store-question`
+    const method = isEdit > 0 ? "put" : "post"
     try {
       const response = await axios({
         method:method,
@@ -78,12 +102,14 @@ const ConfirgureAsset = () => {
       );
       if (response) {
         toast.success("Questions added")
-        navigate("/admin/assets",{state:{campaignId:asset.campaign.id}})
+        // navigate("/admin/assets",{state:{campaignId:asset.campaign.id}})
+        navigate("/admin/assets")
       } else toast.error("Encountered an error while configuring questions")
     } catch (err) {
       toast.error("Encountered an error while configuring questions")
       console.log(err, "err")
     } finally {
+      setLoading(false)
     }
   };
 
@@ -196,7 +222,7 @@ const displayOptions = (id)=>{
            onChange={(e)=>handleChange(e,id)}
          />
        </div>
-       {asset?.questions?.length>0 && <Delete onClick={()=>handleRemove(id)}/>}
+       {isEdit && <Delete onClick={()=>handleRemove(id)}/>}
      </div>
      <div className=''>
      {displayOptions(id)}
@@ -211,12 +237,13 @@ const displayOptions = (id)=>{
   
   return (
     <div className='page-content '>
+      {loading && <LinearProgress/>}
       <div className='d-flex justify-content-between p-2'>
         <button onClick={() => addQuestion()} className="btn btn-primary mb-1">Add Question</button>
-        {asset?.questions.length > 0  && <button onClick={() => deleteQuestion()} className="btn btn-danger mb-1">Delete Question</button>}
+        {isEdit  && <button onClick={() => deleteQuestion()} className="btn btn-danger mb-1">Delete Question</button>}
         </div>
         {renderInputs()}
-      {(questions.length > 0 || asset.questions.length > 0)&&  <button onClick={handleSubmit} className='btn btn-primary my-2'>Save</button>}
+      {(questions.length > 0 || isEdit)&&  <button onClick={handleSubmit} className='btn btn-primary my-2'>Save</button>}
       <ToastContainer/>
     </div>
   )

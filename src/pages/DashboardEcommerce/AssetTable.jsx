@@ -40,16 +40,16 @@ const AssetTable = () => {
                 <Table size="small" >
                     <TableHead>
                         <TableRow >
-                            <TableCell sx={{ padding: "10px" }}>Name</TableCell>
-                            <TableCell sx={{ padding: "10px" }}>Email Sent</TableCell>
-                            <TableCell sx={{ padding: "10px" }}>Subscribers</TableCell>
+                            <TableCell sx={{ padding: "10px 0" }}>Name</TableCell>
+                            <TableCell sx={{ padding: "10px 0" }}>Email Sent</TableCell>
+                            <TableCell sx={{ padding: "10px 0" }}>Subscribers</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {topAsset.map((asset, idx) => (
                             <TableRow key={idx} sx={{ border: "none", backgroundColor: "lightgray" }}>
                                 <TableCell sx={{ position: "relative", padding: "10px 0", borderBottom: '10px solid transparent', zIndex: 2 }}>
-                                    <Box sx={{ width: "40px", padding: '10px 4px', height: "35px", backgroundColor: "#7ed957", position: "absolute", left: "-26px", bottom: "-17px", zIndex: 1, clipPath: 'polygon(0% 20%, 67% 20%, 67% 46%, 100% 46%, 61% 80%, 60% 80%, 0% 80%)' }}>
+                                    <Box sx={{ width: "60px", padding: '10px 4px', height: "35px", backgroundColor: "#7ed957", position: "absolute", left: "-30px", bottom: "-17px", zIndex: 1, clipPath: 'polygon(0% 20%, 67% 20%, 67% 46%, 100% 46%, 61% 80%, 60% 80%, 0% 80%)' }}>
                                         <Typography color='white' variant='caption'>{asset?.percentage ?? "11%"}</Typography>
                                     </Box>
                                     <Typography sx={{ paddingLeft: 1 }} variant='title'>{truncateWords(asset?.name, 5)}</Typography></TableCell>

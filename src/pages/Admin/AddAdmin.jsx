@@ -8,8 +8,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../../config';
 import { useSelector } from 'react-redux';
 import ConfirmModal from '../../Components/Common/ConfirmModal';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, LinearProgress, TextField } from '@mui/material';
 import { Password } from '@mui/icons-material';
+import { updateLoading } from '../../slices/auth/login/reducer';
 
 const initialState = {
   name: "",
@@ -19,12 +20,12 @@ const initialState = {
 }
 
 const AddAdmin = () => {
-  const [loading, setLoading] = useState(false);
   const [admin, setAdmin] = useState(initialState)
   const [selectedAdmin, setSelectedAdmin] = useState({})
   const [isOpen, setIsOpen] = useState(false)
 
   const token = useSelector(state => state.Login.token)
+  const loading = useSelector(state => state.Login.loading)
   const navigate = useNavigate()
   const location = useLocation().state;
 
@@ -60,7 +61,7 @@ const AddAdmin = () => {
       formData.append(key, admin[key]);
     })
 
-    setLoading(true);
+    updateLoading(true)
     try {
       const response = await axios.post(
         `${api.API_URL}/admin/register`,
@@ -81,8 +82,9 @@ const AddAdmin = () => {
     } catch (err) {
       toast.error("Encountered an error while creating an admin")
       console.log(err, "err")
+      updateLoading(false)
     } finally {
-      setLoading(false);
+      updateLoading(false)
     }
   };
 
@@ -93,10 +95,10 @@ const AddAdmin = () => {
       formData.append(key, selectedAdmin[key]);
     })
 
-    setLoading(true);
+    updateLoading(true);
     try {
       const response = await axios.put(
-        `${api.API_URL}/api/admin/${admin.id}`,
+        `${api.API_URL}/admin/update-admin/${admin.id}`,
 
         formData,
         {
@@ -107,20 +109,48 @@ const AddAdmin = () => {
         }
       );
       if (response.status) {
-        toast.success("Admin added")
+        toast.success("Details updated")
         setAdmin(initialState)
-        navigate("/admin/add-admin")
-      } else toast.error("Encountered an error while creating an admin")
+        navigate("/admin/admin-list")
+      } else toast.error("Encountered an error while updating an admin")
     } catch (err) {
-      toast.error("Encountered an error while creating an admin")
+      toast.error("Encountered an error while updating an admin")
       console.log(err, "err")
     } finally {
-      setLoading(false);
+      updateLoading(false);
     }
   };
 
+const handleStatus = async()=>{
+  const formData = new FormData();
+  formData.append("status",location.status =="Active" ? 0 : 1)
+   try {
+      const response = await axios.put(
+        `${api.API_URL}/admin/update-status/${admin.id}`,
+
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status) {
+        toast.success("Details updated")
+        setAdmin(initialState)
+        navigate("/admin/admin-list")
+      } else toast.error("Encountered an error while updating an admin")
+    } catch (err) {
+      toast.error("Encountered an error while updating an admin")
+      console.log(err, "err")
+    } finally {
+      updateLoading(false);
+    }
+}
   return (
     <React.Fragment>
+      {loading && <LinearProgress/>}
       <div className="page-content">
         <Container fluid>
           {isOpen && <ConfirmModal url={`${api.API_URL}/api/admin/${email?.id}`} navigate={navigate} token={token} setIsOpen={setIsOpen} navigateUrl={"/admin/email-list"} />}
@@ -171,7 +201,7 @@ const AddAdmin = () => {
                           id="password"
                           name="password"
                           className="form-control"
-                          value={admin.password}
+                          value={selectedAdmin?.password }
                           onChange={(e) => handleInputChange(e)}
                         />
                       </div>:
@@ -213,11 +243,11 @@ const AddAdmin = () => {
                       </button>
                       {location && (<button
                         type="button"
-                        style={{ backgroundColor: "red", color: "white" }}
+                        style={{ backgroundColor:location?.status == "Active" ? "red" :"green", color: "white" }}
                         className="btn "
-                        onClick={() => setIsOpen(true)}
+                        onClick={() => handleStatus()}
                       >
-                        Delete
+                        {`Mark ${location?.status =="Active" ? "Inactive":"Active"}`}
                       </button>)}
                     </div>
                   </form>
