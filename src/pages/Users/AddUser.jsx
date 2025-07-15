@@ -39,8 +39,8 @@ const AddUser = () => {
     if (location) {
       const userData = {}
       Object.keys(location).map((key) => {
-        if (key == "description") {
-          userData["desc"] = location[key]
+        if (key == "name") {
+          userData["firstName"] = location[key]
         }
         else userData[key] = location[key]
       })
@@ -55,7 +55,7 @@ const AddUser = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!user.firstName || !user.lastName || !user.email || !user.password || !user.phoneNumber) {
+    if (!user.firstName || !user.email || !user.password || !user.phoneNumber) {
       alert('Please fill in all fields');
       return;
     }
@@ -95,13 +95,16 @@ const AddUser = () => {
     event.preventDefault();
     const formData = new FormData();
     Object.keys(selectedUser).map(key => {
-      formData.append(key, selectedUser[key]);
-    })
+      if(key=="firstName"){
+        formData.append("name", selectedUser[key])
+      }
+      else formData.append(key, selectedUser[key]);
+    }) 
 
     setLoading(true);
     try {
       const response = await axios.put(
-        `${api.API_URL}/api/user/${user.id}`,
+        `${api.API_URL}/api/user/update/${user.id}`,
 
         formData,
         {
@@ -112,9 +115,9 @@ const AddUser = () => {
         }
       );
       if (response.status) {
-        toast.success("User added")
+        toast.success("User Updated")
         setUser(initialState)
-        navigate("/user/add-user")
+        navigate("/admin/user-list")
       } else toast.error("Encountered an error while creating an user")
     } catch (err) {
       toast.error("Encountered an error while creating an user")
@@ -128,7 +131,7 @@ const AddUser = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          {isOpen && <ConfirmModal url={`${api.API_URL}/api/user/${email?.id}`} navigate={navigate} token={token} setIsOpen={setIsOpen} navigateUrl={"/user/email-list"} />}
+          {isOpen && <ConfirmModal url={`${api.API_URL}/admin/update-status/0`} navigate={navigate} token={token} setIsOpen={setIsOpen} navigateUrl={"/user/email-list"} isInactive={true} />}
           <ToastContainer closeButton={false} limit={1} />
           <Row>
             <Col lg={12}>
@@ -141,7 +144,7 @@ const AddUser = () => {
                     <div className="mb-3 d-flex flex-wrap gap-4">
                       <div className="mb-3 " style={{ minWidth: '500px' }}>
                         <label htmlFor="firstName" className="form-label">
-                          First Name
+                          Name
                         </label>
                         <input
                           type="text"
@@ -153,7 +156,7 @@ const AddUser = () => {
                           required={!location}
                         />
                       </div>
-                      <div className="mb-3 " style={{ minWidth: '500px' }}>
+                      {/* <div className="mb-3 " style={{ minWidth: '500px' }}>
                         <label htmlFor="lastName" className="form-label">
                           Last Name
                         </label>
@@ -166,7 +169,7 @@ const AddUser = () => {
                           onChange={(e) => handleInputChange(e)}
                           required={!location}
                         />
-                      </div>
+                      </div> */}
                       <div className="mb-3 " style={{ minWidth: '500px' }}>
                         <label htmlFor="email" className="form-label">
                           Email Id
@@ -218,14 +221,14 @@ const AddUser = () => {
                       >
                         {loading ? 'Creating...' : 'Submit'}
                       </button>
-                      {location && (<button
+                      {/* {location && (<button
                         type="button"
                         style={{ backgroundColor: "red", color: "white" }}
                         className="btn "
                         onClick={() => setIsOpen(true)}
                       >
                         Delete
-                      </button>)}
+                      </button>)} */}
                     </div>
                   </form>
                 </CardBody>

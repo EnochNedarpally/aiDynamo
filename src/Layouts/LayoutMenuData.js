@@ -299,23 +299,23 @@ const Navdata = () => {
             
             stateVariables: isUnsubsciberList,
         },        
-        {
-            id: "email",
-            label: "Emails",
-            icon: "ri-mail-line",
-            link: "/#",
-            click: function (e) {
-                e.preventDefault();
-                setEmail(!isEmail);
-                setIscurrentState('Email');
-                updateIconSidebar(e);
-            },
-            stateVariables: isEmail,
-            subItems: [
-                { id: "emailList", label: "All Emails", link: "/admin/email-list" },
-                 { id: "add-email", label: "Add Email", link: "/admin/add-email" },
-            ],
-        },
+        // {
+        //     id: "email",
+        //     label: "Emails",
+        //     icon: "ri-mail-line",
+        //     link: "/#",
+        //     click: function (e) {
+        //         e.preventDefault();
+        //         setEmail(!isEmail);
+        //         setIscurrentState('Email');
+        //         updateIconSidebar(e);
+        //     },
+        //     stateVariables: isEmail,
+        //     subItems: [
+        //         { id: "emailList", label: "All Emails", link: "/admin/email-list" },
+        //          { id: "add-email", label: "Add Email", link: "/admin/add-email" },
+        //     ],
+        // },
         {
             id: "admin",
             label: "Admin",

@@ -8,6 +8,7 @@ import { api } from "../../config";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getIcon } from "../../helpers/helper_utils";
+import CountUp from "react-countup";
 
 const Widgets = () => {
    const [widgets, setWidgets] = useState([]);
@@ -54,7 +55,13 @@ const Widgets = () => {
               {getIcon(card.icon,"3rem")}
               <Typography my={2} color="black" variant="subtitle1">{card.label}</Typography>
             <div>
-              <Typography fontWeight="bold" color="black" variant="h5" className="m-0 p-0">{card.value}</Typography>
+              
+              <Typography fontWeight="bold" color="black" variant="h5" className="m-0 p-0">
+                <CountUp
+                  start={0}
+                  end={card.value}
+                  duration={4}
+              /></Typography>
             </div>
             </Box>
           </Box>

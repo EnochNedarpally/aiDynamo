@@ -25,6 +25,7 @@ import { useSelector } from "react-redux";
 import TableContainer from "../../Components/Common/TableContainer";
 import { api } from "../../config";
 import { EditCalendar, HelpOutline, ToggleOff, ToggleOn, Visibility } from "@mui/icons-material";
+import PaginatedTable from "../../Components/Common/PaginatedTable";
 
 
 const Assets = () => {
@@ -36,26 +37,37 @@ const Assets = () => {
     };
     const navigate = useNavigate()
     const campaignId = useLocation()?.state?.camapignId
-    const [Assets, setAssets] = useState([]);
+    const [assets, setAssets] = useState([]);
     const [modal, setModal] = useState(false);
     const [status, setStatus] = useState("1");
     const [assetId, setAssetId] = useState("")
+    const [pageIndex, setPageIndex] = useState(0);
+  const [pageSize, setPageSize] = useState(20);
+  const [pageCount, setPageCount] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
+  const [loading, setLoading] = useState(0);
     
     useEffect(() => {
         fetchAssets()
-    }, [])
+    }, [pageIndex, pageSize])
 
     const fetchAssets = async () => {
-        const API_URL = campaignId ? `${api.API_URL}/api/asset/campaign/${campaignId}` :`${api.API_URL}/api/asset`
+        const API_URL = campaignId ? `${api.API_URL}/api/asset/campaign-by/${campaignId}` :`${api.API_URL}/api/asset/all?page=${pageIndex}&size=${pageSize}`
+        setLoading(true)
         try {
             const data = await axios.get(API_URL, config)
             if (data.status) {
-                setAssets(data.responseData)
+                setAssets(data.responseData?.content)
+                setTotalItems(data?.responseData?.totalElements ?? 0);
+                setPageCount(data?.responseData?.totalPages ?? 0);
             }
             else toast.error("Unable to fetch Assets")
         } catch (error) {
             toast.error("Unable to fetch Assets")
             console.log("error", error)
+        }
+        finally{
+            setLoading(false)
         }
     }
 
@@ -171,18 +183,25 @@ const Assets = () => {
                                                 <i className="ri-add-fill me-1 align-bottom"></i> Add Asset
                                             </Button>
                                         </div>
-                                        <TableContainer
+                                        <PaginatedTable
+                                            data={assets ?? []}
                                             columns={columns}
-                                            data={(Assets ?? [])}
-                                            isGlobalFilter={true}
-                                            isAddUserList={false}
-                                            customPageSize={10}
+                                            pageIndex={pageIndex}
+                                            pageSize={pageSize}
+                                            pageCount={pageCount}
+                                            totalItems={totalItems}
+                                            loading={loading}
                                             className="custom-header-css"
                                             divClass="table-responsive table-card mb-2"
                                             tableClass="align-middle table-nowrap"
                                             theadClass="table-light"
                                             SearchPlaceholder='Search for Asset...'
-                                        />
+                                            onPageChange={(newPageIndex) => setPageIndex(newPageIndex)}
+                                            onPageSizeChange={(newSize) => {
+                                                setPageSize(newSize);
+                                                setPageIndex(0); // Reset to first page
+                                            }}
+                                            />
                                     </div>
                                     {<Modal id="showModal" isOpen={modal} toggle={toggle} centered>
                                         <ModalHeader className="bg-info-subtle p-3" toggle={toggle}>

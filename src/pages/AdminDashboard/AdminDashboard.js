@@ -11,6 +11,8 @@ import AssetTable from "../DashboardEcommerce/AssetTable";
 import EmailActivity from "../DashboardEcommerce/EmailActivity";
 import Leads from "../DashboardEcommerce/Leads";
 import TopAccounts from "../DashboardEcommerce/TopAccounts";
+import { Box, CssBaseline } from "@mui/material";
+import PeriodSelector from "../DashboardEcommerce/PeriodSelector";
 
 const AdminDashboard = () => {
 
@@ -36,6 +38,10 @@ const AdminDashboard = () => {
                     </Col>
                     <Col md={12}>
                     <Row className="my-3">
+                      <CssBaseline />
+                      {/* <Box sx={{ my: 2 }}>
+                        <PeriodSelector />
+                      </Box> */}
                       <Col md={5}>
                       <EmailActivity/>
                       </Col>
@@ -46,13 +52,10 @@ const AdminDashboard = () => {
                     </Col>
                     <Col md={12}>
                     <Row className="my-3">
-                      <Col md={4}>
-                      <TopAccounts/>
-                      </Col>
-                      <Col md={4}>
+                      <Col md={6}>
                       <CountriesSession/>
                       </Col>
-                      <Col md={4}>
+                      <Col md={6}>
                       <AssetTable/>
                       </Col>
                       </Row>
