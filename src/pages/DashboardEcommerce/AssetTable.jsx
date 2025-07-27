@@ -5,6 +5,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { api } from '../../config';
 import { truncateWords } from '../../helpers/helper_utils';
+import { TextSnippetOutlined } from '@mui/icons-material';
 
 const AssetTable = () => {
     const [topAsset, setTopAsset] = useState([]);
@@ -33,10 +34,10 @@ const AssetTable = () => {
     return (
         <Paper sx={{ height: "400px" }}>
             <ToastContainer />
-            <Box sx={{ p: 1, backgroundColor: '#b388eb' }}>
-                <Typography variant="h6" color="white">Top Asset</Typography>
+            <Box sx={{ p: 1, backgroundColor: '#9882e7' }}>
+                <Typography sx={{marginLeft:"10px",fontSize:"1rem"}} color="white"><TextSnippetOutlined sx={{marginLeft:"10px"}}/> Top Asset</Typography>
             </Box>
-            <Box sx={{ paddingLeft: '30px', paddingRight: "10px" }}>
+            <Box sx={{ paddingLeft: '40px', paddingRight: "10px" }}>
                 <Table size="small" >
                     <TableHead>
                         <TableRow >

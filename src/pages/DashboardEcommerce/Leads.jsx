@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { api } from '../../config';
 import { toast, ToastContainer } from 'react-toastify';
+import { FilterAltOutlined } from '@mui/icons-material';
 
 const StatBox = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -58,8 +59,8 @@ const options = {
     return(
     <Paper sx={{ height: '500px', background: "white" }}>
         <ToastContainer/>
-        <Box sx={{ p: 2, backgroundColor: '#b388eb' }}>
-            <Typography variant="h6" color="white">Leads</Typography>
+        <Box sx={{ p: 1, backgroundColor: '#9882e7' }}>
+            <Typography sx={{marginLeft:"10px",fontSize:"1rem"}} color="white"><FilterAltOutlined sx={{marginLeft:"10px"}}/> Leads</Typography>
         </Box>
         <ReactApexChart options={options} series={leads?.leads ?? []} type="line" height="80%" />
     </Paper>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Paper, Typography } from '@mui/material';
 import { Box, display, styled } from '@mui/system';
-import { Email, EmailRounded } from '@mui/icons-material';
+import { Email, EmailRounded, Subject } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { api } from '../../config';
@@ -44,8 +44,8 @@ const token = useSelector(state => state.Login.token)
     return(
     <Paper sx={{ height: '500px', background: "white" }}>
         <ToastContainer/>
-        <Box sx={{ p: 2, backgroundColor: '#b388eb' }}>
-            <Typography variant="h6" color="white">Email Activity</Typography>
+        <Box sx={{ p: 1, backgroundColor: '#9882e7' }}>
+            <Typography sx={{marginLeft:"10px",fontSize:"1rem"}}  color="white"><Subject sx={{marginRight:"10px"}}/>Email Activity</Typography>
         </Box>
         <Box sx={{width: "100%", height: "90%", padding: 2, display: "flex", gap: 2, flexWrap: "wrap", alignItems: "center" }}>
             {emailActivity.map(email => (

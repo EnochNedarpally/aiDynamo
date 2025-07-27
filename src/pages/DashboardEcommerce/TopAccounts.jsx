@@ -34,7 +34,7 @@ const TopAccounts = () => {
     return (
         <Paper sx={{ height: "400px" }}>
             <ToastContainer />
-            <Box sx={{ p: 1, backgroundColor: '#b388eb' }}>
+            <Box sx={{ p: 1, backgroundColor: '#9882e7' }}>
                 <Typography variant="h6" color="white">Top Account</Typography>
             </Box>
             <Box sx={{ paddingLeft: '30px', paddingRight: "10px" }}>

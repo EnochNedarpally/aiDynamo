@@ -18,16 +18,25 @@
 .bar-background {
   background-color: #18ffff;
   border-radius: 20px;
-  height: 24px;
+  height: 24px;        
   width: 100%;
   position: relative;
   overflow: hidden;
 }
 
 .bar-fill {
-  height: 100%;
-  background: #b388eb;
+  position: absolute;
+  height: 24px;
+  width: 300px; 
+  background-color: #9882e7;
   border-radius: 20px;
+  animation: slideLeftRight 4s linear infinite;
+}
+
+@keyframes slideLeftRight {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-100px); }
+  100% { transform: translateX(0); }
 }
 
 .value-label {

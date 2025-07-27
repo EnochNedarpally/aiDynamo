@@ -5,6 +5,7 @@ import axios from "axios";
 import { api } from "../../config";
 import { toast, ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
+import { Diversity3Outlined } from "@mui/icons-material";
 
 const CountriesSession = () => {
   const [countrySession, setCountrySession] = useState([]);
@@ -60,8 +61,8 @@ const CountriesSession = () => {
   return (
     <Paper sx={{ height: '400px', background: "white" }}>
       <ToastContainer />
-      <Box sx={{ p: 1, backgroundColor: '#b388eb' }}>
-        <Typography variant="h6" color="white">Session By Continents</Typography>
+      <Box sx={{ p: 1, backgroundColor: '#9882e7' }}>
+        <Typography sx={{marginLeft:"10px",fontSize:"1rem"}}  color="white"><Diversity3Outlined sx={{marginLeft:"10px"}}/> Session By Continents</Typography>
       </Box>
       <ReactApexChart options={options} series={series} type="bar" height={"80%"} />
     </Paper>

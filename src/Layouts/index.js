@@ -134,7 +134,7 @@ const Layout = (props) => {
 
     return (
         <React.Fragment>
-            <div id="layout-wrapper">
+            <div id="layout-wrapper" style={{backgroundColor:"#f2f2f2"}}>
                 <Header
                     headerClass={headerClass}
                     layoutModeType={layoutModeType}

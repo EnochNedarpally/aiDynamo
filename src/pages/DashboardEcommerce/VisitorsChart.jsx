@@ -52,7 +52,9 @@ const token = useSelector(state => state.Login.token)
               <div className="bar-background">
                 <div
                   className="bar-fill"
-                  style={{ width: `${item.value}%` }}
+                  // style={{ width: `${item.value}%` }}
+                  style={{ '--target-width': `${item.value}%`, width: `${item.value}%` }}
+                  // style={{ '--target-width': `${item.value}%` }}
                 ></div>
               </div>
               <span className="value-label">{item.value}%</span>

@@ -52,10 +52,10 @@ const AdminDashboard = () => {
                     </Col>
                     <Col md={12}>
                     <Row className="my-3">
-                      <Col md={6}>
+                      <Col md={5}>
                       <CountriesSession/>
                       </Col>
-                      <Col md={6}>
+                      <Col md={7}>
                       <AssetTable/>
                       </Col>
                       </Row>
